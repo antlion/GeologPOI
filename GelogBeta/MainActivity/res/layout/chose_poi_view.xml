@@ -1,0 +1,32 @@
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <Button
+            android:id="@+id/visualizza_su_AR"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="123dp"
+            android:text="visualizza su AR" />
+
+        <Button
+            android:id="@+id/visualizza_su_Mappa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="visualizza su Mappa" />
+
+        <Button
+            android:id="@+id/visualizza_su_Lista"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/button2"
+            android:layout_marginTop="52dp"
+            android:text="visualizza su Lista" />
+
+    </RelativeLayout>

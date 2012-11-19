@@ -1,0 +1,25 @@
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/category_layout" >
+
+        <Button
+            android:id="@+id/deselectAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deseleziona Tutto" />
+
+        <Button
+            android:id="@+id/selectCategories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleziona Categorie" />
+
+        <Button
+            android:id="@+id/selectAllCstegories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Seleziona tutte le categorie" />
+
+    </LinearLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+      <string-array
+        name="poi_selezionato">
+        <item>Visualizza Informazioni</item>
+         <item>Segnala POI</item>
+        
+    </string-array>
+    <string-array
+        name="visualizza_poi">
+        <item>Mappa</item>
+         <item>Lista</item>
+        <item>Realtà Aumentata</item>
+    </string-array>
+</resources>
