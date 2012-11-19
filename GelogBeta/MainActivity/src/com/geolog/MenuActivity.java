@@ -151,7 +151,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 		}
 		
 		if(v.getId() == (R.id.visualizzaPOI)){
-			Intent intent = new Intent(v.getContext(), GestoreLista.class);
+			Intent intent = new Intent(v.getContext(), TestWebService.class);
 	        startActivity(intent);
 		}
 		if(v.getId() == (R.id.Aggiungi_POI)){

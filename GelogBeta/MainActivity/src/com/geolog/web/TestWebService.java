@@ -26,10 +26,18 @@ public class TestWebService extends Activity{
   {
       super.onCreate(savedInstanceState);
       
-      prova();
+      prova2();
 			  
 		  }
-  
+  public void prova2()
+  {
+	  new Thread(new Runnable() {
+	        public void run() {
+	        	TempConvert tempConvert = new TempConvert();
+	        	System.out.println(tempConvert.CelsiusToFahrenheit("50"));
+	        }
+	        }).start();
+  }
   public void prova()
   {
 	  new Thread(new Runnable() {
