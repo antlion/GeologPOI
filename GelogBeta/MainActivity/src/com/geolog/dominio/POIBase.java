@@ -8,12 +8,18 @@ import android.location.Location;
 public abstract class POIBase {
 
 	
-	private String tipo;
+	private Categoria categoria;
 	private String nome;
 	private String descrizione;
 	private int idTipo;
 	private Date dataCreazione;
 	private Location location;
+	public Categoria getCategoria() {
+		return categoria;
+	}
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
 	private int image;
 	
 	
@@ -29,12 +35,7 @@ public abstract class POIBase {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public String getTipo() {
-		return tipo;
-	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
+	
 	public String getNome() {
 		return nome;
 	}

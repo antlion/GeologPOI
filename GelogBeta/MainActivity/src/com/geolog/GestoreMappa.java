@@ -156,8 +156,10 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 	       addPOIOverlay(mapOverlays);
 	        
 		  // mapController.setCenter(geoPoint); 
+	  
 	       
 		 }
+    
 	
 	private void aggiungiMiaPosizione(List<Overlay> mapOverlays, GeoPoint geoPoint)
 	{
@@ -211,28 +213,31 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 				// TODO Auto-generated constructor stub
 				 mContext = context;
 				 this.poi = poi;
-				 map.setOnTouchListener(new View.OnTouchListener() {
+			/*	 map.setOnTouchListener(new View.OnTouchListener() {
 
 			           public boolean onTouch(View v, MotionEvent event) {
 			               // TODO Auto-generated method stub
 			               GeoPoint p = null;
-		System.out.println("toccato");
-			             /*  if (event.getAction() == MotionEvent.ACTION_UP) {
+			               System.out.println("toccato");
+			               if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_UP) {
 			                   p = map.getProjection().fromPixels((int) event.getX(),
 			                           (int) event.getY());
-			                   mapBackButton.setText(p.getLatitudeE6() / 1E6 + ","
+			                   String mapBackButton = (p.getLatitudeE6() / 1E6 + ","
 			                           + p.getLongitudeE6() / 1E6 + "Action is : "
 			                           + event.getAction());
-			                   return true;
+			                   System.out.println(mapBackButton);
+			                   //return true;
 			                   Toast.makeText(
 			                           getBaseContext(),
 			                           p.getLatitudeE6() / 1E6 + "," + p.getLongitudeE6()
 			                                   / 1E6 + "Action is : " + event.getAction(),
 			                           Toast.LENGTH_SHORT).show();
-			               }*/
+			                   return true;
+			               }
 			               return false;
 			           }
-			       });
+			       });*/
+				
 			}
 
 			private ArrayList<OverlayItem> mOverlays = new ArrayList<OverlayItem>();
@@ -256,20 +261,89 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 			    mOverlays.add(overlay);
 			    populate();
 			}
+			/*public boolean onTouchEvent(MotionEvent event, MapView mapView) 
+		    {   
+		        //---when user lifts his finger---
+		        if (event.getAction() == 1) {                
+		            GeoPoint p = mapView.getProjection().fromPixels(
+		                (int) event.getX(),
+		                (int) event.getY());
+		                Toast.makeText(getBaseContext(), 
+		                    p.getLatitudeE6() / 1E6 + "," + 
+		                    p.getLongitudeE6() /1E6 , 
+		                    Toast.LENGTH_SHORT).show();
+		        }                            
+		        return false;
+		    }   */
 			
 			
-			protected boolean onTap(int index) {
+			
+			
+		@Override	
+		protected boolean onTap(final int index) {
 				 
 			 OverlayItem item = mOverlays.get(index);
 			
 		 if(item.getTitle().equals("MiaPosizione")){
-			 AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-			 dialog.setTitle(item.getTitle());
-			 dialog.setMessage(item.getSnippet());
-			 dialog.show();
+			 
+			 final View popUp = getLayoutInflater().inflate(R.layout.ballon, map, false);
+			   
+			 MapView.LayoutParams mapParams = new MapView.LayoutParams(
+                     ViewGroup.LayoutParams.WRAP_CONTENT,
+                     ViewGroup.LayoutParams.WRAP_CONTENT, mOverlays.get(index)
+                                     .getPoint(), MapView.LayoutParams.BOTTOM_CENTER);
+		     map.addView(popUp, mapParams);
+		     final TextView text = (TextView)popUp.findViewById(R.id.balloon_item_title);
+		     text.setText("MiaPosizione");
+		     final ImageView image = (ImageView)popUp.findViewById(R.id.balloon_close);
+		     image.setOnClickListener(new OnClickListener() 
+		     {
+		         public void onClick(View v) 
+		         {
+		        	 	map.removeView(popUp);
+		         }
+		     });
+			
 			 }
 			  else{
-				  AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+				  
+				  final View popUp = getLayoutInflater().inflate(R.layout.ballon_poi, map, false);
+				   
+					 MapView.LayoutParams mapParams = new MapView.LayoutParams(
+		                     ViewGroup.LayoutParams.WRAP_CONTENT,
+		                     ViewGroup.LayoutParams.WRAP_CONTENT, mOverlays.get(index)
+		                                     .getPoint(), MapView.LayoutParams.BOTTOM_CENTER);
+				     map.addView(popUp, mapParams);
+				     final TextView text = (TextView)popUp.findViewById(R.id.balloon_item_title);
+				     text.setText(poi.getNome());
+				     final TextView descrizione = (TextView)popUp.findViewById(R.id.descrizione);
+				    descrizione.setText(poi.getDescrizione());
+				     final ImageView image = (ImageView)popUp.findViewById(R.id.balloon_close);
+				     image.setOnClickListener(new OnClickListener() 
+				     {
+				         public void onClick(View v) 
+				         {
+				        	 	map.removeView(popUp);
+				         }
+				     });
+				     final ImageView segnalazione = (ImageView)popUp.findViewById(R.id.segnalzione);
+				     segnalazione.setOnClickListener(new OnClickListener() 
+				     {
+				         public void onClick(View v) 
+				         {
+				        	 map.removeView(popUp);
+				        	 final View popUp2 = getLayoutInflater().inflate(R.layout.inserisci_segnalazione_dialog, map, false);
+							   
+							 MapView.LayoutParams mapParams = new MapView.LayoutParams(
+				                     ViewGroup.LayoutParams.WRAP_CONTENT,
+				                     ViewGroup.LayoutParams.WRAP_CONTENT, mOverlays.get(index)
+				                                     .getPoint(), MapView.LayoutParams.BOTTOM_CENTER);
+						     map.addView(popUp2, mapParams);
+				         }
+				     });
+				  
+				  
+				/*  AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
 				 dialog.setTitle(poi.getNome());
 				 Resources res = getResources();
 				 String[] planets = res.getStringArray(R.array.poi_selezionato);
@@ -308,7 +382,7 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 		            		               public void onClick(DialogInterface dialog, int id) {
 		            		                   // sign in the user ...
 		            		            	   
-		            		            	   		            	 System.out.println(test.getText().toString());
+		            		            	    System.out.println(test.getText().toString());
 		            		            	   GestorePOI.segnalaPOI(poi,test.getText().toString());
 		            		               }
 		            		           })
@@ -321,14 +395,18 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 		            	   }
 		               }
 		        });
-				  dialog.show();}
+				  dialog.show();*/}
 			  return true;
 			}
 
 			
 			
 		}
-	
+	 public boolean onTap(GeoPoint p, MapView mapView) {
+           System.out.println("ontap2");
+           //  return super.onTap(p, mapView);
+             return true;
+     }
 	
 	 @Override
 	protected boolean isRouteDisplayed() {

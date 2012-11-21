@@ -16,8 +16,8 @@ public class PoiEmergenza extends POIBase {
 	/**
 	 * 
 	 */
-	public PoiEmergenza(String tipo,String nome, String descrizione,int idTipo,Location location) {
-		setTipo(tipo);
+	public PoiEmergenza(Categoria categoria,String nome, String descrizione,int idTipo,Location location) {
+		setCategoria(categoria);
 		setNome(nome);
 		setDescrizione(descrizione);
 		setIdTipo(idTipo);

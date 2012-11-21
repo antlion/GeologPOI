@@ -4,7 +4,7 @@ package com.geolog;
 import com.geolog.util.GestoreCategorie;
 import com.geolog.util.MyParser;
 import com.geolog.util.XmlCategoryCreator;
-import com.geolog.web.TestWebService;
+import com.geolog.web.WebService;
 
 
 import android.app.Activity;
@@ -31,9 +31,9 @@ public class MenuActivity extends Activity implements OnClickListener {
         
         
        // aaa();
+        WebService.prova2();
         
-        
-        
+       
         
         
         
@@ -151,7 +151,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 		}
 		
 		if(v.getId() == (R.id.visualizzaPOI)){
-			Intent intent = new Intent(v.getContext(), TestWebService.class);
+			Intent intent = new Intent(v.getContext(), WebService.class);
 	        startActivity(intent);
 		}
 		if(v.getId() == (R.id.Aggiungi_POI)){

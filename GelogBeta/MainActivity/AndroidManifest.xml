@@ -46,7 +46,7 @@
         </activity>
         <activity android:name="com.tutorial.menuList.Facebook" >
         </activity>
-        <activity android:name="com.geolog.web.TestWebService" >
+        <activity android:name="com.geolog.web.WebService" >
         </activity>
         <activity
             android:name="com.geolog.AggiungiPOIActivity"

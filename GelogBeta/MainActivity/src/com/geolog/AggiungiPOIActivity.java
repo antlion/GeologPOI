@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.geolog.util.GestoreCategorie;
 import com.geolog.util.UtilGps;
+import com.geolog.web.WebService;
 
 import android.app.Activity;
 import android.content.Context;
@@ -67,6 +68,7 @@ public class AggiungiPOIActivity extends Activity implements OnClickListener, an
 			//crea nuovo POI
 			//invia nuovo POI
 			//interfaccia webServer
+			WebService.aggiungiPOI(GestorePOI.creaPOI());
 		}
 		else{
 			Context context = getApplicationContext();

@@ -11,11 +11,14 @@ import java.util.Hashtable;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.HeaderProperty;
+
+import com.geolog.dominio.Categoria;
+
 import java.util.List;
 
 public class TempConvert{
-    public String NAMESPACE =" http://tempuri.org/";
-    public String url="http://www.w3schools.com/webservices/tempconvert.asmx";
+    public String NAMESPACE ="http://ws";
+    public String url="http://160.80.156.142:8080/Geolog/services/";
     public int timeOut = 60000;
     
 
@@ -30,6 +33,42 @@ public class TempConvert{
         return FahrenheitToCelsius(Fahrenheit,null);
     }
 
+    public String chiamaCupis(float lun,float longi, int categoria,List<HeaderProperty> headers)
+    {
+    	 SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+         soapEnvelope.implicitTypes = true;
+         soapEnvelope.dotNet = false;
+         SoapObject soapReq = new SoapObject("http://ws","findNearby");
+         soapReq.addProperty("latitude",lun);
+         soapReq.addProperty("latitude",longi);
+         soapReq.addProperty("category_id",categoria);
+        
+         
+         
+         soapEnvelope.setOutputSoapObject(soapReq);
+         HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+         try{
+             
+             if (headers!=null){
+                 httpTransport.call("http://tempuri.org/FahrenheitToCelsius", soapEnvelope,headers);
+             }else{
+                 httpTransport.call("http://tempuri.org/FahrenheitToCelsius", soapEnvelope);
+             }
+             SoapObject result=(SoapObject)soapEnvelope.bodyIn;
+             if (result.hasProperty("FahrenheitToCelsiusResult"))
+             {
+                 Object obj = result.getProperty("FahrenheitToCelsiusResult");
+                 if (obj.getClass().equals(SoapPrimitive.class)){
+                     SoapPrimitive j0 =(SoapPrimitive) result.getProperty("FahrenheitToCelsiusResult");
+                     String resultVariable = j0.toString();
+                     return resultVariable;
+                 }
+             }
+         }catch (Exception e) {
+             e.printStackTrace();
+         }
+         return null;
+    }
 
     public String FahrenheitToCelsius(String Fahrenheit,List<HeaderProperty> headers){
     

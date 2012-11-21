@@ -46,7 +46,7 @@ public class RicercaPOI extends TabActivity implements Visualizzazione{
         	Location location = new Location(LocationManager.GPS_PROVIDER);
         	location.setLatitude(41.858247);
         	location.setLongitude(22.345678);
-	        PoiEmergenza newPOI = new PoiEmergenza("Emergenza","Ospedale PTV", "ospedale qui viicno",1,location);
+	        PoiEmergenza newPOI = new PoiEmergenza(new Categoria("Emergenza",1),"Ospedale PTV", "ospedale qui viicno",1,location);
 	        newPOI.setImage(R.drawable.croce_rossa);
 	        pois.add(newPOI);
 	        
@@ -121,11 +121,11 @@ public class RicercaPOI extends TabActivity implements Visualizzazione{
 	public void updateLocationData(Location location) {
 		// TODO Auto-generated method stub
 		this.location = location;
-		//crea pacchetto da mandare al Cupis con la mia locazione e file delle categorie
+		GestorePOI.cercaPOI(location);
 		//scegliModalitàVisualizzazione();
 	}
 
-	public void scegliModalitaVisualizzazione()
+	/*public void scegliModalitaVisualizzazione()
 	{
 		ImageView image = new ImageView(getBaseContext());	     
 	    image.setImageResource(R.drawable.visualizza_poi);
@@ -148,7 +148,7 @@ public class RicercaPOI extends TabActivity implements Visualizzazione{
             	   }
            }
     }).show();
-	}
+	}*/
 	
 	
 	

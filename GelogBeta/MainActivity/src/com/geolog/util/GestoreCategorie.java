@@ -33,6 +33,11 @@ public class GestoreCategorie {
 		return categorie;
 		}
 	
+		public ArrayList<Categoria> richiediCategorieSelezionate()
+		{
+			return categorieSelezionate;
+		}
+		
 		public void salvaSelezione(ArrayList<Categoria> categorieScelte)
 		{
 			categorieSelezionate = categorieScelte;

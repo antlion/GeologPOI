@@ -1,5 +1,7 @@
 package com.geolog.web;
 
+import java.util.ArrayList;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -7,13 +9,16 @@ import org.ksoap2.transport.Transport;
 import org.ksoap2.transport.HttpTransportSE;
 
 import com.geolog.R;
+import com.geolog.dominio.Categoria;
+import com.geolog.dominio.POIBase;
 
 import android.app.Activity;
+import android.location.Location;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class TestWebService extends Activity{
+public class WebService {
 
 	private static final String METHOD_NAME = "hello";
 	 private static final String SOAP_ACTION = "http://160.80.129.114:8084/axis2/services/HelloAxisWorld/hello";
@@ -21,23 +26,47 @@ public class TestWebService extends Activity{
 	 private static final String URL = "http://160.80.129.114:8084/axis2/services/HelloAxisWorld?wsdl";
  
    
-  @Override
-  public void onCreate(Bundle savedInstanceState)
-  {
-      super.onCreate(savedInstanceState);
-      
-      prova2();
-			  
-		  }
-  public void prova2()
+ 
+  public static void prova2()
   {
 	  new Thread(new Runnable() {
 	        public void run() {
-	        	TempConvert tempConvert = new TempConvert();
-	        	System.out.println(tempConvert.CelsiusToFahrenheit("50"));
+	        	NewAxisFromJava service = new NewAxisFromJava();
+	        	
+	        	System.out.println(service.hello("Lorenzo"));
 	        }
 	        }).start();
   }
+  
+  public static ArrayList<POIBase> richiediCategorie(Location location,ArrayList<Categoria> categorie)
+  {
+	  new Thread(new Runnable() {
+	        public void run() {
+	        
+	        }
+	        }).start();
+	return null;
+	  
+  }
+  
+  public static void segnalaPOI(POIBase poi,String descrizione)
+  {
+	  new Thread(new Runnable() {
+	        public void run() {
+	        
+	        }
+	        }).start();
+  }
+  
+  public static void aggiungiPOI(POIBase poi)
+  {
+	  new Thread(new Runnable() {
+	        public void run() {
+	        
+	        }
+	        }).start();
+  }
+  
   public void prova()
   {
 	  new Thread(new Runnable() {

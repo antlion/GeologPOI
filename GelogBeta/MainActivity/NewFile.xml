@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://ws" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://ws" xmlns:intf="http://ws" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.2.1
+Built on Jun 14, 2005 (09:15:57 EDT)-->
+ <wsdl:types>
+  <schema elementFormDefault="qualified" targetNamespace="http://ws" xmlns="http://www.w3.org/2001/XMLSchema">
+   <element name="findNearby">
+    <complexType>
+     <sequence>
+      <element name="latitude" type="xsd:float"/>
+      <element name="longitude" type="xsd:float"/>
+      <element name="category_id" type="xsd:int"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="findNearbyResponse">
+    <complexType>
+     <sequence>
+      <element name="findNearbyReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+   <element name="listCategory">
+    <complexType/>
+   </element>
+   <element name="listCategoryResponse">
+    <complexType>
+     <sequence>
+      <element name="listCategoryReturn" type="xsd:string"/>
+     </sequence>
+    </complexType>
+   </element>
+  </schema>
+ </wsdl:types>
+
+   <wsdl:message name="listCategoryResponse">
+
+      <wsdl:part element="impl:listCategoryResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="findNearbyResponse">
+
+      <wsdl:part element="impl:findNearbyResponse" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="listCategoryRequest">
+
+      <wsdl:part element="impl:listCategory" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:message name="findNearbyRequest">
+
+      <wsdl:part element="impl:findNearby" name="parameters">
+
+      </wsdl:part>
+
+   </wsdl:message>
+
+   <wsdl:portType name="WS">
+
+      <wsdl:operation name="findNearby">
+
+         <wsdl:input message="impl:findNearbyRequest" name="findNearbyRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:findNearbyResponse" name="findNearbyResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="listCategory">
+
+         <wsdl:input message="impl:listCategoryRequest" name="listCategoryRequest">
+
+       </wsdl:input>
+
+         <wsdl:output message="impl:listCategoryResponse" name="listCategoryResponse">
+
+       </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="WSSoapBinding" type="impl:WS">
+
+      <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="findNearby">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="findNearbyRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="findNearbyResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="listCategory">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="listCategoryRequest">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="listCategoryResponse">
+
+            <wsdlsoap:body use="literal"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="WSService">
+
+      <wsdl:port binding="impl:WSSoapBinding" name="WS">
+
+         <wsdlsoap:address location="http://160.80.156.142:8080/Geolog/services/WS"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>
