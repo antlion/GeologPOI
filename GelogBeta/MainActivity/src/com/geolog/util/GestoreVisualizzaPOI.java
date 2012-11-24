@@ -10,7 +10,7 @@ import android.os.Bundle;
 
 import com.geolog.ChoseCategoryActivity;
 import com.geolog.GestoreAR;
-import com.geolog.GestoreLista;
+import com.geolog.ListHandler;
 import com.geolog.GestoreMappa;
 import com.geolog.dominio.*;
 
@@ -54,7 +54,7 @@ public class GestoreVisualizzaPOI {
 	
 	public Intent visualizzaLista()
 	{
-		Intent intent = new Intent(ctx, GestoreLista.class);
+		Intent intent = new Intent(ctx, ListHandler.class);
 		ParametersBridge.getInstance().addParameter("listaPOI", pois);
         return intent;
 	}

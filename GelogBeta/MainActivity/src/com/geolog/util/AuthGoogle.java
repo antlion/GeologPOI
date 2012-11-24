@@ -24,7 +24,7 @@ public class AuthGoogle {
 	
 	
 	
-	public Account googleServiceAviable(Activity activity)
+	public static Account googleServiceAviable(Activity activity)
 	{
 		  AccountManager accountManager = AccountManager.get(activity);
 	        Account[] accounts = accountManager.getAccountsByType("com.google");

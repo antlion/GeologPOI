@@ -4,7 +4,7 @@ package com.geolog;
 
 import java.util.ArrayList;
 
-import com.geolog.util.GestoreCategorie;
+import com.geolog.util.CategoryHandler;
 import com.geolog.util.UtilGps;
 import com.geolog.web.WebService;
 
@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 public class AggiungiPOIActivity extends Activity implements OnClickListener, android.view.View.OnClickListener,Visualizzazione{
 	
-	private GestoreCategorie gestoreCategorie;
+	private CategoryHandler gestoreCategorie;
 	private UtilGps gps;
 	private Location location;
 	@Override
@@ -32,7 +32,7 @@ public class AggiungiPOIActivity extends Activity implements OnClickListener, an
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aggiunta_poi_activity_layout);
         
-        gestoreCategorie = new GestoreCategorie();
+        gestoreCategorie = new CategoryHandler();
         gps = new UtilGps(this, this);
         gps.getGpsStatus();
         EditText et1 = (EditText) findViewById(R.id.editText1);

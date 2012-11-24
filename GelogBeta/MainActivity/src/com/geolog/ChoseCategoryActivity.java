@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlSerializer;
 
 import com.geolog.dominio.Categoria;
-import com.geolog.util.GestoreCategorie;
+import com.geolog.util.CategoryHandler;
 import com.geolog.util.MyParser;
 import com.geolog.util.UtilDialog;
 import com.geolog.util.XmlCategoryCreator;
@@ -29,12 +29,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ChoseCategoryActivity extends Activity implements OnClickListener{
-
+public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	private ArrayList<CheckBox> categorie; 
 	private ArrayList<Categoria> parsedData;
 	private LinearLayout linearLayout;
-	private GestoreCategorie gestoreCategorie;	   
+	private CategoryHandler gestoreCategorie;	   
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -57,7 +56,7 @@ public class ChoseCategoryActivity extends Activity implements OnClickListener{
 	       // parser.parseXml(this.getApplicationContext());
 	        //parsedData = new ArrayList<Categoria>();
 	        //parsedData = parser.getParsedData();
-	        gestoreCategorie = new GestoreCategorie();
+	        gestoreCategorie = new CategoryHandler();
 	        parsedData = gestoreCategorie.richiediCategorie();
 	        
 	        for(Categoria categoria : parsedData)

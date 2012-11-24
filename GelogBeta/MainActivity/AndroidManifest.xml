@@ -23,22 +23,21 @@
         android:theme="@style/AppTheme" >
         <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name="com.geolog.MainActivity" >
+        <activity android:name="com.geolog.MenuActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.geolog.MenuActivity" >
-        </activity>
+        
         <activity android:name="com.geolog.ChoseCategoryActivity" >
         </activity>
-        <activity android:name="com.geolog.RicercaPOI" >
+        <activity android:name="com.geolog.POISearch" >
         </activity>
         <activity android:name="com.geolog.GestoreMappa" >
         </activity>
-        <activity android:name="com.geolog.GestoreLista" >
+        <activity android:name="com.geolog.ListHandler" >
         </activity>
         <activity android:name="com.geolog.GestoreAR" >
         </activity>

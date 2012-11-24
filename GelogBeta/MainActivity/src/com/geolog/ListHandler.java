@@ -2,10 +2,16 @@ package com.geolog;
 
 import java.util.ArrayList;
 
+
+
+import com.geolog.dominio.Categoria;
 import com.geolog.dominio.POIBase;
 import com.geolog.dominio.PoiEmergenza;
+import com.geolog.util.CategoryAdapter;
+import com.geolog.util.CategoryHandler;
 import com.geolog.util.POIAdapter;
 import com.geolog.util.ParametersBridge;
+import com.geolog.util.UtilGps;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -20,7 +26,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,11 +44,20 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class GestoreLista extends ListActivity implements Visualizzazione {
+public class ListHandler extends ListActivity implements Visualizzazione {
 
 	private ArrayList<POIBase> poi;
 	private Point p;
 	private Context ctx;
+	private UtilGps utilGps;
+	private Location myLocation;
+	private POIAdapter pois;
+	private LinearLayout MenuList;
+	private Button btnToggleMenuList;
+	private int screenWidth;
+	private boolean isExpanded;
+	TextView view;
+	private CategoryHandler gestoreCategorie;
 	 public void onCreate(final Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.lista_poi);
@@ -49,21 +66,36 @@ public class GestoreLista extends ListActivity implements Visualizzazione {
 	        ParametersBridge bridge = ParametersBridge.getInstance();
 	        poi = (ArrayList<POIBase>) bridge.getParameter("listaPOI");
 	       
-	        
+	        utilGps = new UtilGps(this,this);
+	        gestoreCategorie = new CategoryHandler();
+	        isExpanded = false;
+	        ListView v = (ListView) findViewById(R.id.listView1);
+	        final CategoryAdapter pois = new CategoryAdapter(this, gestoreCategorie.richiediCategorie(),gestoreCategorie.getCategorySelected2());
+	        v.setAdapter(pois);
+	        v.setVisibility(View.GONE);
 	        String providerId = LocationManager.GPS_PROVIDER; 
 	       
 	        ctx = getApplicationContext();
 	        Resources res = ctx.getResources();
 	      
-	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
-	        final POIAdapter pois = new POIAdapter(ctx, poi);
-	        setListAdapter(pois);
-	 
-	        ListView listaPOI = getListView();
-	        listaPOI.setTextFilterEnabled(true);
+	        MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
+	        
+	        DisplayMetrics metrics = new DisplayMetrics();
+	        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+	        screenWidth = metrics.widthPixels;
 	       
 	        
-	       final Context context = this;
+	        
+	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
+	     //   final POIAdapter pois = new POIAdapter(ctx, poi,utilGps.getLastLocation());
+	       // setListAdapter(pois);
+	 
+	        //istView listaPOI = getListView();
+	        //listaPOI.setTextFilterEnabled(true);
+	       
+	        
+	        
+	    /*   final Context context = this;
 	        
 	        listaPOI.setOnItemClickListener(new OnItemClickListener() {
 	            
@@ -97,7 +129,7 @@ public class GestoreLista extends ListActivity implements Visualizzazione {
 					
 	        }
 					
-	        }	);
+	        }	);*/
 					
 					
 					
@@ -109,7 +141,53 @@ public class GestoreLista extends ListActivity implements Visualizzazione {
 	      
 						
  }
-	 
+	 public boolean onKeyDown(int keyCode, KeyEvent event) {
+		    if (keyCode == KeyEvent.KEYCODE_MENU) {
+		    	ListView v = (ListView) findViewById(R.id.listView1);
+		    	if (isExpanded) {
+	    			
+	    			
+	    			isExpanded = false;
+	    			//MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+	    			 v.setVisibility(View.GONE);
+	    			 checkMenuCategory((CategoryAdapter)v.getAdapter());
+	    		}else {
+	        		isExpanded = true;
+	        		//MenuList.startAnimation(new com.geolog.slide.ExpandAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+	        		v.setVisibility(View.VISIBLE);
+	    		}
+			     return true;
+		    } else {
+		        return super.onKeyDown(keyCode, event);
+		    }
+		}
+
+		public void checkMenuCategory(CategoryAdapter categoryChoose)
+		{
+			ArrayList<Categoria> categoriaSelezionate = new ArrayList<Categoria>();
+			int number = categoryChoose.getCount();
+			for(int count = 0; count<number;count++)
+			{
+				if(categoryChoose.getCheckBoxstatus())
+				categoriaSelezionate.add((Categoria)categoryChoose.getItem(count));			
+			}
+			gestoreCategorie.salvaSelezione(categoriaSelezionate);
+			//effettua una nuova ricerca
+			//chiama il servizio del cupis
+			//ottienicateogorie
+			//aggiorna categorie
+		}
+	 protected void onResume() { 
+		   super.onResume(); 
+		  if(utilGps != null)
+			  utilGps.onResumeGps();
+		 } 
+	@Override
+	protected void onPause() { 
+	   super.onPause(); 
+	   if(utilGps != null)
+		   utilGps.onPauseGps();
+	 } 
 	
 	 	
 	 public Dialog onCreateDialog(Bundle savedInstanceState,String string) {
@@ -131,7 +209,10 @@ public class GestoreLista extends ListActivity implements Visualizzazione {
 	 
 	public void updateLocationData(Location location) {
 		// TODO Auto-generated method stub
+		myLocation = location;
 		
+		 final POIAdapter pois = new POIAdapter(ctx, poi,location);
+	        setListAdapter(pois);
 	}
 	
 	

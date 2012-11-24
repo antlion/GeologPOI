@@ -1,25 +1,29 @@
 package com.geolog.util;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.geolog.dominio.Categoria;
 
-public class GestoreCategorie {
+public class CategoryHandler {
 	
 		private ArrayList<Categoria> categorie;
 		private ArrayList<Categoria> categorieSelezionate;
-		private static GestoreCategorie gestoreCategorie = null;
+		private HashMap<String,String> categorySelected2;
+		
+		private static CategoryHandler gestoreCategorie = null;
 		
 		
-		public static synchronized GestoreCategorie getGestoreCategorie() {
+		public static synchronized CategoryHandler getGestoreCategorie() {
 	        if (gestoreCategorie == null) 
-	            gestoreCategorie = new GestoreCategorie();
+	            gestoreCategorie = new CategoryHandler();
 	        return gestoreCategorie;
 	    	}
-		public GestoreCategorie()
+		public CategoryHandler()
 		{
 			categorie = richiediCategorie();
 			categorieSelezionate = categorie;
+			updateCategorySelected2();
 		}
 		
 		public ArrayList<Categoria> richiediCategorie()
@@ -44,6 +48,19 @@ public class GestoreCategorie {
 			
 		}
 		
+		public void updateCategorySelected2()
+		{
+			categorySelected2 = new HashMap<String,String>();
+			for(Categoria categoria: categorieSelezionate)
+			{
+				categorySelected2.put(categoria.getNomeCategoria(), "true");
+			}
+		}
+		
+		
+		public HashMap<String, String> getCategorySelected2() {
+			return categorySelected2;
+		}
 		public ArrayList<String> ottieniNomiCategorie()
 		{
 			ArrayList<String> nomi = new ArrayList<String>();

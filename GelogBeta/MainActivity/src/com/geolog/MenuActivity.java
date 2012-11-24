@@ -1,14 +1,18 @@
 package com.geolog;
 
 
-import com.geolog.util.GestoreCategorie;
+import com.geolog.util.AuthGoogle;
+import com.geolog.util.CategoryHandler;
 import com.geolog.util.MyParser;
 import com.geolog.util.XmlCategoryCreator;
 import com.geolog.web.WebService;
 
-
+import android.provider.Settings;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,15 +27,17 @@ public class MenuActivity extends Activity implements OnClickListener {
 	private int progressBarStatus = 0;
 	private Handler progressBarHandler = new Handler();
 	private long fileSize = 0;
-	
+	private Activity activity;
+	private Context context;
+	private Thread prova;
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_activity);
         
-        
-        
-       // aaa();
-        WebService.prova2();
+        context = getBaseContext();
+        activity = this;
+        aaa();
+        //WebService.prova2();
         
        
         
@@ -60,7 +66,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	        image.setImageResource(R.drawable.inizializzazione2);
 		progressBar.setCustomTitle(image);
 		progressBar.setCancelable(true);
-		progressBar.setMessage("Contatto il server ...");
+		progressBar.setMessage("Autenticazione in corso ...");
 		progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 		progressBar.setProgress(0);
 		progressBar.setMax(100);
@@ -72,13 +78,13 @@ public class MenuActivity extends Activity implements OnClickListener {
 		//reset filesize
 		fileSize = 0;
 
-		new Thread(new Runnable() {
+	prova =  new Thread(new Runnable() {
 		  public void run() {
 			while (progressBarStatus < 100) {
 
 			  // process some tasks
 			  progressBarStatus = doSomeTasks();
-
+			 
 			  // your computer is too fast, sleep 1 second
 			  try {
 				Thread.sleep(1000);
@@ -90,8 +96,59 @@ public class MenuActivity extends Activity implements OnClickListener {
 			  progressBarHandler.post(new Runnable() {
 				public void run() {
 				  progressBar.setProgress(progressBarStatus);
-				  if(progressBarStatus == 10)
-					  progressBar.setMessage("Controllo aggiornamenti applicazione");
+				  if(progressBarStatus == 10){
+					  progressBar.setMessage("Autenticazione in corso");
+					  if(AuthGoogle.googleServiceAviable(activity) == null)
+					  {
+						  AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+					        builder.setMessage("Non sei collegato con nessun account google, vuoi collegarti ora?")
+					        .setCancelable(false)
+					               .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+					                   public void onClick(DialogInterface dialog, int id) {
+					                       // FIRE ZE MISSILES!
+					                	   //collegati account goole
+					                	   Intent intent = new Intent(Settings.ACTION_SYNC_SETTINGS);
+					                	   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					                	   context.startActivity(intent);
+					                	  
+					                	   if(AuthGoogle.googleServiceAviable(activity) == null){
+					                		   AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+										        builder.setMessage("Devi essere collegato ad account google per potere continuare");
+										        builder.setCancelable(false);
+										        builder.setNeutralButton("Esci",  new DialogInterface.OnClickListener() {
+										                   public void onClick(DialogInterface dialog, int id) {
+										                       // User cancelled the dialog
+										                	  finish();
+										                   }
+										               });
+										              
+										        builder.show();
+					                	  finish();
+					                	   }
+					                   }
+					               })
+					               .setNegativeButton("no", new DialogInterface.OnClickListener() {
+					                   public void onClick(DialogInterface dialog, int id) {
+					                       // User cancelled the dialog
+					                	   AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+									        builder.setMessage("Devi essere collegato ad account google per potere continuare");
+									        builder.setCancelable(false);
+									        builder.setNeutralButton("Esci",  new DialogInterface.OnClickListener() {
+									                   public void onClick(DialogInterface dialog, int id) {
+									                       // User cancelled the dialog
+									                	  finish();
+									                   }
+									               });
+									              
+									        builder.show();
+					                   }
+					               });
+					        builder.show();
+					  }
+					  
+					  }
+				  if(progressBarStatus == 15)
+					  progressBar.setMessage("Autenticazione riuscita");
 				  if(progressBarStatus == 30)
 					  progressBar.setMessage("Recupero la lista delle categorie");
 				  if(progressBarStatus == 50 )
@@ -116,7 +173,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 				progressBar.dismiss();
 			}
 		  }
-	       }).start();
+	       });
+	prova.start();
 
            }
 	public int doSomeTasks() {
@@ -128,10 +186,12 @@ public class MenuActivity extends Activity implements OnClickListener {
  
 			if (fileSize == 100000) {
 				return 10;
+			} else if (fileSize == 150000) {
+				return 15;
 			} else if (fileSize == 200000) {
 				return 20;
-			} else if (fileSize == 500000) {
-				GestoreCategorie gestoreCategorie = new GestoreCategorie();
+			}else if (fileSize == 500000) {
+				CategoryHandler gestoreCategorie = new CategoryHandler();
 				return 50;
 			} else if (fileSize == 900000){
 				return 90;
@@ -146,7 +206,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	
 	public void onClick(View v) {
 		if(v.getId() == (R.id.ricerca_poi)){
-			Intent intent = new Intent(v.getContext(), RicercaPOI.class);
+			Intent intent = new Intent(v.getContext(), POISearch.class);
 	        startActivity(intent);
 		}
 		

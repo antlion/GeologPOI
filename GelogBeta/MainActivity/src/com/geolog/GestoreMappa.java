@@ -36,10 +36,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,7 +69,7 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 	private String providerId = LocationManager.GPS_PROVIDER; 
 	private ArrayList<POIBase> poi;
 	private MapView map;
-	
+	private CategoryHandler gestoreCategorie;
 	private LinearLayout MenuList;
 	private Button btnToggleMenuList;
 	private int screenWidth;
@@ -78,7 +83,7 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
         poi = new ArrayList<POIBase>();
         ParametersBridge bridge = ParametersBridge.getInstance();
         poi = (ArrayList<POIBase>) bridge.getParameter("listaPOI");
-       
+       gestoreCategorie = new CategoryHandler();
         
         //verrà passata l'istanza dei POI ricercati
         
@@ -96,25 +101,74 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
         mapController = mapView.getController(); 
         mapController.setZoom(10); 
         
-        
-        
-       
-      
-        
+        ListView v = (ListView) findViewById(R.id.listView1);
+   	 	Context ctx = getApplicationContext();
+	    Resources res = ctx.getResources();
+	      
+	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
+	        final CategoryAdapter pois = new CategoryAdapter(ctx, gestoreCategorie.richiediCategorie(),gestoreCategorie.getCategorySelected2());
+	        v.setAdapter(pois);
+	        v.setVisibility(View.GONE);
+	        MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
+	        DisplayMetrics metrics = new DisplayMetrics();
+	        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+	        screenWidth = metrics.widthPixels;
+	      
+	        
+	        
+	     // then animate the view translating from (0, 0)
+	    
+	      
 		
         
 	}
-	
-	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.layout.menu_categorie, menu);
-	    return true;
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_MENU) {
+	    	ListView v = (ListView) findViewById(R.id.listView1);
+	    	
+	    	if(isExpanded){
+	    		v.setVisibility(View.GONE);
+	    	isExpanded = false;
+	    	MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+	    	
+	    	checkMenuCategory((CategoryAdapter) v.getAdapter());
+	    	;}
+	    	else{
+	    		
+	    		isExpanded = true;
+	    		
+	    		MenuList.startAnimation(new com.geolog.slide.ExpandAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+	    		View view =(View)findViewById( R.id.linearLayout2);
+	    		//view.setVisibility(View.GONE);
+	    	v.setVisibility(View.VISIBLE);
+	    	//	view.setVisibility(View.VISIBLE);
+	    		}
+		     return true;
+	    } else {
+	        return super.onKeyDown(keyCode, event);
+	    }
 	}
+	
+	
 	
 	
 
    
-	
+	public void checkMenuCategory(CategoryAdapter categoryChoose)
+	{
+		ArrayList<Categoria> categoriaSelezionate = new ArrayList<Categoria>();
+		int number = categoryChoose.getCount();
+		for(int count = 0; count<number;count++)
+		{
+			if(categoryChoose.getCheckBoxstatus())
+			categoriaSelezionate.add((Categoria)categoryChoose.getItem(count));			
+		}
+		gestoreCategorie.salvaSelezione(categoriaSelezionate);
+		//effettua una nuova ricerca
+		//chiama il servizio del cupis
+		//ottienicateogorie
+		//aggiorna categorie
+	}
 	   
 	protected void onResume() { 
 		   super.onResume(); 
@@ -339,6 +393,26 @@ public class GestoreMappa extends MapActivity implements Visualizzazione{
 				                     ViewGroup.LayoutParams.WRAP_CONTENT, mOverlays.get(index)
 				                                     .getPoint(), MapView.LayoutParams.BOTTOM_CENTER);
 						     map.addView(popUp2, mapParams);
+						     final Button close = (Button) popUp2.findViewById(R.id.chiudi);
+						    close.setOnClickListener(new OnClickListener()
+						    {
+
+								public void onClick(View arg0) {
+									// TODO Auto-generated method stub
+									map.removeView(popUp2);
+								}
+						    	
+						    });
+						    final Button invia = (Button) popUp2.findViewById(R.id.invia);
+						    close.setOnClickListener(new OnClickListener()
+						    {
+
+								public void onClick(View arg0) {
+									// TODO Auto-generated method stub
+									//invia Segnalazione al cupis
+								}
+						    	
+						    });
 				         }
 				     });
 				  

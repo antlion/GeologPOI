@@ -4,6 +4,7 @@
         android:layout_height="fill_parent"
         android:id="@+id/category_layout" >
 
+
         <Button
             android:id="@+id/deselectAll"
             android:layout_width="wrap_content"

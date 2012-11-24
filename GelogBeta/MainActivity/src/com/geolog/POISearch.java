@@ -26,10 +26,10 @@ import android.widget.TabHost.TabSpec;
 import com.geolog.util.GestoreVisualizzaPOI;
 import com.geolog.util.UtilGps;
 import com.geolog.dominio.*;
-public class RicercaPOI extends TabActivity implements Visualizzazione{
+public class POISearch extends TabActivity {
 
-	private UtilGps gps;
-	private Location location;
+	
+	
 	private ArrayList<POIBase> pois;
 	private GestoreVisualizzaPOI gestoreVisualizzazione;
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,18 +40,18 @@ public class RicercaPOI extends TabActivity implements Visualizzazione{
       
         
         //setContentView(R.layout.menu_activity);
-        	gps = new UtilGps(this,this);
+        	
         	gestoreVisualizzazione = new GestoreVisualizzaPOI(this);
         	pois = new ArrayList<POIBase>();
         	Location location = new Location(LocationManager.GPS_PROVIDER);
-        	location.setLatitude(41.858247);
-        	location.setLongitude(22.345678);
+        	location.setLatitude(41.703422);
+        	location.setLongitude(12.690868);
 	        PoiEmergenza newPOI = new PoiEmergenza(new Categoria("Emergenza",1),"Ospedale PTV", "ospedale qui viicno",1,location);
 	        newPOI.setImage(R.drawable.croce_rossa);
 	        pois.add(newPOI);
 	        
 	        gestoreVisualizzazione.setPois(pois);
-	       setContentView(R.layout.main);
+	        setContentView(R.layout.main);
 	        
 	        TabHost tabHost = getTabHost();
 	        
@@ -98,32 +98,9 @@ public class RicercaPOI extends TabActivity implements Visualizzazione{
 		 .setBackgroundResource(R.drawable.priva); // Selezionato
 		}
 			
-		 public void onResume()
-		 {
-			 super.onResume(); 
-			 if (gps != null){
-				 //effettua ricerca
-				 gps.onResumeGps();
-				 
-			 }
-		 }
+		
 
-		 public void onPause()
-		 {
-			 super.onPause();
-			 if (gps != null){
-				 //effettua ricerca
-				 gps.onPauseGps();
-				
-			 }
-		 }
-
-	public void updateLocationData(Location location) {
-		// TODO Auto-generated method stub
-		this.location = location;
-		GestorePOI.cercaPOI(location);
-		//scegliModalitàVisualizzazione();
-	}
+	
 
 	/*public void scegliModalitaVisualizzazione()
 	{
