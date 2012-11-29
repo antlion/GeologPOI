@@ -6,31 +6,43 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 
 import com.geolog.ChoseCategoryActivity;
 import com.geolog.GestoreAR;
 import com.geolog.ListHandler;
-import com.geolog.GestoreMappa;
+import com.geolog.MapHandler;
 import com.geolog.dominio.*;
 
 public class GestoreVisualizzaPOI {
 	
-	private ArrayList<POIBase> pois;
+	private ArrayList<Poi> pois;
 	private Context ctx;
-	
+	private Location mylocation; 
+	 
+	public Location getMylocation() {
+		return mylocation;
+	}
+
+
+	public void setMylocation(Location mylocation) {
+		this.mylocation = mylocation;
+	}
+
+
 	public GestoreVisualizzaPOI(Context context){
 		ctx = context;
-		pois = new ArrayList<POIBase>();
+		pois = new ArrayList<Poi>();
 	}
 	
 	
-	public ArrayList<POIBase> getPois() {
+	public ArrayList<Poi> getPois() {
 		return pois;
 	}
 
 
-	public void setPois(ArrayList<POIBase> pois) {
+	public void setPois(ArrayList<Poi> pois) {
 		this.pois = pois;
 	}
 
@@ -47,8 +59,9 @@ public class GestoreVisualizzaPOI {
 
 	public Intent visualizzaMappa()
 	{	
-		Intent intent = new Intent(ctx,GestoreMappa.class);		
+		Intent intent = new Intent(ctx,MapHandler.class);		
 		ParametersBridge.getInstance().addParameter("listaPOI", pois);
+		ParametersBridge.getInstance().addParameter("location", mylocation);
         return intent;
 	}
 	

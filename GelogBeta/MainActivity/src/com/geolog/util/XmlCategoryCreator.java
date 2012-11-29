@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import com.geolog.dominio.Categoria;
+import com.geolog.dominio.Category;
 
 import android.R;
 import android.util.Log;
@@ -18,7 +18,7 @@ public class XmlCategoryCreator {
 
 	private final static String nameXml = "/new.xml";
 	
-	public static void createNewXml(ArrayList<Categoria> categorie, String pathToSave)
+	public static void createNewXml(ArrayList<Category> categorie, String pathToSave)
 	{
 		
 		File newxmlfile = new File(pathToSave+nameXml);
@@ -45,7 +45,7 @@ public class XmlCategoryCreator {
         serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
         serializer.startTag(null, "categorie");
         
-        for(Categoria categoria : categorie)
+        for(Category categoria : categorie)
         {
         	
         serializer.startTag(null, "categoria");

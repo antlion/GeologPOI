@@ -1,133 +1,109 @@
 package com.geolog.web;
 
-import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
-import org.ksoap2.SoapEnvelope;
-import org.ksoap2.serialization.SoapObject;
-import org.ksoap2.serialization.SoapSerializationEnvelope;
-import org.ksoap2.transport.Transport;
-import org.ksoap2.transport.HttpTransportSE;
+import com.geolog.dominio.Category;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.neurospeech.wsclient.SoapFaultException;
 
-import com.geolog.R;
-import com.geolog.dominio.Categoria;
-import com.geolog.dominio.POIBase;
-
-import android.app.Activity;
+import prova.WS;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.location.Location;
-import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.util.Log;
 
 public class WebService {
-
-	private static final String METHOD_NAME = "hello";
-	 private static final String SOAP_ACTION = "http://160.80.129.114:8084/axis2/services/HelloAxisWorld/hello";
-	 private static final String NAMESPACE = "http://160.80.129.114:8084/axis2/services/HelloAxisWorld/";
-	 private static final String URL = "http://160.80.129.114:8084/axis2/services/HelloAxisWorld?wsdl";
- 
-   
- 
-  public static void prova2()
-  {
-	  new Thread(new Runnable() {
-	        public void run() {
-	        	NewAxisFromJava service = new NewAxisFromJava();
-	        	
-	        	System.out.println(service.hello("Lorenzo"));
-	        }
-	        }).start();
-  }
-  
-  public static ArrayList<POIBase> richiediCategorie(Location location,ArrayList<Categoria> categorie)
-  {
-	  new Thread(new Runnable() {
-	        public void run() {
-	        
-	        }
-	        }).start();
-	return null;
-	  
-  }
-  
-  public static void segnalaPOI(POIBase poi,String descrizione)
-  {
-	  new Thread(new Runnable() {
-	        public void run() {
-	        
-	        }
-	        }).start();
-  }
-  
-  public static void aggiungiPOI(POIBase poi)
-  {
-	  new Thread(new Runnable() {
-	        public void run() {
-	        
-	        }
-	        }).start();
-  }
-  
-  public void prova()
-  {
-	  new Thread(new Runnable() {
-	        public void run() {
-	        	//setContentView(R.layout.web_prova);
-			      SoapObject request = new SoapObject(NAMESPACE, METHOD_NAME); //set up request
-			      
-			      request.addProperty("name", "lorenzo"); //variable name, value. I got the variable name, from the wsdl file!
-			      SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11); //put all required data into a soap envelope
-			      envelope.setOutputSoapObject(request);  //prepare request
-			      
-			     
-			      
-			     
-			      
-			  
-			      
-			      try {
-			    	  HttpTransportSE  httpTransport = new HttpTransportSE(URL);
-			    	  
-			          httpTransport.debug = true;  //this is optional, use it if you don't want to use a packet sniffer to check what the sent message was (httpTransport.requestDump)
-			          httpTransport.call(SOAP_ACTION, envelope); //send request
-			          SoapObject result=(SoapObject)envelope.getResponse(); //get response
-
-			          if(result != null)
-			          {
-			                //Get the first property and change the label text
-			        	  System.out.println(result.getProperty(0).toString());
-			              
-			          }
-			          else
-			          {
-			        	  System.out.println("No response");
-			          
-			          }
-			    } catch (Exception e) {
-			          e.printStackTrace();
-			          System.out.println(e);
-			    }
-	        }
-	    }).start();
-  }
+	private Context context;
+	private PoiListResponse response;
+	public WebService (Context context) {
+		this.context = context;
+		response = null;
+	}
 	
-
-      
-      
-      
-      
-      
-      
-      
-    
-      
-    }
-      
-      
-      
-      
-      
-     
-     
-  
+	public PoiListResponse findNearby(Location location, String category)
+	{
+		
+		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+		ProgressDialog dialog;
+		boolean connectionTimeout = false;
+		
+		protected void onPreExecute(){
+			 dialog = ProgressDialog.show(context, "Attendere...", "Recupero punti di interesse");
+		}
+		
+		
+		
+		@Override
+		protected String doInBackground(Void... params) {
+			// TODO Auto-generated method stub
+			//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+			 WS nuovo = new WS();
+	           nuovo.setBaseUrl("http://160.80.135.31:8080/GeologWeb/services/WS"); 
+	          try {
+	        	 
+				String responseFromServices = nuovo.findNearby(41.45435, 22.232131, 8);
+				GsonBuilder builder = new GsonBuilder();
+				Gson gson = builder.create();
+				response = gson.fromJson(responseFromServices, PoiListResponse.class);
+			 //  Log.d("numeroPois",String.valueOf(pois.getCount()));
+				
+				
+				
+			} catch(SoapFaultException e)
+	          {
+	        	 Log.d("timeout","aaa");
+	        	 connectionTimeout = true;
+	        	  return null;
+	          }
+	          catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				return null;
+			}
+	          
+			
+           
+            return null;
+		}
+            protected void onPostExecute(String result) {
+            	dialog.dismiss();
+            	if ( connectionTimeout == true)
+            	{
+            		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+            		alertDialog.setTitle("Informazione");
+            		alertDialog.setMessage("Impossibile stabilire la conessione con il server");
+            		alertDialog.setNeutralButton("Continua", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							dialog.dismiss();
+						}
+					});
+            		alertDialog.show();
+            		
+            	}
+            	
+            	
+            	
+	            }
+		
+		
+		
+		
+		};
+		task.execute(null);
+		return response;
+	}
 	
 	
+	
+
+}

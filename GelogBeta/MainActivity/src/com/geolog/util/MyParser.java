@@ -15,7 +15,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import com.geolog.R;
-import com.geolog.dominio.Categoria;
+import com.geolog.dominio.Category;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,10 +25,10 @@ import android.util.Log;
 public class MyParser extends Activity{
    
     
-    private ArrayList<Categoria> parsedData= new ArrayList<Categoria>(); //struttura dati che immagazzinerà i dati letti
+    private ArrayList<Category> parsedData= new ArrayList<Category>(); //struttura dati che immagazzinerà i dati letti
     
     
-    public ArrayList<Categoria> getParsedData() 
+    public ArrayList<Category> getParsedData() 
     {  //metodo di accesso alla struttura dati
             return parsedData;
     }
@@ -51,7 +51,7 @@ public class MyParser extends Activity{
                      //controlliamo se questo è un nodo elemento (un tag)
                              //se avessimo usato root.getElementsByTagName("note") questo controllo
                              //non sarebbe stato necessario
-                             Categoria newNote = new Categoria("",0); //costruiamo un oggetto MyNote dove andremo a salvare i dati
+                             Category newNote = new Category("",0,0); //costruiamo un oggetto MyNote dove andremo a salvare i dati
                              
                              Element note=(Element)c; //cast da nodo a Elemento
                              

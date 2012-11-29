@@ -2,17 +2,6 @@ package com.geolog;
 
 import java.util.ArrayList;
 
-
-
-import com.geolog.dominio.Categoria;
-import com.geolog.dominio.POIBase;
-import com.geolog.dominio.PoiEmergenza;
-import com.geolog.util.CategoryAdapter;
-import com.geolog.util.CategoryHandler;
-import com.geolog.util.POIAdapter;
-import com.geolog.util.ParametersBridge;
-import com.geolog.util.UtilGps;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,63 +9,88 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListHandler extends ListActivity implements Visualizzazione {
+import com.geolog.dominio.Category;
+import com.geolog.dominio.Poi;
+import com.geolog.util.CategoryAdapter;
+import com.geolog.util.CategoryHandler;
+import com.geolog.util.POIAdapter;
+import com.geolog.util.ParametersBridge;
+import com.geolog.util.UtilDialog;
+import com.geolog.web.FindNearbyService;
 
-	private ArrayList<POIBase> poi;
-	private Point p;
+public class ListHandler extends ListActivity implements VisHandler {
+
+	private ArrayList<Poi> poi;
+
 	private Context ctx;
-	private UtilGps utilGps;
+
 	private Location myLocation;
 	private POIAdapter pois;
 	private LinearLayout MenuList;
 	private Button btnToggleMenuList;
 	private int screenWidth;
 	private boolean isExpanded;
+	private ListView listCategory;
+	private Activity activity;
 	TextView view;
 	private CategoryHandler gestoreCategorie;
+	private ListView listaPOI;
+	private CategoryAdapter categoryAdapter;
+	private boolean itemListPOIClicked = false;
+	private LocationManager locationManager;
+	private LocationListener myLocationListener;
+	
 	 public void onCreate(final Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.lista_poi);
 	        
-	        poi = new ArrayList<POIBase>();
+	        RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
+	        rl.setVisibility(View.GONE);
+	        
+	        activity = this;
+	        poi = new ArrayList<Poi>();
 	        ParametersBridge bridge = ParametersBridge.getInstance();
-	        poi = (ArrayList<POIBase>) bridge.getParameter("listaPOI");
-	       
-	        utilGps = new UtilGps(this,this);
+	        poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
+	        myLocation =(Location)ParametersBridge.getInstance().getParameter("location");
+	        
+	        
 	        gestoreCategorie = new CategoryHandler();
 	        isExpanded = false;
-	        ListView v = (ListView) findViewById(R.id.listView1);
-	        final CategoryAdapter pois = new CategoryAdapter(this, gestoreCategorie.richiediCategorie(),gestoreCategorie.getCategorySelected2());
-	        v.setAdapter(pois);
-	        v.setVisibility(View.GONE);
-	        String providerId = LocationManager.GPS_PROVIDER; 
+	        
+	        
+	       setListPOI();
+	        
+	        listCategory = (ListView) findViewById(R.id.list_category);
+	        final CategoryAdapter categoryAdapter = new CategoryAdapter(this, gestoreCategorie.richiediCategorie(),gestoreCategorie.getCategorySelected2());
+	        listCategory.setAdapter(categoryAdapter);
+	        listCategory.setVisibility(View.GONE);
+	        
+	       
 	       
 	        ctx = getApplicationContext();
-	        Resources res = ctx.getResources();
+	       
 	      
 	        MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
 	        
@@ -85,110 +99,174 @@ public class ListHandler extends ListActivity implements Visualizzazione {
 	        screenWidth = metrics.widthPixels;
 	       
 	        
-	        
-	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
-	     //   final POIAdapter pois = new POIAdapter(ctx, poi,utilGps.getLastLocation());
-	       // setListAdapter(pois);
-	 
-	        //istView listaPOI = getListView();
-	        //listaPOI.setTextFilterEnabled(true);
-	       
-	        
-	        
-	    /*   final Context context = this;
-	        
-	        listaPOI.setOnItemClickListener(new OnItemClickListener() {
-	            
+	        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+		    myLocationListener = new LocationListener() { 
+						
+					   
+					 
+					public void onLocationChanged(Location location) {
+						// TODO Auto-generated method stub
+						//vis.updateLocationData(location);
+						//effutua ricerca poi
+						Log.d("Locazione cabiata3", location.toString());
+						updateLocationData(location);
+						}
 
-				public void onItemClick(AdapterView<?> arg0, View arg1,
+					public void onProviderDisabled(String arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void onProviderEnabled(String provider) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					public void onStatusChanged(String provider, int status,
+							Bundle extras) {
+						// TODO Auto-generated method stub
+						
+					} 
+					 };   
+					 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+	  
+	        
+	        
+	     final Context context = this;
+	        if ( poi != null){
+	        listaPOI.setOnItemClickListener(new OnItemClickListener() {
+	            	public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
+					itemListPOIClicked = true;
+					final LinearLayout ln = (LinearLayout) findViewById(R.id.linearLayout5);
+					//ListView v = (ListView) findViewById(R.id.listView1);
 					
-					final POIBase prova= (POIBase) pois.getItem(arg2);
-					Resources res = getResources();
-					String[] planets = res.getStringArray(R.array.poi_selezionato);
-					new AlertDialog.Builder(context)
-			        .setTitle(prova.getNome())
-			        
-			        .setItems(planets, new DialogInterface.OnClickListener() {
-			               public void onClick(DialogInterface dialog, int which) {
-			            	   if (which == 0){
-			            		   ImageView image = new ImageView(getBaseContext());
-			        		       
-			       		        image.setImageResource(R.drawable.poi_info);
-			       		     new AlertDialog.Builder(context)
-						        .setCustomTitle(image)
-						        .setMessage(prova.getDescrizione())
-						        .show();
-			            		  
-			            	   }
-			            	   if(which == 1){
-			            		   //segnala POI
-			            	   }
-			           }
-			    }).show();
+					final RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
+					
+					
+					
+					listCategory.setVisibility(View.GONE);
+					ln.setVisibility(View.GONE);
+					rl.setVisibility(View.VISIBLE);
+					Button bt1 = (Button)findViewById(R.id.back);
+					Poi poi = (Poi)pois.getItem(arg2);
+					
+					ImageView imageDescriptionPOi = (ImageView) findViewById(R.id.imagePOI);
+					imageDescriptionPOi.setBackgroundResource(poi.getImage());
+					
+					TextView titoloPOI = (TextView) findViewById(R.id.nomePOI);
+					titoloPOI.setText(poi.getNome());
+					
+					TextView descrizionePOI = (TextView) findViewById(R.id.descriptionPOI);
+					descrizionePOI.setText(poi.getDescrizione());
+					
+					bt1.setOnClickListener(new OnClickListener() {
+						
+						public void onClick(View v) {
+							// TODO Auto-generated method stub
+							rl.setVisibility(View.GONE);
+							ln.setVisibility(View.VISIBLE);
+							
+						}
+					});
+					
+				}
+
+	        }	
+					
+	        	);
+					
 					
 	        }
-					
-	        }	);*/
-					
-					
-					
-					 //final Dialog builder= onCreateDialog(savedInstanceState,"askljadsk");
-				       
-					 //AlertDialog.Builder builder = new AlertDialog.Builder(GestoreLista.this);
 					
 			
 	      
 						
  }
+	 public void setListPOI()
+	 {
+		 if( poi !=null){
+		        pois = new POIAdapter(this, poi,myLocation);
+		        setListAdapter(pois);
+		        listaPOI = getListView();
+			    listaPOI.setTextFilterEnabled(true);
+			    listaPOI.setVisibility(View.GONE);
+			    listaPOI.setVisibility(View.VISIBLE);}
+		        else {
+		        	UtilDialog.createBaseToast("impossibile recuperare poi", this).show();
+
+		        }
+	 }
+	 
+	 
 	 public boolean onKeyDown(int keyCode, KeyEvent event) {
 		    if (keyCode == KeyEvent.KEYCODE_MENU) {
-		    	ListView v = (ListView) findViewById(R.id.listView1);
+		    	
+		    	LinearLayout ln = (LinearLayout) findViewById(R.id.linearLayout5);
 		    	if (isExpanded) {
-	    			
-	    			
 	    			isExpanded = false;
 	    			//MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
-	    			 v.setVisibility(View.GONE);
-	    			 checkMenuCategory((CategoryAdapter)v.getAdapter());
+	    			 listCategory.setVisibility(View.GONE);
+	    			 checkMenuCategory((CategoryAdapter)listCategory.getAdapter());
 	    		}else {
 	        		isExpanded = true;
-	        		//MenuList.startAnimation(new com.geolog.slide.ExpandAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
-	        		v.setVisibility(View.VISIBLE);
+	            	//MenuList.startAnimation(new com.geolog.slide.ExpandAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
+	        		//ln.setVisibility(View.GONE);
+	        		listCategory.setVisibility(View.VISIBLE);
 	    		}
 			     return true;
-		    } else {
+		    }
+		    if( keyCode == KeyEvent.KEYCODE_BACK)
+		    {
+		    	if ( itemListPOIClicked ){
+		    		itemListPOIClicked = false;
+		    		final RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
+		    		final LinearLayout ln = (LinearLayout) findViewById(R.id.linearLayout5);
+		    		rl.setVisibility(View.GONE);
+		    		ln.setVisibility(View.VISIBLE);
+		    		return true;
+		    	}
+		    	return false;
+		    }
+		    else {
 		        return super.onKeyDown(keyCode, event);
 		    }
 		}
 
 		public void checkMenuCategory(CategoryAdapter categoryChoose)
 		{
-			ArrayList<Categoria> categoriaSelezionate = new ArrayList<Categoria>();
+			ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();
 			int number = categoryChoose.getCount();
 			for(int count = 0; count<number;count++)
 			{
 				if(categoryChoose.getCheckBoxstatus())
-				categoriaSelezionate.add((Categoria)categoryChoose.getItem(count));			
+				categoriaSelezionate.add((Category)categoryChoose.getItem(count));			
 			}
 			gestoreCategorie.salvaSelezione(categoriaSelezionate);
-			//effettua una nuova ricerca
-			//chiama il servizio del cupis
-			//ottienicateogorie
-			//aggiorna categorie
+			
+			poi = GestorePOI.cercaPOI(myLocation, this);
+			updateLocationData(myLocation);
 		}
-	 protected void onResume() { 
-		   super.onResume(); 
-		  if(utilGps != null)
-			  utilGps.onResumeGps();
-		 } 
+	 
 	@Override
 	protected void onPause() { 
 	   super.onPause(); 
-	   if(utilGps != null)
-		   utilGps.onPauseGps();
+	   LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE); 
+		  locationManager.removeUpdates(myLocationListener); 
 	 } 
-	
+	public void onResume()
+	{
+		super.onResume();
+		locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE); 
+		Location location = locationManager.getLastKnownLocation(
+				LocationManager.GPS_PROVIDER
+				);
+				if (location != null) {
+					myLocation = location;
+				updateLocationData(location);
+				}
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+	}
 	 	
 	 public Dialog onCreateDialog(Bundle savedInstanceState,String string) {
 	     AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -210,9 +288,10 @@ public class ListHandler extends ListActivity implements Visualizzazione {
 	public void updateLocationData(Location location) {
 		// TODO Auto-generated method stub
 		myLocation = location;
-		
-		 final POIAdapter pois = new POIAdapter(ctx, poi,location);
-	        setListAdapter(pois);
+		setListPOI();
+			
+	}        
+	       
 	}
 	
 	
@@ -220,4 +299,4 @@ public class ListHandler extends ListActivity implements Visualizzazione {
 	
 	
 
-}
+

@@ -82,10 +82,10 @@
 	    android:layout_marginRight="5dip">
 
 		<ImageView
-			android:id="@+id/list_image"
+			android:id="@+id/poi_image"
 	        android:layout_width="50dip"
 	        android:layout_height="50dip"
-	        android:src="@drawable/arrow_down"/>
+	       />
 
 	</LinearLayout>
 
@@ -103,16 +103,17 @@
         android:textStyle="bold"/>
 
 	<!-- Artist Name -->
+
     <TextView
         android:id="@+id/categoriaPOI"
-        android:layout_width="fill_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@id/nomePOI"
-        android:textColor="#343434"
-        android:textSize="10dip"
         android:layout_marginTop="1dip"
         android:layout_toRightOf="@+id/thumbnail"
-        android:text="Just gona stand there and ..." />
+        android:text="Just gona stand there and ..."
+        android:textColor="#343434"
+        android:textSize="10dip" />
 
 	<!-- Rightend Duration -->
     <TextView
@@ -129,6 +130,13 @@
         android:textStyle="bold"/>
 
      <!-- Rightend Arrow -->
-   
+
+    <ImageView
+        android:id="@+id/imageSuggestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/distance"
+        android:layout_alignTop="@+id/categoriaPOI"
+        android:src="@drawable/suggestion_poi" />
 
 </RelativeLayout>

@@ -15,7 +15,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" 
-        android:hint="Inserisci il nome del POI">
+        android:hint="Inserisci il nome del POI"
+        android:background="@drawable/edit_text_holo_dark">
 
         <requestFocus />
     </EditText>

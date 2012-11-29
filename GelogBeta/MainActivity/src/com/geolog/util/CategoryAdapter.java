@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.geolog.R;
-import com.geolog.dominio.Categoria;
-import com.geolog.dominio.POIBase;
+import com.geolog.dominio.Category;
+import com.geolog.dominio.Poi;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -22,14 +22,14 @@ public class CategoryAdapter extends BaseAdapter{
 	
 	private Context context;
 
-	private ArrayList<Categoria> categorie; 
+	private ArrayList<Category> categorie; 
 	
 	private CheckBox chk;
 	
 	private HashMap<String,String> categorySelected;
 	
 
-	public CategoryAdapter(Context context, ArrayList<Categoria> categorie,HashMap<String,String>categorySelected) {
+	public CategoryAdapter(Context context, ArrayList<Category> categorie,HashMap<String,String>categorySelected) {
 	   this.context = context; 
 	   this.categorie = categorie; 
 	   this.categorySelected = categorySelected;

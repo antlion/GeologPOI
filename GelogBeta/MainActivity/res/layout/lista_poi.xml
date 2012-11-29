@@ -14,8 +14,54 @@
 -->
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="match_parent" android:layout_height="match_parent">
+	android:layout_width="match_parent" android:layout_height="match_parent"
+	 android:background="#000">
 
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000" 
+    android:id="@+id/layoutInformationPOI">
+
+    <TextView
+        android:id="@+id/nomePOI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:textColor="#33CCFF"/>
+
+    <ImageView
+        android:id="@+id/imagePOI"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="50dp"
+         />
+
+    <TextView
+        android:id="@+id/descriptionPOI"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_alignTop="@+id/imageView1"
+        android:layout_marginTop="50dp"
+        android:layout_toRightOf="@+id/imagePOI"
+        android:text="TextView" />
+
+    <Button
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginTop="300dp"
+        android:text="Indietro" />
+
+</RelativeLayout>
 
 	<LinearLayout android:id="@+id/linearLayout1"
 		android:layout_width="match_parent" android:layout_height="match_parent" >
@@ -23,17 +69,19 @@
 	<LinearLayout android:id="@+id/linearLayout2"
 		android:layout_width="wrap_content" android:layout_height="match_parent"
 		android:layout_weight="0.01" android:orientation="vertical" 
-		android:background="#333366">
+		android:background="#3399FF" >
 
 		<ListView
-		    android:id="@+id/listView1"
+		    android:id="@+id/list_category"
 		    android:layout_width="208dp"
-		    android:layout_height="wrap_content" >
+		    android:layout_height="wrap_content"
+		    android:background="#3399FF" >
+
 		</ListView>
 
 	</LinearLayout>
 
-
+	
 
 	<LinearLayout android:id="@+id/linearLayout3"
 		android:layout_width="wrap_content" android:layout_height="match_parent"
@@ -43,13 +91,15 @@
 
 			<LinearLayout android:id="@+id/linearLayout5"
 				android:layout_width="match_parent" android:layout_height="match_parent"
-				android:orientation="horizontal">
+				android:orientation="horizontal"
+				android:background="#000000">
 				<ListView android:id="@android:id/list"
     android:layout_height="wrap_content"
     android:layout_width="fill_parent"
     />
 			</LinearLayout>
 
+	
 		</TableRow>
 
 	</LinearLayout>

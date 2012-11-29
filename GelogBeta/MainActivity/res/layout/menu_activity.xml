@@ -1,55 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<com.markupartist.android.widget.ActionBar xmlns:app="http://schemas.android.com/apk/res/com.geolog"
+		android:id="@+id/actionbar1" app:title="Geolog" style="@style/ActionBar" />
+	<Button android:id="@+id/Aggiungi_POI" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_alignParentBottom="true"
+		android:layout_alignParentLeft="true" android:layout_marginBottom="49dp"
+		android:text="Aggiungi POI" />
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+	<Button android:id="@+id/ricerca_poi" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_above="@+id/Aggiungi_POI"
+		android:layout_alignParentLeft="true" android:layout_marginBottom="89dp"
+		android:text="RicercaPOI" />
 
-        <Button
-            android:id="@+id/Aggiungi_POI"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="49dp"
-            android:text="Aggiungi POI" />
+	<Button android:id="@+id/selezionaCategorie"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:layout_above="@+id/visualizzaPOI"
+		android:layout_alignParentLeft="true" android:layout_marginBottom="32dp"
+		android:text="Seleziona Categorie di Ricerca" />
 
-        <Button
-            android:id="@+id/ricerca_poi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/Aggiungi_POI"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="89dp"
-            android:text="RicercaPOI" />
+	<Button android:id="@+id/visualizzaPOI" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:layout_above="@+id/ricerca_poi"
+		android:layout_alignParentLeft="true" android:layout_marginBottom="35dp"
+		android:text="Viualizza POI" />
 
-        <Button
-            android:id="@+id/visualizzaPOI"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/ricerca_poi"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="76dp"
-            android:text="Viualizza POI" />
-
-        <Button
-            android:id="@+id/selezionaCategorie"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/visualizzaPOI"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="32dp"
-            android:text="Seleziona Categorie di Ricerca" />
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:adjustViewBounds="false"
-            android:baselineAlignBottom="false"
-            android:cropToPadding="false"
-            android:scaleType="fitXY"
-            android:src="@drawable/geolog2" />
-
-    </RelativeLayout>
+</RelativeLayout>

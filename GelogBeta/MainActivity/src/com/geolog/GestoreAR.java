@@ -1,7 +1,11 @@
 package com.geolog;
 
 
-import com.geolog.util.UtilGps;
+import java.util.ArrayList;
+
+import com.geolog.dominio.Poi;
+import com.geolog.util.ParametersBridge;
+
 
 import haseman.project.where4.CustomCameraView;
 import android.app.Activity;
@@ -10,18 +14,31 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
-public class GestoreAR extends Activity implements Visualizzazione{
+public class GestoreAR extends Activity implements VisHandler{
 
 	public static SensorManager sensorMan;
 	
-	private UtilGps gps;
+
+	private ArrayList<Poi> poi;
+	private LocationManager locationManager;
+	private LocationListener myLocationListener;
+
+	private Location myLocation;
 	public void onCreate(Bundle savedInstanceState) {
 		
-		gps = new UtilGps(this,this);
-
+		//gps = new UtilGps(this,this);
+		 	poi = new ArrayList<Poi>();
+	        ParametersBridge bridge = ParametersBridge.getInstance();
+	        poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
+	        myLocation =(Location)ParametersBridge.getInstance().getParameter("location");
+	        
+	        
+	        
 		   try{
 		      super.onCreate(savedInstanceState);
 		      CustomCameraView cv = new CustomCameraView(

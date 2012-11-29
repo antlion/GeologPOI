@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlSerializer;
 
-import com.geolog.dominio.Categoria;
+import com.geolog.dominio.Category;
 import com.geolog.util.CategoryHandler;
 import com.geolog.util.MyParser;
 import com.geolog.util.UtilDialog;
@@ -31,7 +31,7 @@ import android.widget.Toast;
 
 public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	private ArrayList<CheckBox> categorie; 
-	private ArrayList<Categoria> parsedData;
+	private ArrayList<Category> parsedData;
 	private LinearLayout linearLayout;
 	private CategoryHandler gestoreCategorie;	   
 	    @Override
@@ -59,14 +59,14 @@ public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	        gestoreCategorie = new CategoryHandler();
 	        parsedData = gestoreCategorie.richiediCategorie();
 	        
-	        for(Categoria categoria : parsedData)
+	        for(Category categoria : parsedData)
 	        {
 	        	addCategorie(categoria,linearLayout);
 	        }
 	   
 	       
 	}
-	    public void addCategorie(Categoria categoria,LinearLayout linearLayout)
+	    public void addCategorie(Category categoria,LinearLayout linearLayout)
 	    {
 	    	CheckBox cb = new CheckBox(this.getApplicationContext());
         	cb.setText(categoria.getNomeCategoria());
@@ -93,10 +93,10 @@ public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	   }
 	   public void creaSceltaCategorie()
 	    {
-	    	ArrayList<Categoria> categorieSelezionate = new  ArrayList<Categoria>();
+	    	ArrayList<Category> categorieSelezionate = new  ArrayList<Category>();
 			for(CheckBox cb : categorie){
 				if(cb.isChecked()){
-					Categoria categoria = new Categoria((String)cb.getText(),0);
+					Category categoria = new Category((String)cb.getText(),0,0);
 					
 					categorieSelezionate.add(categoria);
 					}

@@ -5,7 +5,13 @@ import com.geolog.util.AuthGoogle;
 import com.geolog.util.CategoryHandler;
 import com.geolog.util.MyParser;
 import com.geolog.util.XmlCategoryCreator;
+import com.geolog.web.FindNearbyService;
+import com.geolog.web.PoiListResponse;
 import com.geolog.web.WebService;
+
+import com.markupartist.android.widget.ActionBar;
+import com.markupartist.android.widget.ActionBar.Action;
+
 
 import android.provider.Settings;
 import android.app.Activity;
@@ -14,12 +20,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MenuActivity extends Activity implements OnClickListener {
 	
@@ -32,14 +41,45 @@ public class MenuActivity extends Activity implements OnClickListener {
 	private Thread prova;
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.menu_activity);
+        setContentView(R.layout.menu_activity_layout);
+        
+     ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
+     // You can also assign the title programmatically by passing a
+     // CharSequence or resource id.
+     //actionBar.setTitle(R.string.some_title);
+  
+     //actionBar.setHomeLogo(R.drawable.arrow_down);
+    // actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
+    // actionBar.addAction(new ToastAction());
+     actionBar.addAction(new Action() {
+         public void performAction(View view) {
+            // Toast.makeText(HomeActivity.this, "Added action.", Toast.LENGTH_SHORT).show();
+         }
+         public int getDrawable() {
+             return R.drawable.icon;
+         }
+     });
         
         context = getBaseContext();
-        activity = this;
-        aaa();
-        //WebService.prova2();
         
-       
+        activity = this;
+        //aaa();
+        Location location = new Location("nuova");
+        location.setLatitude(41.857);
+        location.setLongitude(12.632897);
+        CategoryHandler cc = new CategoryHandler();
+      //  WebService service = new WebService(this);
+       // service.findNearby(location, null);
+      // PoiListResponse poi= FindNearbyService.prova();
+      // poi = FindNearbyService.getPoiListResponse();
+       //Log.d("numeroPois",String.valueOf(poi.getCount()));
+      //ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar1);
+     // You can also assign the title programmatically by passing a
+     // CharSequence or resource id.
+     //actionBar.setTitle("Geolog");
+     //actionBar.setHomeAction(null);
+     //actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
+     //actionBar.addAction(new ToastAction());
         
         
         
@@ -211,11 +251,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 		}
 		
 		if(v.getId() == (R.id.visualizzaPOI)){
-			Intent intent = new Intent(v.getContext(), WebService.class);
-	        startActivity(intent);
+			
 		}
 		if(v.getId() == (R.id.Aggiungi_POI)){
-			Intent intent = new Intent(v.getContext(), AggiungiPOIActivity.class);
+			Intent intent = new Intent(v.getContext(), AddPOIActivity.class);
 	        startActivity(intent);
 		}
 		if(v.getId() == (R.id.selezionaCategorie)) {

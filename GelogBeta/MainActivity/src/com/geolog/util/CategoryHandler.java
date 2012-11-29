@@ -3,12 +3,12 @@ package com.geolog.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.geolog.dominio.Categoria;
+import com.geolog.dominio.Category;
 
 public class CategoryHandler {
 	
-		private ArrayList<Categoria> categorie;
-		private ArrayList<Categoria> categorieSelezionate;
+		private ArrayList<Category> categorie;
+		private ArrayList<Category> categorieSelezionate;
 		private HashMap<String,String> categorySelected2;
 		
 		private static CategoryHandler gestoreCategorie = null;
@@ -26,23 +26,23 @@ public class CategoryHandler {
 			updateCategorySelected2();
 		}
 		
-		public ArrayList<Categoria> richiediCategorie()
+		public ArrayList<Category> richiediCategorie()
 		{
 		//contatta il webServer per le categorie
-		Categoria categoria = new Categoria("categoria di prova",0);
-		Categoria categoria2 = new Categoria("categoria di prova2",0);
-		ArrayList<Categoria> categorie = new ArrayList<Categoria>();
+		Category categoria = new Category("categoria di prova",0,0);
+		Category categoria2 = new Category("categoria di prova2",0,0);
+		ArrayList<Category> categorie = new ArrayList<Category>();
 		categorie.add(categoria);
 		categorie.add(categoria2);
 		return categorie;
 		}
 	
-		public ArrayList<Categoria> richiediCategorieSelezionate()
+		public ArrayList<Category> richiediCategorieSelezionate()
 		{
 			return categorieSelezionate;
 		}
 		
-		public void salvaSelezione(ArrayList<Categoria> categorieScelte)
+		public void salvaSelezione(ArrayList<Category> categorieScelte)
 		{
 			categorieSelezionate = categorieScelte;
 			
@@ -51,7 +51,7 @@ public class CategoryHandler {
 		public void updateCategorySelected2()
 		{
 			categorySelected2 = new HashMap<String,String>();
-			for(Categoria categoria: categorieSelezionate)
+			for(Category categoria: categorieSelezionate)
 			{
 				categorySelected2.put(categoria.getNomeCategoria(), "true");
 			}
@@ -65,9 +65,19 @@ public class CategoryHandler {
 		{
 			ArrayList<String> nomi = new ArrayList<String>();
 		
-			for(Categoria categoria : categorie){
+			for(Category categoria : categorie){
 				nomi.add(categoria.getNomeCategoria());
 			}
 			return nomi;
+		}
+		
+		public String getIdSelectedCategory()
+		{
+			String id = "";
+			for(Category cat: categorieSelezionate)
+			{
+				id +=String.valueOf(cat.getId())+",";
+			}
+			return id;
 		}
 }

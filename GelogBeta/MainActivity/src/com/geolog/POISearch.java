@@ -1,93 +1,232 @@
 package com.geolog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.view.KeyEvent;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+
+import android.util.Log;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
+
+import com.geolog.dominio.Poi;
 import com.geolog.util.GestoreVisualizzaPOI;
-import com.geolog.util.UtilGps;
-import com.geolog.dominio.*;
+import com.geolog.util.UtilDialog;
+
 public class POISearch extends TabActivity {
 
 	
 	
-	private ArrayList<POIBase> pois;
+	private ArrayList<Poi> pois =  new ArrayList<Poi>();
 	private GestoreVisualizzaPOI gestoreVisualizzazione;
+	
+	private LocationManager locationManager;
+	private LocationListener myLocationListener;
+	private Location mylocation;
+	private boolean hasLocation; 
+	private Context context;
 	public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        
-       
-        
+    super.onCreate(savedInstanceState);
+       context = this; 
+       mylocation = null;
+       hasLocation = false;
+       locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
+       myLocationListener = new LocationListener() { 
+				public void onStatusChanged(String provider, int status, Bundle extras) { 
+			    if (status == LocationProvider.AVAILABLE) { 
+			    	//esegui scansione
+			   } else { 
+				  //restituisci messaggio di errore
+			   } 
+			  } 
+			 public void onProviderEnabled(String provider) { 
+			  
+			  } 
+			
+			   public void onProviderDisabled(String provider) { 
+				  
+			  } 
+			   
+			 
+			public void onLocationChanged(Location location) {
+				// TODO Auto-generated method stub
+				//vis.updateLocationData(location);
+				//effutua ricerca poi
+				Log.d("Locazione cabiata", location.toString());
+				
+				hasLocation = true;
+				//chiama web Service
+				//pois = GestorePOI.cercaPOI(location);
+				mylocation = location;
+				location.setLatitude(41.703422);
+	        	location.setLongitude(12.690868);
+	        	/*Poi newPOI = new Poi(new Category("Emergenza",1,R.drawable.croce_rossa),"Ospedale PTV", "ospedale qui viicno",1,null, location, R.drawable.ptv);
+	        	Location location2 = new Location("prova");
+	        	location2.setLatitude(42.703422);
+	        	location2.setLongitude(20.690868);
+	        	Poi newPOI2 = new Poi(new Category("Ristoro",2,R.drawable.food_icon),"SushiBar", "Ristorante cinese pienodi schifezze",2,null, location2, R.drawable.kfc);
+	        	pois.add(newPOI);
+	        	pois.add(newPOI2);*/
+	        	gestoreVisualizzazione.setPois(GestorePOI.cercaPOI(mylocation, context));
+	        	gestoreVisualizzazione.setMylocation(mylocation);
+	        	LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
+	  		  	locationManager.removeUpdates(myLocationListener);
+	  		  	setTab();
+				//Log.d("size",String.valueOf(pois.size()));
+			} 
+			 };
       
-        
-        //setContentView(R.layout.menu_activity);
-        	
+       
+			//inizializzo i poi a null
         	gestoreVisualizzazione = new GestoreVisualizzaPOI(this);
-        	pois = new ArrayList<POIBase>();
-        	Location location = new Location(LocationManager.GPS_PROVIDER);
-        	location.setLatitude(41.703422);
-        	location.setLongitude(12.690868);
-	        PoiEmergenza newPOI = new PoiEmergenza(new Categoria("Emergenza",1),"Ospedale PTV", "ospedale qui viicno",1,location);
-	        newPOI.setImage(R.drawable.croce_rossa);
-	        pois.add(newPOI);
+        	gestoreVisualizzazione.setPois(pois);
+        	gestoreVisualizzazione.setMylocation(mylocation);
+        	//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+        	//Location location = new Location(LocationManager.GPS_PROVIDER);
+        	//location.setLatitude(41.703422);
+        	//location.setLongitude(12.690868);
+	      //  Poi newPOI = new Poi(new Category("Emergenza",1),"Ospedale PTV", "ospedale qui viicno",1,null, location, R.drawable.croce_rossa);
+	       
+	       // pois.add(newPOI);
 	        
-	        gestoreVisualizzazione.setPois(pois);
-	        setContentView(R.layout.main);
+	       // gestoreVisualizzazione.setPois(pois);
+	        setContentView(R.layout.poi_search_layout);
 	        
-	        TabHost tabHost = getTabHost();
-	        
-	        // Tab for Photos
-	        TabSpec photospec = tabHost.newTabSpec("Lista");
-	        // setting Title and Icon for the Tab
-	        
-	        photospec.setIndicator("Lista", null);
-	        Intent photosIntent = gestoreVisualizzazione.visualizzaLista();
-	        photospec.setContent(photosIntent);
-	 
-	        // Tab for Songs
-	        TabSpec songspec = tabHost.newTabSpec("Mappa");
-	        songspec.setIndicator("", getResources().getDrawable(R.drawable.maps_icon));
-	        Intent songsIntent =gestoreVisualizzazione.visualizzaMappa();
-	        songspec.setContent(songsIntent);
-	 
-	        // Tab for Videos
-	        TabSpec videospec = tabHost.newTabSpec("AR");
-	       videospec.setIndicator("", getResources().getDrawable(R.drawable.ar_icon));
-	        Intent videosIntent = gestoreVisualizzazione.visualizzaAR();
-	        videospec.setContent(videosIntent);
-	 
 	       
 	        
-	        
-	        // Adding all TabSpec to TabHost
-	        tabHost.addTab(photospec); // Adding photos tab
-	        tabHost.addTab(songspec); // Adding songs tab
-	        tabHost.addTab(videospec); // Adding videos tab
-	       	        setTabsBackground();
-	       	     
-	        
+	        if ( locationManager.getProvider(LocationManager.GPS_PROVIDER) == null){
+	        	UtilDialog.createAlertNoGps(context).show();
+	        	finish();
+				}
+		
+				if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true)
+				{
+					getLocationForSearchPOI(this);
+					
+			       	     
+				}
+				else {
+					UtilDialog.createAlertNoGps(this).show();
+					
+				}
 	}
 	
 	
+				
+	        
+	        
+	public void setTab(){
+		 TabHost tabHost = getTabHost();
+		 // Tab for Songs
+        TabSpec songspec = tabHost.newTabSpec("Mappa");
+        songspec.setIndicator("", getResources().getDrawable(R.drawable.maps_icon));
+        Intent songsIntent =gestoreVisualizzazione.visualizzaMappa();
+        songspec.setContent(songsIntent);
+        // Tab for Photos
+        TabSpec photospec = tabHost.newTabSpec("Lista");
+        // setting Title and Icon for the Tab
+        
+        photospec.setIndicator("Lista", null);
+        Intent photosIntent = gestoreVisualizzazione.visualizzaLista();
+        photospec.setContent(photosIntent);
+        // Tab for Videos
+        TabSpec videospec = tabHost.newTabSpec("AR");
+       videospec.setIndicator("", getResources().getDrawable(R.drawable.ar_icon));
+        Intent videosIntent = gestoreVisualizzazione.visualizzaAR();
+        videospec.setContent(videosIntent);
+ 
+       
+        
+        
+      
+       tabHost.addTab(songspec);
+       tabHost.addTab(photospec); // Adding photos tab
+         // Adding songs tab
+       tabHost.addTab(videospec); // Adding videos tab
+       setTabsBackground();
+		
+	}
+							
+		public void getLocationForSearchPOI(final Context context){
+		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+			
+			ProgressDialog dialog;
+			@Override
+			protected void onPreExecute(){
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+				dialog = ProgressDialog.show(context, "Attendere...", "Recupero Posizione in corso...");
+			
+			}
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+				Long t = Calendar.getInstance().getTimeInMillis();
+	            while ( !hasLocation && Calendar.getInstance().getTimeInMillis() - t < 15000) {
+	                try {
+	                    Thread.sleep(1000);
+	                } catch (InterruptedException e) {
+	                    e.printStackTrace();
+	                }
+	            };
+	            return null;
+			
+			}
+			 protected void onPostExecute(String result) {
+		            dialog.dismiss();
+		            if(mylocation == null){
+		            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		    		builder.setMessage("impossibile stabilire posizione");
+		    		builder.setNeutralButton("Continua", new DialogInterface.OnClickListener() {
+						
+						public void onClick(DialogInterface dialog, int which) {
+							// TODO Auto-generated method stub
+							dialog.dismiss();
+						}
+					});
+		    		builder.setCancelable(true);
+		    		
+		    		finish();
+		    		}
+		            else {
+		            	hasLocation = false;
+		            	
+		            }
+		        }
+			
+		};
+		task.execute(null);
+	
+		}
+	public void onPause()
+	{
+		super.onPause();
+		  LocationManager locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE); 
+		  locationManager.removeUpdates(myLocationListener); 
+	}
+	
+	public void onResume()
+	{
+		super.onResume();
+		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&  locationManager.getProvider(LocationManager.GPS_PROVIDER) != null)
+		 	getLocationForSearchPOI(this);
+		
+			
+		  // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener); 
+		  
+	}
 	
 	private void setTabsBackground() {
 		 for(int i=0;i<getTabHost().getTabWidget().getChildCount();i++) {
@@ -97,42 +236,5 @@ public class POISearch extends TabActivity {
 		 getTabHost().getTabWidget().getChildAt(getTabHost().getCurrentTab())
 		 .setBackgroundResource(R.drawable.priva); // Selezionato
 		}
-			
-		
-
-	
-
-	/*public void scegliModalitaVisualizzazione()
-	{
-		ImageView image = new ImageView(getBaseContext());	     
-	    image.setImageResource(R.drawable.visualizza_poi);
-		Resources res = getResources();
-		String[] planets = res.getStringArray(R.array.visualizza_poi);
-		new AlertDialog.Builder(this)
-		.setCustomTitle(image)
-		.setItems(planets, new DialogInterface.OnClickListener() {
-               public void onClick(DialogInterface dialog, int which) {
-            	   if (which == 0){
-            		  
-            		  startActivity(gestoreVisualizzazione.visualizzaMappa());
-            		  
-            	   }
-            	   if(which == 1){
-            		   startActivity(gestoreVisualizzazione.visualizzaLista());
-            	   }
-            	   if(which == 2){
-            		   startActivity(gestoreVisualizzazione.visualizzaAR());
-            	   }
-           }
-    }).show();
-	}*/
-	
-	
-	
-
-
-	
-
-   
 
 }
