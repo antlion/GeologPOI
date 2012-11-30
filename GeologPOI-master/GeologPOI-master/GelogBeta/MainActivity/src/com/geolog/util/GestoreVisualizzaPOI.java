@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.geolog.ChoseCategoryActivity;
@@ -20,6 +22,7 @@ public class GestoreVisualizzaPOI {
 	private ArrayList<Poi> pois;
 	private Context ctx;
 	private Location mylocation; 
+	
 	 
 	public Location getMylocation() {
 		return mylocation;

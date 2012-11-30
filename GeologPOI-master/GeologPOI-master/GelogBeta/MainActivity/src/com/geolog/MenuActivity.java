@@ -44,13 +44,7 @@ public class MenuActivity extends Activity implements OnClickListener {
         setContentView(R.layout.menu_activity_layout);
         
      ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
-     // You can also assign the title programmatically by passing a
-     // CharSequence or resource id.
-     //actionBar.setTitle(R.string.some_title);
-  
-     //actionBar.setHomeLogo(R.drawable.arrow_down);
-    // actionBar.addAction(new IntentAction(this, createShareIntent(), R.drawable.ic_title_share_default));
-    // actionBar.addAction(new ToastAction());
+   
      actionBar.addAction(new Action() {
          public void performAction(View view) {
             // Toast.makeText(HomeActivity.this, "Added action.", Toast.LENGTH_SHORT).show();

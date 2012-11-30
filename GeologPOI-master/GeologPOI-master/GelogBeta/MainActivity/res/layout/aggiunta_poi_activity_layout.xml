@@ -4,11 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="InserisciPOI" />
+     <com.markupartist.android.widget.ActionBar xmlns:app="http://schemas.android.com/apk/res/com.geolog"
+    android:id="@+id/actionbar"
+    app:title="Geolog"
+    style="@style/ActionBar"
+    />
 
     <EditText
         android:id="@+id/editText1"
@@ -16,7 +16,10 @@
         android:layout_height="wrap_content"
         android:ems="10" 
         android:hint="Inserisci il nome del POI"
-        android:background="@drawable/edit_text_holo_dark">
+      	android:cursorVisible="true"
+        android:textColorHint="#3366CC"
+        
+        >
 
         <requestFocus />
     </EditText>
@@ -26,6 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" 
         android:hint="Scegli categoria"
+        android:
         />
 
     <EditText
@@ -34,12 +38,27 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textEmailAddress" 
-        android:hint="Inserisci info"/>
+        android:hint="Inserisci info"
+        android:textColorHint="#3366CC"/>
 
     <Button
         android:id="@+id/ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Fatto" />
+
+    <Button
+        android:id="@+id/cameraShot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" 
+     
+        android:textColorHint="#3366CC"/>
+
+    <ImageView
+        android:id="@+id/imagePic"
+        android:layout_width="129dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/actionbar_back_indicator" />
 
 </LinearLayout>
