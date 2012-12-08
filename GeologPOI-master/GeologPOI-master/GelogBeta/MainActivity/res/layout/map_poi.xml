@@ -38,7 +38,7 @@ android:layout_height="match_parent" />
 	<LinearLayout android:id="@+id/linearLayout2"
 		android:layout_width="wrap_content" android:layout_height="match_parent"
 		android:layout_weight="0.01" android:orientation="vertical" 
-		 android:background="#33CCFF">
+		 android:background="@drawable/customshape">
 
 		<ListView
 		    android:id="@+id/listView1"
@@ -70,10 +70,13 @@ android:layout_height="match_parent" />
 			        android:layout_height="match_parent"
 			        android:apiKey="0RKzE3GmM5HAhVMrImhviRswQH20hg-kZiM330w"
 			        android:clickable="true" />
+			    
 
 			</LinearLayout>
-
+		
 		</TableRow>
+
+		
 
 	</LinearLayout>
 	</LinearLayout >

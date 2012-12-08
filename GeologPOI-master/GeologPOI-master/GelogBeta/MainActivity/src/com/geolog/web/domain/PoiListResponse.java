@@ -1,4 +1,4 @@
-package com.geolog.web;
+package com.geolog.web.domain;
 
 import java.util.List;
 

@@ -1,7 +1,9 @@
 package com.geolog.util;
 
 import java.util.ArrayList;
+import java.util.Date;
 
+import com.geolog.HandlerPOI;
 import com.geolog.R;
 import com.geolog.dominio.Poi;
 import com.google.android.maps.MapView;
@@ -12,6 +14,7 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.util.FloatMath;
 import android.util.Log;
@@ -61,7 +64,7 @@ public long getItemId(int position) {
 	   return textView; 
 	 }*/
 
-public View getView(int position, View convertView, ViewGroup parent) throws NullPointerException { 
+public View getView(final int position, View convertView, ViewGroup parent) throws NullPointerException { 
 	   if (convertView == null) {
            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
            convertView = inflater.inflate(R.layout.riga_lista_gestore_lista, null);
@@ -72,49 +75,62 @@ public View getView(int position, View convertView, ViewGroup parent) throws Nul
 	   textView2.setText(poi.get(position).getCategoria().getNomeCategoria());
 	   
 	   ImageView information = (ImageView) convertView.findViewById(R.id.poi_image);
-	   information.setBackgroundResource(poi.get(position).getImage());
+	   poi.get(position).setImageFromResource(context);
+	   Drawable d = poi.get(position).getDrawableImage();
+	   
+	   
+	   
+	   if (d == null)
+	   information.setImageResource(R.drawable.no_image_aviable);
+	   else
+		   information.setImageDrawable(d);
 	   
 	   suggestionView = (ImageView) convertView.findViewById(R.id.imageSuggestion);
 	   suggestionView.setClickable(true);
 	   suggestionView.setOnClickListener(new OnClickListener() {
 		
-		public void onClick(View v) {
+		public void onClick(final View v) {
 			// TODO Auto-generated method stub
-			
-			LayoutInflater inflater = (LayoutInflater) context.getSystemService( Context.LAYOUT_INFLATER_SERVICE );
-			final View view = inflater.inflate( R.layout.inserisci_segnalazione_dialog,null);
-			AlertDialog.Builder dialog = new AlertDialog.Builder(context);
-			dialog.setIcon(R.drawable.ex_mark2);
-			dialog.setTitle("Segnalazione POI");
-			dialog.setView(inflater.inflate( R.layout.inserisci_segnalazione_dialog,null));
-			dialog.setPositiveButton("Invia", new DialogInterface.OnClickListener() {
-				
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					//invia Segnalazione
-					EditText descriptionSuggest = (EditText) view.findViewById(R.id.descrizione_segnalazione_poi);
-					String descrption = descriptionSuggest.getText().toString();
-				}
-			});
-			dialog.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
-				
-				
+			AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
-				public void onClick(DialogInterface dialog, int which) {
-					// TODO Auto-generated method stub
-					dialog.dismiss();
-				}
+			alert.setIcon(R.drawable.ex_mark2);
+			alert.setTitle("Segnalazione POI");
+
+			// Set an EditText view to get user input 
+			final EditText input = new EditText(context);
+			input.setHint("inserisci la descrizione della segnalazione");
+			alert.setView(input);
+
+			alert.setPositiveButton("Invia", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+			
+			  // Do something with value!
+			  String descrption = input.getText().toString();
+				Log.d("edit",descrption);
+			if(	(HandlerPOI.segnalaPOI(poi.get(position), descrption, new Date(), v.getContext())) )
+			{
+				UtilDialog.createBaseToast("Segnlazione inviata", context);
+			}
+			else
+				UtilDialog.createBaseToast("Segnalazione non iviata", context);
+			  }
 			});
-			dialog.show();
-			
-			
+
+			alert.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+			  public void onClick(DialogInterface dialog, int whichButton) {
+			    // Canceled.
+			  }
+			});
+
+			alert.show();
+		
 		}
 	});
 	   
-	   Location poiLocation = poi.get(position).getPOILocation();
+	  
 	 
 	   
-	   int numero =(int) myLocation.distanceTo(poi.get(0).getPOILocation()) ; 
+	   int numero =(int) myLocation.distanceTo(poi.get(position).getPOILocation()) ; 
 		
 	   
 	   TextView textView3 = (TextView) convertView.findViewById(R.id.distance);

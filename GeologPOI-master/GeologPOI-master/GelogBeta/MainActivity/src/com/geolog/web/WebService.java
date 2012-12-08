@@ -5,7 +5,13 @@ import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.json.simple.JSONObject;
+
 import com.geolog.dominio.Category;
+import com.geolog.dominio.Suggestion;
+import com.geolog.util.UtilDialog;
+import com.geolog.web.domain.BaseResponse;
+import com.geolog.web.domain.PoiListResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.neurospeech.wsclient.SoapFaultException;
@@ -21,6 +27,8 @@ import android.os.Handler;
 import android.util.Log;
 
 public class WebService {
+	
+	private static final String WEB_SERVICE_URL = "http://160.80.135.31:8080/GeologWeb/services/WS";
 	private Context context;
 	private PoiListResponse response;
 	public WebService (Context context) {
@@ -30,7 +38,7 @@ public class WebService {
 	
 	public PoiListResponse findNearby(Location location, String category)
 	{
-		
+		final String aaa;
 		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 		ProgressDialog dialog;
 		boolean connectionTimeout = false;
@@ -45,19 +53,19 @@ public class WebService {
 		protected String doInBackground(Void... params) {
 			// TODO Auto-generated method stub
 			//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
-			 WS nuovo = new WS();
-	           nuovo.setBaseUrl("http://160.80.135.31:8080/GeologWeb/services/WS"); 
+			 	WS nuovo = new WS();
+			 	nuovo.setBaseUrl(WEB_SERVICE_URL); 
 	          try {
 	        	 
-				String responseFromServices = nuovo.findNearby(41.45435, 22.232131, 8);
+				//String responseFromServices = nuovo.  (41.45435, 22.232131, 8);
 				GsonBuilder builder = new GsonBuilder();
 				Gson gson = builder.create();
-				response = gson.fromJson(responseFromServices, PoiListResponse.class);
+				response = gson.fromJson("dddfs", PoiListResponse.class);
 			 //  Log.d("numeroPois",String.valueOf(pois.getCount()));
 				
 				
 				
-			} catch(SoapFaultException e)
+			} catch(NullPointerException e)
 	          {
 	        	 Log.d("timeout","aaa");
 	        	 connectionTimeout = true;
@@ -77,17 +85,7 @@ public class WebService {
             	dialog.dismiss();
             	if ( connectionTimeout == true)
             	{
-            		AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
-            		alertDialog.setTitle("Informazione");
-            		alertDialog.setMessage("Impossibile stabilire la conessione con il server");
-            		alertDialog.setNeutralButton("Continua", new DialogInterface.OnClickListener() {
-						
-						public void onClick(DialogInterface dialog, int which) {
-							// TODO Auto-generated method stub
-							dialog.dismiss();
-						}
-					});
-            		alertDialog.show();
+            		UtilDialog.alertDialog(context, "Impossibile stabilire la conessione con il server").show();
             		
             	}
             	
@@ -102,6 +100,9 @@ public class WebService {
 		task.execute(null);
 		return response;
 	}
+	
+	
+	
 	
 	
 	

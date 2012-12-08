@@ -52,14 +52,7 @@
         android:layout_toRightOf="@+id/imagePOI"
         android:text="TextView" />
 
-    <Button
-        android:id="@+id/back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/imageView1"
-        android:layout_marginTop="300dp"
-        android:text="Indietro" />
+    
 
 </RelativeLayout>
 
@@ -69,7 +62,7 @@
 	<LinearLayout android:id="@+id/linearLayout2"
 		android:layout_width="wrap_content" android:layout_height="match_parent"
 		android:layout_weight="0.01" android:orientation="vertical" 
-		android:background="#3399FF" >
+		android:background="@drawable/customshape" >
 
 		<ListView
 		    android:id="@+id/list_category"

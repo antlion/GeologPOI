@@ -1,4 +1,4 @@
-package com.geolog.util;
+package com.geolog;
 
 import haseman.project.where4.HoldMeUp;
 
@@ -11,13 +11,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
-import com.geolog.ChoseCategoryActivity;
-import com.geolog.GestoreAR;
-import com.geolog.ListHandler;
-import com.geolog.MapHandler;
+import com.geolog.ar.HandlerAR;
 import com.geolog.dominio.*;
+import com.geolog.util.ParametersBridge;
 
-public class GestoreVisualizzaPOI {
+public class ViewPOIHandler {
 	
 	private ArrayList<Poi> pois;
 	private Context ctx;
@@ -34,7 +32,7 @@ public class GestoreVisualizzaPOI {
 	}
 
 
-	public GestoreVisualizzaPOI(Context context){
+	public ViewPOIHandler(Context context){
 		ctx = context;
 		pois = new ArrayList<Poi>();
 	}
@@ -76,7 +74,7 @@ public class GestoreVisualizzaPOI {
 	}
 	public Intent visualizzaAR()
 	{
-		Intent intent = new Intent(ctx,haseman.project.where4.HoldMeUp.class);
+		Intent intent = new Intent(ctx,HandlerAR.class);
 		ParametersBridge.getInstance().addParameter("listaPOI", pois);
         return intent;
 	}

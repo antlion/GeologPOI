@@ -1,7 +1,5 @@
 package prova;
 
-import android.util.Log;
-
 import com.neurospeech.wsclient.*;
 import org.w3c.dom.*;
 
@@ -9,7 +7,7 @@ public class WS extends SoapWebService{
 	
 	
 	public WS(){
-		this.setUrl("/Geolog/services/WS.WSHttpSoap11Endpoint/");
+		this.setUrl("/Prova/services/WS.WSHttpSoap11Endpoint/");
 	}
 	
 	protected String getNamespaces()
@@ -18,7 +16,7 @@ public class WS extends SoapWebService{
 		" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \r\n" + 
 		" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" \r\n" + 
 		" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\" \r\n" + 
-		" xmlns:ns4=\"http://ws/xsd/\" \r\n" + 
+		" xmlns:ns4=\"http://math\" \r\n" + 
 		 "" ;
 	}
 	
@@ -27,45 +25,37 @@ public class WS extends SoapWebService{
 		e.setAttribute("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance");
 		e.setAttribute("xmlns:xsd", "http://www.w3.org/2001/XMLSchema");
 		e.setAttribute("xmlns:soap", "http://schemas.xmlsoap.org/soap/envelope/");
-		e.setAttribute("xmlns:ns4", "http://ws/xsd/");
+		e.setAttribute("xmlns:ns4", "http://math");
 	}
 	
 	
-	public String listCategory() throws Exception 
+	public String addPOI(String poi) throws Exception 
 	{
-		SoapRequest ___req = buildSoapRequest("urn:listCategory");
+		SoapRequest ___req = buildSoapRequest("urn:addPOI");
 		WSHelper ws = new WSHelper(___req.document);
-		WS_listCategory ____method = new WS_listCategory();
+		WS_addPOI ____method = new WS_addPOI();
+		____method.setpoi(poi);
 		___req.method = ____method.toXMLElement(ws,___req.root);
 		SoapResponse sr = getSoapResponse(___req);
 		if(sr.header!=null)
 		{
 		}
-		WS_listCategoryResponse __response = WS_listCategoryResponse.loadFrom((Element)sr.body.getFirstChild());
+		WS_addPOIResponse __response = WS_addPOIResponse.loadFrom((Element)sr.body.getFirstChild());
 		return  __response.getreturn();
 	}
 	
-	public String findNearby(Double latitude, Double longitude, Integer category_id) throws Exception,SoapFaultException 
+	public String getSuggestion(String suggestion) throws Exception 
 	{
-		//Vaffanculoooooooooooooooooooooooooooo
-		
-		setConnectionTimeout(500);
-		
-		SoapRequest ___req = buildSoapRequest("urn:findNearby");
-		
+		SoapRequest ___req = buildSoapRequest("urn:getSuggestion");
 		WSHelper ws = new WSHelper(___req.document);
-		WS_findNearby ____method = new WS_findNearby();
-		____method.setlatitude(latitude);
-		____method.setlongitude(longitude);
-		____method.setcategory_id(category_id);
+		WS_getSuggestion ____method = new WS_getSuggestion();
+		____method.setsuggestion(suggestion);
 		___req.method = ____method.toXMLElement(ws,___req.root);
-		
 		SoapResponse sr = getSoapResponse(___req);
-		
 		if(sr.header!=null)
 		{
 		}
-		WS_findNearbyResponse __response = WS_findNearbyResponse.loadFrom((Element)sr.body.getFirstChild());
+		WS_getSuggestionResponse __response = WS_getSuggestionResponse.loadFrom((Element)sr.body.getFirstChild());
 		return  __response.getreturn();
 	}
 	

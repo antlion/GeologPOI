@@ -10,7 +10,28 @@ public class Suggestion implements IEntity {
 	private String user;
 	private Poi poi;
 	private Date creationDate;
+	private String description;
 	
+	
+	
+	
+	public Suggestion(int id, String user, Poi poi, Date creationDate,String description) {
+		super();
+		this.id = id;
+		this.user = user;
+		this.poi = poi;
+		this.creationDate = creationDate;
+		this.description= description;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	public int getId() {
 		return id;
 	}

@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlSerializer;
 
 import com.geolog.dominio.Category;
-import com.geolog.util.CategoryHandler;
 import com.geolog.util.MyParser;
 import com.geolog.util.UtilDialog;
 import com.geolog.util.XmlCategoryCreator;

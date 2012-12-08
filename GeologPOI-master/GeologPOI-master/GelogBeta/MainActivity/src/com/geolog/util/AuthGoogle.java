@@ -40,4 +40,29 @@ public class AuthGoogle {
 	        return myAccount;
 	}
 
+	
+	public static void aaaaa(Activity activity)
+	{
+		AccountManager manager = AccountManager.get(activity);
+		Account[] accounts = manager.getAccountsByType("com.google");
+		manager.getAuthToken(AuthGoogle.googleServiceAviable(activity), "”Manage your tasks”", null,activity, new AccountManagerCallback<Bundle>() {
+		    public void run(AccountManagerFuture<Bundle> future) {
+		      try {
+		        // If the user has authorized your application to use the tasks API
+		        // a token is available.
+		    	  
+		    	  Bundle bundle = future.getResult();
+		    	  String token = bundle.getString(AccountManager.KEY_AUTHTOKEN);
+		        //String token = future.getResult().getString(AccountManager.KEY_AUTHTOKEN);
+		        // Now you can use the Tasks API...
+		        // Setting up the Tasks API Service
+		        
+		      } catch (OperationCanceledException e) {
+		        // TODO: The user has denied you access to the API, you should handle that
+		      } catch (Exception e) {
+		        e.printStackTrace();
+		      }
+		    }
+		  }, null);
+	}
 }

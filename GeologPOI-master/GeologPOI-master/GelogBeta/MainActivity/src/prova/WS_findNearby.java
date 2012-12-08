@@ -6,26 +6,19 @@ import org.w3c.dom.*;
 public class WS_findNearby extends WSObject
 {
 	
-	private Double _latitude;
-	public Double getlatitude(){
+	private Float _latitude;
+	public Float getlatitude(){
 		return _latitude;
 	}
-	public void setlatitude(Double value){
+	public void setlatitude(Float value){
 		_latitude = value;
 	}
-	private Double _longitude;
-	public Double getlongitude(){
-		return _longitude;
+	private Float _langitude;
+	public Float getlangitude(){
+		return _langitude;
 	}
-	public void setlongitude(Double value){
-		_longitude = value;
-	}
-	private Integer _category_id;
-	public Integer getcategory_id(){
-		return _category_id;
-	}
-	public void setcategory_id(Integer value){
-		_category_id = value;
+	public void setlangitude(Float value){
+		_langitude = value;
 	}
 	
 	public static WS_findNearby loadFrom(Element root) throws Exception
@@ -41,9 +34,8 @@ public class WS_findNearby extends WSObject
 	
 	protected void load(Element root) throws Exception
 	{
-		this.setlatitude(WSHelper.getDouble(root,"latitude",false));
-		this.setlongitude(WSHelper.getDouble(root,"longitude",false));
-		this.setcategory_id(WSHelper.getInteger(root,"category_id",false));
+		this.setlatitude(WSHelper.getFloat(root,"latitude",false));
+		this.setlangitude(WSHelper.getFloat(root,"langitude",false));
 	}
 	
 	
@@ -58,8 +50,7 @@ public class WS_findNearby extends WSObject
 	public void fillXML(WSHelper ws,Element e)
 	{
 		ws.addChild(e,"ns4:latitude",String.valueOf(_latitude),false);
-		ws.addChild(e,"ns4:longitude",String.valueOf(_longitude),false);
-		ws.addChild(e,"ns4:category_id",String.valueOf(_category_id),false);
+		ws.addChild(e,"ns4:langitude",String.valueOf(_langitude),false);
 	}
 	
 }

@@ -8,6 +8,11 @@ public class ResourceType implements IEntity {
 	private String name;
 	private Set<Resource> resources;
 	
+	public ResourceType(String name) {
+		super();
+		this.name = name;
+	}
+
 	public int compareTo(IEntity o) {
 		// TODO Auto-generated method stub
 		return 0;

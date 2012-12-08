@@ -10,6 +10,16 @@ public class Resource  {
 	private ResourceType resourceType;
 	
 	
+	public Resource(int id, String url, String description, Poi poi,
+			ResourceType resourceType) {
+		super();
+		this.id = id;
+		this.url = url;
+		this.description = description;
+		this.poi = poi;
+		this.resourceType = resourceType;
+	}
+
 	public Resource(){}
 	
 	public int getId() {

@@ -15,14 +15,23 @@ import android.widget.Toast;
 public class  UtilDialog {
 
 	
-	public static void alertDialog(Context context,String message)
+	public static AlertDialog alertDialog(Context context,String message)
 	{
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Avviso");
         builder.setMessage(message);
         builder.setCancelable(true);
+        builder.setNeutralButton("Continua", new DialogInterface.OnClickListener() {
+			
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				dialog.dismiss();
+			}
+		});
+		
        // AlertDialog dialog = builder.create();
-      builder.show();
+        final AlertDialog alert = builder.create();
+		return alert;
 
 	}
 	
@@ -65,5 +74,8 @@ public class  UtilDialog {
 		final AlertDialog alert = builder.create();
 		return alert;
 	}
+	
+	
+	
 	
 }

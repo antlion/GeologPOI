@@ -1,11 +1,17 @@
 package com.geolog.dominio;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
+import com.geolog.web.Services;
 
 
+
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 
 public class Poi {
@@ -16,12 +22,18 @@ public class Poi {
 	private String description;
 	private int id;
 	private Date creationDate;
-	private Set<Resource> resources;
+	private List<Resource> resources;
 	private double latitude;
 	private double longitude;
 	private int image;
+	private Drawable drawableImage;
 	
-	
+	public Drawable getDrawableImage() {
+		return drawableImage;
+	}
+	public void setDrawableImage(Drawable drawableImage) {
+		this.drawableImage = drawableImage;
+	}
 	public Poi(Category categoria, String nome, String descrizione, int idTipo,
 			Date dataCreazione, Location location, int image) {
 		super();
@@ -33,6 +45,7 @@ public class Poi {
 		this.latitude =  location.getLatitude();
 		this.longitude = location.getLatitude();
 		this.image = image;
+		
 	}
 	public Poi(Category categoria, String nome, String descrizione, int idTipo,
 			Date dataCreazione,double lat,double log, int image) {
@@ -48,6 +61,12 @@ public class Poi {
 	}
 	
 	
+	public List<Resource> getResources() {
+		return resources;
+	}
+	public void setResources(List<Resource> resources) {
+		this.resources = resources;
+	}
 	public Category getCategoria() {
 		return category;
 	}
@@ -110,6 +129,36 @@ public class Poi {
 	}
 	public void setDataCreazione(Date dataCreazione) {
 		this.creationDate = dataCreazione;
+	}
+	
+	public Drawable setImageFromResource(Context context)
+	{
+		if ( resources == null)
+		{
+			//no image aviable
+			return null;
+		}
+		else if ( drawableImage == null)
+		{
+			Iterator<Resource> it = resources.iterator();
+
+			while(it.hasNext())
+			{
+			Resource elemento = it.next();
+			if (elemento.getResourceType().getName().equals("image/jpeg"))
+			{
+				Services services = new Services();
+				Drawable d = services.downloadResource(elemento.getUrl(), context);
+				if (d != null){
+					setDrawableImage(d);
+					return d;}
+				else{
+					setDrawableImage(null);
+					return null;}
+			}
+			}
+		}
+		return drawableImage;
 	}
 	
 }

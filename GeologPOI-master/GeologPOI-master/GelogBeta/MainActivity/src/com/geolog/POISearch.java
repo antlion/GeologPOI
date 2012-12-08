@@ -9,6 +9,7 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -22,7 +23,7 @@ import android.widget.TabHost.TabSpec;
 
 
 import com.geolog.dominio.Poi;
-import com.geolog.util.GestoreVisualizzaPOI;
+import com.geolog.util.AuthGoogle;
 import com.geolog.util.UtilDialog;
 
 public class POISearch extends TabActivity {
@@ -30,15 +31,19 @@ public class POISearch extends TabActivity {
 	
 	
 	private ArrayList<Poi> pois =  new ArrayList<Poi>();
-	private GestoreVisualizzaPOI gestoreVisualizzazione;
+	private ViewPOIHandler gestoreVisualizzazione;
 	
 	private LocationManager locationManager;
 	private LocationListener myLocationListener;
 	private Location mylocation;
 	private boolean hasLocation; 
 	private Context context;
+	private boolean setTab;
 	public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+  //AuthGoogle.aaaaa(this);
+  //  setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+    setTab = false;
        context = this; 
        mylocation = null;
        hasLocation = false;
@@ -79,18 +84,22 @@ public class POISearch extends TabActivity {
 	        	Poi newPOI2 = new Poi(new Category("Ristoro",2,R.drawable.food_icon),"SushiBar", "Ristorante cinese pienodi schifezze",2,null, location2, R.drawable.kfc);
 	        	pois.add(newPOI);
 	        	pois.add(newPOI2);*/
-	        	gestoreVisualizzazione.setPois(GestorePOI.cercaPOI(mylocation, context));
+	        	gestoreVisualizzazione.setPois(HandlerPOI.cercaPOI(mylocation, context));
 	        	gestoreVisualizzazione.setMylocation(mylocation);
 	        	LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 	  		  	locationManager.removeUpdates(myLocationListener);
-	  		  	setTab();
+	  		  	if (setTab == false)
+	  		  	{ 
+	  		  		setTab();
+	  		  		setTab = true;
+	  		  	}
 				//Log.d("size",String.valueOf(pois.size()));
 			} 
 			 };
       
        
 			//inizializzo i poi a null
-        	gestoreVisualizzazione = new GestoreVisualizzaPOI(this);
+        	gestoreVisualizzazione = new ViewPOIHandler(this);
         	gestoreVisualizzazione.setPois(pois);
         	gestoreVisualizzazione.setMylocation(mylocation);
         	//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
@@ -220,9 +229,17 @@ public class POISearch extends TabActivity {
 	public void onResume()
 	{
 		super.onResume();
+		//setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&  locationManager.getProvider(LocationManager.GPS_PROVIDER) != null)
-		 	getLocationForSearchPOI(this);
-		
+		{	//getLocationForSearchPOI(this);
+		Location location = locationManager.getLastKnownLocation(
+				LocationManager.GPS_PROVIDER
+				);
+				if (location != null) {
+					mylocation = location;
+				//updateLocationData(location);
+				}
+		}
 			
 		  // locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener); 
 		  

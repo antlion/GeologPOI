@@ -8,18 +8,25 @@ import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,18 +41,19 @@ import android.widget.Toast;
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
 import com.geolog.util.CategoryAdapter;
-import com.geolog.util.CategoryHandler;
 import com.geolog.util.POIAdapter;
 import com.geolog.util.ParametersBridge;
 import com.geolog.util.UtilDialog;
 import com.geolog.web.FindNearbyService;
 
-public class ListHandler extends ListActivity implements VisHandler {
+public class ListHandler extends ListActivity implements VisHandler,OnTouchListener {
 
 	private ArrayList<Poi> poi;
 
 	private Context ctx;
 
+
+	
 	private Location myLocation;
 	private POIAdapter pois;
 	private LinearLayout MenuList;
@@ -55,9 +63,10 @@ public class ListHandler extends ListActivity implements VisHandler {
 	private ListView listCategory;
 	private Activity activity;
 	TextView view;
+	private CategoryAdapter categoryAdapter ;
 	private CategoryHandler gestoreCategorie;
 	private ListView listaPOI;
-	private CategoryAdapter categoryAdapter;
+
 	private boolean itemListPOIClicked = false;
 	private LocationManager locationManager;
 	private LocationListener myLocationListener;
@@ -65,7 +74,7 @@ public class ListHandler extends ListActivity implements VisHandler {
 	 public void onCreate(final Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.lista_poi);
-	        
+	        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 	        RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
 	        rl.setVisibility(View.GONE);
 	        
@@ -78,13 +87,13 @@ public class ListHandler extends ListActivity implements VisHandler {
 	        
 	        gestoreCategorie = new CategoryHandler();
 	        isExpanded = false;
-	        
-	        
+	   
 	       setListPOI();
 	        
 	        listCategory = (ListView) findViewById(R.id.list_category);
-	        final CategoryAdapter categoryAdapter = new CategoryAdapter(this, gestoreCategorie.richiediCategorie(),gestoreCategorie.getCategorySelected2());
-	        listCategory.setAdapter(categoryAdapter);
+	        categoryAdapter = new CategoryAdapter(this, gestoreCategorie.richiediCategorie());
+	        gestoreCategorie.setSelectionCategory(listCategory, getApplicationContext(), categoryAdapter);
+	       // listCategory.setAdapter(categoryAdapter);
 	        listCategory.setVisibility(View.GONE);
 	        
 	       
@@ -148,11 +157,21 @@ public class ListHandler extends ListActivity implements VisHandler {
 					listCategory.setVisibility(View.GONE);
 					ln.setVisibility(View.GONE);
 					rl.setVisibility(View.VISIBLE);
-					Button bt1 = (Button)findViewById(R.id.back);
+					
 					Poi poi = (Poi)pois.getItem(arg2);
 					
 					ImageView imageDescriptionPOi = (ImageView) findViewById(R.id.imagePOI);
-					imageDescriptionPOi.setBackgroundResource(poi.getImage());
+					
+					
+					poi.setImageFromResource(context);
+					   Drawable d = poi.getDrawableImage();
+					   
+					   
+					   
+					   if (d == null)
+					   imageDescriptionPOi.setImageResource(R.drawable.no_image_aviable);
+					   else
+						imageDescriptionPOi.setImageDrawable(d);
 					
 					TextView titoloPOI = (TextView) findViewById(R.id.nomePOI);
 					titoloPOI.setText(poi.getNome());
@@ -160,15 +179,7 @@ public class ListHandler extends ListActivity implements VisHandler {
 					TextView descrizionePOI = (TextView) findViewById(R.id.descriptionPOI);
 					descrizionePOI.setText(poi.getDescrizione());
 					
-					bt1.setOnClickListener(new OnClickListener() {
-						
-						public void onClick(View v) {
-							// TODO Auto-generated method stub
-							rl.setVisibility(View.GONE);
-							ln.setVisibility(View.VISIBLE);
-							
-						}
-					});
+					
 					
 				}
 
@@ -179,10 +190,11 @@ public class ListHandler extends ListActivity implements VisHandler {
 					
 	        }
 					
-			
-	      
-						
+		
+           
  }
+	 
+	 
 	 public void setListPOI()
 	 {
 		 if( poi !=null){
@@ -207,7 +219,10 @@ public class ListHandler extends ListActivity implements VisHandler {
 	    			isExpanded = false;
 	    			//MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
 	    			 listCategory.setVisibility(View.GONE);
-	    			 checkMenuCategory((CategoryAdapter)listCategory.getAdapter());
+	    			 gestoreCategorie.checkMenuCategory(categoryAdapter);
+	    			 poi = HandlerPOI.cercaPOI(myLocation, this);
+	    				updateLocationData(myLocation);
+	    			// checkMenuCategory((CategoryAdapter)listCategory.getAdapter());
 	    		}else {
 	        		isExpanded = true;
 	            	//MenuList.startAnimation(new com.geolog.slide.ExpandAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
@@ -244,7 +259,7 @@ public class ListHandler extends ListActivity implements VisHandler {
 			}
 			gestoreCategorie.salvaSelezione(categoriaSelezionate);
 			
-			poi = GestorePOI.cercaPOI(myLocation, this);
+			poi = HandlerPOI.cercaPOI(myLocation, this);
 			updateLocationData(myLocation);
 		}
 	 
@@ -257,13 +272,14 @@ public class ListHandler extends ListActivity implements VisHandler {
 	public void onResume()
 	{
 		super.onResume();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 		locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE); 
 		Location location = locationManager.getLastKnownLocation(
 				LocationManager.GPS_PROVIDER
 				);
 				if (location != null) {
 					myLocation = location;
-				updateLocationData(location);
+				//updateLocationData(location);
 				}
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
 	}
@@ -290,6 +306,11 @@ public class ListHandler extends ListActivity implements VisHandler {
 		myLocation = location;
 		setListPOI();
 			
+	}
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		// TODO Auto-generated method stub
+		return false;
 	}        
 	       
 	}

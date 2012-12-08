@@ -12,6 +12,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -80,10 +81,13 @@ public class MapHandler extends MapActivity implements VisHandler{
 	private List<Overlay> mapOverlays;
 	private LocationManager locationManager;
 	private LocationListener myLocationListener;
+	private CategoryAdapter categoryAdapter;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       
         setContentView(R.layout.map_poi);
+       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         poi = new ArrayList<Poi>();
         ParametersBridge bridge = ParametersBridge.getInstance();
         poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
@@ -113,8 +117,11 @@ public class MapHandler extends MapActivity implements VisHandler{
 	    Resources res = ctx.getResources();
 	      
 	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
-	    final CategoryAdapter pois = new CategoryAdapter(ctx, gestoreCategorie.richiediCategorie(),gestoreCategorie.getCategorySelected2());
-	    v.setAdapter(pois);
+	    
+	    categoryAdapter = new CategoryAdapter(getApplicationContext(), gestoreCategorie.richiediCategorie());
+        gestoreCategorie.setSelectionCategory(v, getApplicationContext(),categoryAdapter);
+      
+	   // v.setAdapter(pois);
 	    v.setVisibility(View.GONE);
 	    MenuList = (LinearLayout) findViewById(R.id.linearLayout2);
 	    DisplayMetrics metrics = new DisplayMetrics();
@@ -175,13 +182,14 @@ public class MapHandler extends MapActivity implements VisHandler{
 	public void onResume()
 	{
 		super.onResume();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 		locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE); 
 		Location location = locationManager.getLastKnownLocation(
 				LocationManager.GPS_PROVIDER
 				);
 				if (location != null) {
-					mylocation = location;
-				updateLocationData(location);
+				mylocation = location;
+				//updateLocationData(location);
 				}
 				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
 	}
@@ -195,8 +203,13 @@ public class MapHandler extends MapActivity implements VisHandler{
 	    		v.setVisibility(View.GONE);
 	    	isExpanded = false;
 	    	//MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
-	    	
-	    	checkMenuCategory((CategoryAdapter) v.getAdapter());
+	    	gestoreCategorie.checkMenuCategory(categoryAdapter);
+	    	poi = HandlerPOI.cercaPOI(mylocation, this);
+			if (poi != null)
+			{
+				updateLocationData(mylocation);
+			}
+	    //	checkMenuCategory((CategoryAdapter) v.getAdapter());
 	    	;}
 	    	else{
 	    		
@@ -214,33 +227,9 @@ public class MapHandler extends MapActivity implements VisHandler{
 	    }
 	}
 	
-	
-	
+
 	
 
-   
-	public void checkMenuCategory(CategoryAdapter categoryChoose)
-	{
-		ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();
-		int number = categoryChoose.getCount();
-		for(int count = 0; count<number;count++)
-		{
-			if(categoryChoose.getCheckBoxstatus())
-			categoriaSelezionate.add((Category)categoryChoose.getItem(count));			
-		}
-		gestoreCategorie.salvaSelezione(categoriaSelezionate);
-		//effettua una nuova ricerca
-		//chiama il servizio del cupis
-		//ottienicateogorie
-		//aggiorna categorie +
-		poi = GestorePOI.cercaPOI(mylocation, this);
-		
-	}
-	   
-	
-	
-	
-	
 	public void updateLocationData(Location location) { 
 		 
 		   if( mylocation != null){
@@ -257,7 +246,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 	private void aggiungiMiaPosizione(List<Overlay> mapOverlays, GeoPoint geoPoint)
 	{
 		map.getOverlays().clear();
-		Drawable drawable = this.getResources().getDrawable(R.drawable.arrow_down);
+		Drawable drawable = this.getResources().getDrawable(R.drawable.pegman);
 		PositionOverlay itemizedoverlay = new PositionOverlay(drawable, this,null); 
         OverlayItem overlayitem = new OverlayItem(geoPoint, "MiaPosizione", "I'm there");
         itemizedoverlay.addOverlay(overlayitem);
@@ -358,7 +347,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 			 OverlayItem item = mOverlays.get(index);
 			
 		 if(item.getTitle().equals("MiaPosizione")){
-			 
+			 mapOverlays.remove(index);
 			 final View popUp = getLayoutInflater().inflate(R.layout.ballon, map, false);
 			   
 			 MapView.LayoutParams mapParams = new MapView.LayoutParams(
@@ -374,11 +363,20 @@ public class MapHandler extends MapActivity implements VisHandler{
 		         public void onClick(View v) 
 		         {
 		        	 	map.removeView(popUp);
+		        	 	
+		        	 	
+		        	 	Drawable drawable = v.getResources().getDrawable(R.drawable.pegman);
+		        		PositionOverlay itemizedoverlay = new PositionOverlay(drawable, v.getContext(),null); 
+		                OverlayItem overlayitem = new OverlayItem(createNewGeoPoint(mylocation), "MiaPosizione", "I'm there");
+		                itemizedoverlay.addOverlay(overlayitem);
+		                mapOverlays.add(itemizedoverlay);
+		                mapController.setCenter(createNewGeoPoint(mylocation));
 		         }
 		     });
 			
 			 }
 			  else{
+				  
 				  
 				  final View popUp = getLayoutInflater().inflate(R.layout.ballon_poi, map, false);
 				   
@@ -397,6 +395,8 @@ public class MapHandler extends MapActivity implements VisHandler{
 				         public void onClick(View v) 
 				         {
 				        	 	map.removeView(popUp);
+				        		
+				                //mapController.setCenter(createNewGeoPoint(mylocation));
 				         }
 				     });
 				     final ImageView segnalazione = (ImageView)popUp.findViewById(R.id.segnalzione);
@@ -415,30 +415,38 @@ public class MapHandler extends MapActivity implements VisHandler{
 						     
 						     
 						     
-								final View view = getLayoutInflater().inflate(R.layout.inserisci_segnalazione_dialog, map, false);
-								AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-								dialog.setIcon(R.drawable.ex_mark2);
-								dialog.setTitle("Segnalazione POI");
-								dialog.setView(view);
-								dialog.setPositiveButton("Invia", new DialogInterface.OnClickListener() {
-									
-									public void onClick(DialogInterface dialog, int which) {
-										// TODO Auto-generated method stub
-										//invia Segnalazione
-										EditText descriptionSuggest = (EditText) view.findViewById(R.id.descrizione_segnalazione_poi);
-										String descrption = descriptionSuggest.getText().toString();
-									}
-								});
-								dialog.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
-									
-									
+							 	AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
 
-									public void onClick(DialogInterface dialog, int which) {
-										// TODO Auto-generated method stub
-										dialog.dismiss();
-									}
+								alert.setIcon(R.drawable.ex_mark2);
+								alert.setTitle("Segnalazione POI");
+
+								// Set an EditText view to get user input 
+								final EditText input = new EditText(mContext);
+								input.setHint("inserisci la descrizione della segnalazione");
+								alert.setView(input);
+
+								alert.setPositiveButton("Invia", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int whichButton) {
+								
+								  // Do something with value!
+								  String descrption = input.getText().toString();
+									Log.d("edit",descrption);
+								if(	(HandlerPOI.segnalaPOI(poi, descrption, new Date(), popUp2.getContext())) )
+								{
+									UtilDialog.createBaseToast("Segnlazione inviata", mContext);
+								}
+								else
+									UtilDialog.createBaseToast("Segnalazione non iviata", mContext);
+								  }
 								});
-								dialog.show();
+
+								alert.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+								  public void onClick(DialogInterface dialog, int whichButton) {
+								    // Canceled.
+								  }
+								});
+
+								alert.show();
 						     
 						     
 						   /*  final Button close = (Button) popUp2.findViewById(R.id.chiudi);

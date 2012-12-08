@@ -19,6 +19,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import prova.WS;
 import prova.WS_findNearby;
 import prova.WS_findNearbyResponse;
+import prova2.WSs;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -30,6 +31,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.geolog.dominio.*;
+import com.geolog.web.domain.CategoryListResponse;
+import com.geolog.web.domain.PoiListResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -114,15 +117,18 @@ public class FindNearbyService  {
 	{
 		 
 		
-	        	
-	             WS nuovo = new WS();
-	             nuovo.setBaseUrl(URL); 
+	      //("http://192.168.0.102:8080/Prova/services/WS");
+	
+	           
+	            // nuovo.setBaseUrl(URL); 
 	          try {
-				String response = nuovo.findNearby(41.45435, 22.232131, 8);
-				Log.d("richiesta",response);
+				//String response = nuovo.findNearby(41.45435, 22.232131, 8);
+	        	  WSs sss = new WSs();
+	        	  sss.setUrl("http://192.168.0.102:8080/Prova/services/WS");
+		            String string = sss.listCategories();
 				GsonBuilder builder = new GsonBuilder();
 				Gson gson = builder.create();
-				PoiListResponse pois = gson.fromJson(response, PoiListResponse.class);
+				PoiListResponse pois = gson.fromJson("asdas", PoiListResponse.class);
 			   Log.d("numeroPois",String.valueOf(pois.getCount()));
 			response2 = pois;
 				
@@ -163,51 +169,7 @@ public class FindNearbyService  {
 	}*/
 	
 	
-	public static void SearchPOI(final Context context){
-		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-			
-			ProgressDialog dialog;
-			@Override
-			protected void onPreExecute(){
-				 WS nuovo = new WS();
-	             nuovo.setBaseUrl(URL); 
-	             dialog = ProgressDialog.show(context, "Attendere...", "Recupero Posizione in corso...");
-	             try {
-	            	 
-					String response = nuovo.findNearby(41.45435, 22.232131, 8);
-					getResponse = true;
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			@Override
-			protected String doInBackground(Void... params) {
-				// TODO Auto-generated method stub
-				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
-				Long t = Calendar.getInstance().getTimeInMillis();
-	            while ( getResponse == false && Calendar.getInstance().getTimeInMillis() - t < 15000) {
-	                try {
-	                    Thread.sleep(1000);
-	                } catch (InterruptedException e) {
-	                    e.printStackTrace();
-	                }
-	            };
-	            return null;
-			
-			}
-			 protected void onPostExecute(String result) {
-		            dialog.dismiss();
-		            if( getResponse == false){
-		            	Log.d("impossibile prendere la risposta","");
-		            }
-		            }
-		        
-			
-		};
-		task.execute(null);
-	
-		}
+
 	
 	
 	
