@@ -61,6 +61,17 @@ public class Poi {
 	}
 	
 	
+	public Poi(Category category, String name, String description,
+			Date creationDate, Location location) {
+		super();
+		this.category = category;
+		this.name = name;
+		this.description = description;
+		this.creationDate = creationDate;
+		this.latitude = location.getLatitude();
+		this.longitude = location.getLongitude();
+	}
+	
 	public List<Resource> getResources() {
 		return resources;
 	}

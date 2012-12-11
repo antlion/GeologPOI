@@ -2,13 +2,15 @@ package com.geolog.util;
 
 import java.io.ByteArrayOutputStream;
 
+import com.geolog.dominio.Resource;
+
 import android.graphics.Bitmap;
 import android.util.Base64;
 
 /**
  * @author Lorenzo
  *
- *Classe per la gestione delle risorse dell'applicazione android. 
+ *Classe per la gestione delle risorse dell'applicazione 
  */
 public class ResourcesHandler {
 
@@ -28,5 +30,8 @@ public class ResourcesHandler {
 		return base64Image;
 	}
 	
-	
+	public static Resource createImageResource(){
+		return null;
+		
+	}
 }

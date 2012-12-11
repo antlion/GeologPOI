@@ -172,7 +172,9 @@ public class MenuActivity extends Activity implements OnClickListener {
      
         
         //services.getListCategory(context);
-        
+      
+      Button aggiungiPOI = (Button) findViewById(R.id.Aggiungi_POI);
+      aggiungiPOI.setOnClickListener(this);
 	}
 	
 	
@@ -273,8 +275,10 @@ public class MenuActivity extends Activity implements OnClickListener {
 					  progressBar.setMessage("Autenticazione riuscita");
 				  if(progressBarStatus == 20)
 					  progressBar.setMessage("Recupero la lista delle categorie");
-				  if(progressBarStatus == 50 )
+				  if(progressBarStatus == 50 ){
 					  progressBar.setMessage("Lista categorie recuperata");
+					  
+					  }
 				  if(progressBarStatus == 90 )
 					  progressBar.setMessage("Fine inizializzazione...");
 				}
@@ -333,19 +337,21 @@ public class MenuActivity extends Activity implements OnClickListener {
 	}
 	
 	public void onClick(View v) {
-		
-			Intent intent = new Intent(v.getContext(), POISearch.class);
+			if (v.getId() == R.id.Aggiungi_POI){ 
+				Intent intent2 = new Intent(v.getContext(), AddPOIActivity.class);
+		        startActivity(intent2);
+			}
+			/*Intent intent = new Intent(v.getContext(), POISearch.class);
 	        startActivity(intent);
 	
 		
-		
+	        
 			Intent intent2 = new Intent(v.getContext(), AddPOIActivity.class);
 	        startActivity(intent);
 	
 		Intent intent3 = new Intent(v.getContext(), ChoseCategoryActivity.class);
-        startActivity(intent);
+        startActivity(intent);*/
 	}
-	
 	public void inizializzaFileCategorie()
 	{
 		MyParser parser = new MyParser();

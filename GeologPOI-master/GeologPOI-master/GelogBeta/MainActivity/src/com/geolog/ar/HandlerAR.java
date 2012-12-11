@@ -9,7 +9,7 @@ import java.util.Vector;
 import com.geolog.dominio.Poi;
 import com.geolog.util.ParametersBridge;
 
-import ARKit.ARLayout;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;

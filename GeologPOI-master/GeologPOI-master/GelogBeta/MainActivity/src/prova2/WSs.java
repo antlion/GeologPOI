@@ -266,7 +266,7 @@ soapEnvelope.encodingStyle = SoapEnvelope.ENC;
 	    
      SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
      soapEnvelope.implicitTypes = true;
-     soapEnvelope.dotNet = true;
+     soapEnvelope.dotNet = false;
      SoapObject soapReq = new SoapObject("http://ws/xsd/","addPoi");
      soapReq.addProperty("poi",poi);
      soapReq.addProperty("user",user);

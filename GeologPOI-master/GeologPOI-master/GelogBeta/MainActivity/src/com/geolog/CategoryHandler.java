@@ -102,7 +102,14 @@ public class CategoryHandler {
 			return -1;
 		}
 		
-		
+		public Category getCategoryFromId(int idCateogry)
+		{
+			for(Category categoria : categorie){
+				if(categoria.getId() == idCateogry)
+				return categoria;
+			}
+			return null;
+		}
 		public void checkMenuCategory(CategoryAdapter categoryChoose)
 		{
 			ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();

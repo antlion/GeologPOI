@@ -14,11 +14,13 @@ import com.geolog.dominio.Poi;
 import com.geolog.dominio.Resource;
 import com.geolog.dominio.ResourceType;
 import com.geolog.dominio.Suggestion;
+import com.geolog.util.ResourcesHandler;
 import com.geolog.web.FindNearbyService;
 import com.geolog.web.Services;
 import com.geolog.web.WebService;
 import com.geolog.web.domain.AddPOIResponse;
 import com.geolog.web.domain.CategoryListResponse;
+import com.geolog.web.domain.ConfrimResponse;
 import com.geolog.web.domain.PoiListResponse;
 import com.geolog.web.domain.SuggestionResponse;
 
@@ -26,9 +28,10 @@ import com.geolog.web.domain.SuggestionResponse;
 public class HandlerPOI {
 
 	
-	public static Poi creaPOI(Location location,Category cateogry,String nome,String descrizione,int idTipo,Date date)
+	public static Poi creaPOI(Location location,int idCategory,String nome,String descrizione,Date date)
 	{
-		Poi newPOI = new Poi(cateogry, nome, descrizione, idTipo, date, location, 0);
+		Category category = new CategoryHandler().getCategoryFromId(idCategory);
+		Poi newPOI = new Poi(category, nome, descrizione, date, location);
 		return newPOI;
 	}
 	
@@ -49,16 +52,26 @@ public class HandlerPOI {
 	
 	}
 	
-	public static boolean addPOI(Poi poi, Context context)
+	public static ConfrimResponse addPOI(Poi poi, Context context,String user)
 	{
 		Services service = new Services();
-		
-		AddPOIResponse poiResponse =(AddPOIResponse) service.addPOI(poi, context);
-		if (poiResponse == null)
-			return false;
-		if(poiResponse.getStatus() != 200)
-			return false;
-		return true;
+		service.addPOI(poi, context, user);
+		ConfrimResponse confirmResponse = (ConfrimResponse) service.getBaseResponse() ;
+		if (confirmResponse == null)
+			return null;
+		if(confirmResponse.getStatus() != 200)
+			return null;
+		return confirmResponse;
+	}
+	
+	public static ConfrimResponse uploadPoiResource(int idPOI,Context context,byte[] resource,String typeRespurce)
+	{	Services service = new Services();
+		ConfrimResponse responseWeb = (ConfrimResponse) service.uploadResource(context, idPOI, typeRespurce, resource);
+		if (responseWeb == null && responseWeb.getStatus() != 200)
+			return null;
+		else {
+			return responseWeb;
+		}
 	}
 	
 	public static List<Category> getListCategory(Context context)

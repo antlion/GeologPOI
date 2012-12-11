@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
@@ -21,6 +22,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.geolog.dominio.*;
@@ -28,6 +31,7 @@ import com.geolog.util.UtilDialog;
 import com.geolog.web.domain.AddPOIResponse;
 import com.geolog.web.domain.BaseResponse;
 import com.geolog.web.domain.CategoryListResponse;
+import com.geolog.web.domain.ConfrimResponse;
 import com.geolog.web.domain.PoiListResponse;
 import com.geolog.web.domain.SuggestionResponse;
 import com.google.gson.Gson;
@@ -36,7 +40,7 @@ import com.google.gson.GsonBuilder;
 public class Services {
 
 	private WSs webService;
-	private static final String WEB_SERVICE_URL = "http://192.168.0.102:8080/Prova/services/WS";
+	private static final String WEB_SERVICE_URL = "http://160.80.145.216:8080/GelogWeb/services/WS";
 	private JSONObject result;
 
 	//tutti i metodi mi ritoranano un oggetto di tipo BaseResponse
@@ -46,6 +50,14 @@ public class Services {
 		webService = new WSs();
 		webService.setUrl(WEB_SERVICE_URL);
 
+	}
+
+	public BaseResponse getBaseResponse() {
+		return baseResponse;
+	}
+
+	public void setBaseResponse(BaseResponse baseResponse) {
+		this.baseResponse = baseResponse;
 	}
 
 	public BaseResponse findNearby(final Location location,String id,final Context context)
@@ -118,20 +130,9 @@ public class Services {
 		}
 		return null;
 	}
-	public BaseResponse getListCategory(final Context context)
+	public CategoryListResponse getListCategory(final Context context)
 	{
-		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-			ProgressDialog dialog;
-
-			protected void onPreExecute(){
-
-				dialog = ProgressDialog.show(context, "Attendere...", "Invio segnalazione al Server");
-
-			}
-			@Override
-			protected String doInBackground(Void... params) {
-				// TODO Auto-generated method stub
-
+		
 
 				try {
 					String response = webService.listCategories();
@@ -139,33 +140,22 @@ public class Services {
 					Gson gson = builder.create();
 					CategoryListResponse responseWeb= gson.fromJson(response, CategoryListResponse.class);
 					if ( responseWeb.getStatus() == 200){
-						baseResponse = responseWeb;
+						return responseWeb;
 					}
 
 					else
-						baseResponse = null;
+						return null;
 
 				} 
 				catch (Exception e) {
 					// TODO Auto-generated catch block
-					baseResponse = null;
+					
 					return null;
 				}
-				return null;
+				
 			}
-			protected void onPostExecute(String result) {
-				dialog.dismiss();
-				if ( baseResponse == null)
-				{
-					UtilDialog.alertDialog(context, "Impossibile stabilire la conessione con il server").show();
-				}
-
-			}
-		};
-		task.execute(null);
-		return baseResponse;
-
-	}
+			
+	
 
 	public BaseResponse addSuggestion(final Suggestion suggestion,final Context context)
 	{
@@ -234,64 +224,7 @@ public class Services {
 
 	}
 
-	public BaseResponse addPOI(final Poi poi,final Context context)
-	{
-		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-			ProgressDialog dialog;
-
-			protected void onPreExecute(){
-				result = new JSONObject();
-				
-				result.put("name",poi.getNome());
-				result.put("longitude",poi.getLongitude());
-				result.put("latitude",poi.getLongitude());
-				result.put("description", poi.getDescrizione());
-				
-				result.put("category_id",8);
-				dialog = ProgressDialog.show(context, "Attendere...", "Invio segnalazione al Server");
-
-			}
-			@Override
-			protected String doInBackground(Void... params) {
-				// TODO Auto-generated method stub
-
-
-				try {
-					WSs services = new WSs();
-					services.setUrl("http://160.80.135.31:8080/GeologWeb/services/WS");
-					String response = services.addPoi(result.toJSONString(),"io");
-					GsonBuilder builder = new GsonBuilder();
-					Gson gson = builder.create();
-					CategoryListResponse responseWeb= gson.fromJson(response, CategoryListResponse.class);
-					if ( responseWeb.getStatus() == 200){
-						baseResponse = responseWeb;
-					}
-
-					else
-						baseResponse = null;
-
-				} 
-				catch (Exception e) {
-					// TODO Auto-generated catch block
-					baseResponse = null;
-					return null;
-				}
-				return null;
-			}
-			protected void onPostExecute(String result) {
-				dialog.dismiss();
-				if ( baseResponse == null)
-				{
-					UtilDialog.alertDialog(context, "Impossibile stabilire la conessione con il server").show();
-				}
-
-			}
-		};
-		task.execute(null);
-		return baseResponse;
-
-	}
-
+	
 	public Drawable downloadResource(String url,Context context)
 	{
 		
@@ -338,6 +271,72 @@ public class Services {
 			return null;
 		}
 	}
+	
+	public ConfrimResponse uploadResource(final Context context,final int idPOI,final String typeResource,final byte[] data)
+	{
+		
+				// TODO Auto-generated method stub
+				ConfrimResponse confirm;
 
+				try {
+					WSs services = new WSs();
+					services.setUrl(WEB_SERVICE_URL);
+					String response = services.upload(idPOI, typeResource, data);
+					GsonBuilder builder = new GsonBuilder();
+					Gson gson = builder.create();
+					 confirm= gson.fromJson(response,ConfrimResponse.class);
+					if ( confirm.getStatus() == 200){
+						return confirm;
+					}
 
+					else
+						return null;
+
+				} 
+				catch (Exception e) {
+					// TODO Auto-generated catch block
+					
+					return null;
+				}
+				
+			}
+		
+	
+	
+	
+public ConfrimResponse addPOI(Poi poi,Context context,String user)
+{
+	final JSONObject result = new JSONObject();
+	final ConfrimResponse confirmResponse;
+	
+	result.put("name",poi.getNome());
+	result.put("longitude",poi.getLongitude());
+	result.put("latitude",poi.getLongitude());
+	result.put("description", poi.getDescrizione());
+	//attenzione questo valore
+	result.put("category_id",8);
+	try {
+		WSs services = new WSs();
+		services.setUrl(WEB_SERVICE_URL);
+		services.setTimeOut(10);
+		String response = services.addPoi(result.toJSONString(),user);
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		ConfrimResponse responseWeb= gson.fromJson(response, ConfrimResponse.class);
+		
+		if ( responseWeb.getStatus() == 200){
+			return responseWeb;
+		}
+
+		else
+			return null;
+
+	} 
+	catch (Exception e) {
+		// TODO Auto-generated catch block
+		
+		return null;
+	
+	}
+}
 }

@@ -2,7 +2,7 @@ package com.geolog.ar;
 
 import com.geolog.R;
 
-import ARKit.ARSphericalView;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
