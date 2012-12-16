@@ -14,6 +14,8 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.geolog.dominio.Category;
 import com.geolog.util.CategoryAdapter;
+import com.geolog.web.Services;
+import com.geolog.web.domain.CategoryListResponse;
 
 public class CategoryHandler {
 	
@@ -29,22 +31,18 @@ public class CategoryHandler {
 	            gestoreCategorie = new CategoryHandler();
 	        return gestoreCategorie;
 	    	}
-		public CategoryHandler()
+		private CategoryHandler()
 		{
-			categorie = richiediCategorie();
-			categorieSelezionate = categorie;
-			updateCategorySelected2();
+			
 		}
 		
-		public ArrayList<Category> richiediCategorie()
+		
+		
+		public CategoryListResponse richiediCategorieFromWeb()
 		{
-		//contatta il webServer per le categorie
-		Category categoria = new Category("categoria di prova",0,0);
-		Category categoria2 = new Category("categoria di prova2",0,0);
-		ArrayList<Category> categorie = new ArrayList<Category>();
-		categorie.add(categoria);
-		categorie.add(categoria2);
-		return categorie;
+			Services services = new Services();
+			CategoryListResponse categoryListResponse = services.getListCategory();
+			return categoryListResponse;
 		}
 	
 		public ArrayList<Category> richiediCategorieSelezionate()
@@ -113,6 +111,7 @@ public class CategoryHandler {
 		public void checkMenuCategory(CategoryAdapter categoryChoose)
 		{
 			ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();
+			
 			int number = categoryChoose.getCount();
 			
 			HashMap<Category,String> map = categoryChoose.aaaa();
@@ -159,5 +158,25 @@ public class CategoryHandler {
 				}
 			});
 		}
+		public ArrayList<Category> getCategorie() {
+			return categorie;
+		}
+		public void setCategorie(ArrayList<Category> categorie) {
+			this.categorie = categorie;
+		}
+		public ArrayList<Category> getCategorieSelezionate() {
+			return categorieSelezionate;
+		}
+		public void setCategorieSelezionate(ArrayList<Category> categorieSelezionate) {
+			this.categorieSelezionate = categorieSelezionate;
+		}
+		public void setCategorySelected2(HashMap<String, String> categorySelected2) {
+			this.categorySelected2 = categorySelected2;
+		}
+		public static void setGestoreCategorie(CategoryHandler gestoreCategorie) {
+			CategoryHandler.gestoreCategorie = gestoreCategorie;
+		}
+		
+		
 		
 }

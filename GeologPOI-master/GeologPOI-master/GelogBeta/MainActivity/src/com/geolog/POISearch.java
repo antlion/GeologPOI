@@ -47,6 +47,8 @@ public class POISearch extends TabActivity {
        context = this; 
        mylocation = null;
        hasLocation = false;
+       CategoryHandler category = CategoryHandler.getGestoreCategorie();
+      
        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
        myLocationListener = new LocationListener() { 
 				public void onStatusChanged(String provider, int status, Bundle extras) { 

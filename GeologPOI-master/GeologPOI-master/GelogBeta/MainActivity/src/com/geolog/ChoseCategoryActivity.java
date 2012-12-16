@@ -55,8 +55,8 @@ public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	       // parser.parseXml(this.getApplicationContext());
 	        //parsedData = new ArrayList<Categoria>();
 	        //parsedData = parser.getParsedData();
-	        gestoreCategorie = new CategoryHandler();
-	        parsedData = gestoreCategorie.richiediCategorie();
+	        gestoreCategorie = CategoryHandler.getGestoreCategorie();
+	        parsedData = gestoreCategorie.getCategorie();
 	        
 	        for(Category categoria : parsedData)
 	        {

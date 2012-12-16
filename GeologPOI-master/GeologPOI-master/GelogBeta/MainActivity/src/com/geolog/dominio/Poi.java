@@ -5,6 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.geolog.R;
+import com.geolog.util.ResourcesHandler;
 import com.geolog.web.Services;
 
 
@@ -22,18 +24,13 @@ public class Poi {
 	private String description;
 	private int id;
 	private Date creationDate;
-	private List<Resource> resources;
+	private Set<Resource> resources;
 	private double latitude;
 	private double longitude;
 	private int image;
-	private Drawable drawableImage;
+
 	
-	public Drawable getDrawableImage() {
-		return drawableImage;
-	}
-	public void setDrawableImage(Drawable drawableImage) {
-		this.drawableImage = drawableImage;
-	}
+	
 	public Poi(Category categoria, String nome, String descrizione, int idTipo,
 			Date dataCreazione, Location location, int image) {
 		super();
@@ -72,10 +69,10 @@ public class Poi {
 		this.longitude = location.getLongitude();
 	}
 	
-	public List<Resource> getResources() {
+	public Set<Resource> getResources() {
 		return resources;
 	}
-	public void setResources(List<Resource> resources) {
+	public void setResources(Set<Resource> resources) {
 		this.resources = resources;
 	}
 	public Category getCategoria() {
@@ -147,10 +144,9 @@ public class Poi {
 		if ( resources == null)
 		{
 			//no image aviable
-			return null;
+			return context.getResources().getDrawable( R.drawable.no_image_icon);
 		}
-		else if ( drawableImage == null)
-		{
+			
 			Iterator<Resource> it = resources.iterator();
 
 			while(it.hasNext())
@@ -158,18 +154,24 @@ public class Poi {
 			Resource elemento = it.next();
 			if (elemento.getResourceType().getName().equals("image/jpeg"))
 			{
+				if (ResourcesHandler.controlImageResource(getNome(), context))
+					return  Drawable.createFromPath(context.getFilesDir().toString()+"//"+getNome());
+				
+				
+				
 				Services services = new Services();
-				Drawable d = services.downloadResource(elemento.getUrl(), context);
+				Drawable d = services.downloadResource(elemento.getUrl(), context,getNome());
 				if (d != null){
-					setDrawableImage(d);
+					
 					return d;}
 				else{
-					setDrawableImage(null);
-					return null;}
+					return context.getResources().getDrawable( R.drawable.no_image_aviable);
+					}
 			}
 			}
-		}
-		return drawableImage;
+			return context.getResources().getDrawable( R.drawable.no_image_aviable);
+		
+	
 	}
 	
 }

@@ -85,13 +85,13 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 	        myLocation =(Location)ParametersBridge.getInstance().getParameter("location");
 	        
 	        
-	        gestoreCategorie = new CategoryHandler();
+	        gestoreCategorie = CategoryHandler.getGestoreCategorie();
 	        isExpanded = false;
 	   
 	       setListPOI();
 	        
 	        listCategory = (ListView) findViewById(R.id.list_category);
-	        categoryAdapter = new CategoryAdapter(this, gestoreCategorie.richiediCategorie());
+	        categoryAdapter = new CategoryAdapter(this, gestoreCategorie.getCategorie());
 	        gestoreCategorie.setSelectionCategory(listCategory, getApplicationContext(), categoryAdapter);
 	       // listCategory.setAdapter(categoryAdapter);
 	        listCategory.setVisibility(View.GONE);
@@ -163,15 +163,13 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 					ImageView imageDescriptionPOi = (ImageView) findViewById(R.id.imagePOI);
 					
 					
-					poi.setImageFromResource(context);
-					   Drawable d = poi.getDrawableImage();
+				
+					  
 					   
 					   
-					   
-					   if (d == null)
-					   imageDescriptionPOi.setImageResource(R.drawable.no_image_aviable);
-					   else
-						imageDescriptionPOi.setImageDrawable(d);
+					
+					  
+						imageDescriptionPOi.setImageDrawable(poi.setImageFromResource(context));
 					
 					TextView titoloPOI = (TextView) findViewById(R.id.nomePOI);
 					titoloPOI.setText(poi.getNome());

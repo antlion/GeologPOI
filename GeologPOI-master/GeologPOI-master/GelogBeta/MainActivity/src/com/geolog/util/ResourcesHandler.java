@@ -3,8 +3,11 @@ package com.geolog.util;
 import java.io.ByteArrayOutputStream;
 
 import com.geolog.dominio.Resource;
+import com.geolog.web.Services;
 
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
 /**
@@ -30,8 +33,24 @@ public class ResourcesHandler {
 		return base64Image;
 	}
 	
-	public static Resource createImageResource(){
-		return null;
+	public static boolean controlImageResource(String uri,Context context)
+	{
+		String path = (context.getFilesDir().toString());
+		String[] fileList = context.fileList();
+		for ( String string: fileList)
+		{
+			if ( string.equals(uri))
+				return true;
+		}
+		return false;
+	}
+	
+	
+	
+	public static Drawable getDrawableFromUri(String uri, Context context,String nome){
+		Services service= new Services();
+		return service.downloadResource(uri, context,nome);
+			
 		
 	}
 }

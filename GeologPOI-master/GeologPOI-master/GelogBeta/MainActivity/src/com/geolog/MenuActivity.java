@@ -37,6 +37,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -68,6 +69,8 @@ public class MenuActivity extends Activity implements OnClickListener {
 	private Thread prova;
 	private boolean menuCategoryOpen;
 	private CategoryHandler categoryHandler;
+	private CategoryAdapter categoryAdapter;
+	private ListView listView;
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
@@ -77,23 +80,23 @@ public class MenuActivity extends Activity implements OnClickListener {
         
         final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
         menuCategoryOpen = false;
-        categoryHandler = new CategoryHandler();
+        categoryHandler = CategoryHandler.getGestoreCategorie();
         
         context = getBaseContext();
         activity = this;
         
-    
-       // aaa();
+    //	CONTROLLARE QUANDO NON SI RECUPERA LA LISTA DELLE CATEGORIE
+       aaa();
       
         Location location = new Location("nuova");
         location.setLatitude(41.857);
         location.setLongitude(12.632897);
-        final CategoryHandler cc = new CategoryHandler();
-        
-        final ListView listView = (ListView)findViewById(R.id.listCategory);
-        final CategoryAdapter categoryAdapter = new CategoryAdapter(getApplicationContext(), cc.richiediCategorie());
-        cc.setSelectionCategory(listView, getApplicationContext(),categoryAdapter);
       
+        
+         listView = (ListView)findViewById(R.id.listCategory);
+        /*final CategoryAdapter categoryAdapter = new CategoryAdapter(getApplicationContext(), categoryHandler.getCategorie());
+        categoryHandler.setSelectionCategory(listView, getApplicationContext(),categoryAdapter);
+      */
       
        /* listView.setAdapter(categoryAdapter);
         listView.setBackgroundResource(R.drawable.customshape);
@@ -127,7 +130,7 @@ public class MenuActivity extends Activity implements OnClickListener {
        listView.setVisibility(View.GONE);
         actionBar.addAction(new Action() {
             public void performAction(View view) {
-          
+          if ( categoryHandler.getCategorie() != null){
            	ListView listView = (ListView)findViewById(R.id.listCategory);
                     	
         
@@ -141,7 +144,7 @@ public class MenuActivity extends Activity implements OnClickListener {
     	    	  listView.setVisibility(View.GONE);
     	    	  categoryHandler.checkMenuCategory(categoryAdapter);
     	      }
-           	
+            }
             }
             public int getDrawable() {
                 return R.drawable.poi_of_interest;
@@ -175,6 +178,8 @@ public class MenuActivity extends Activity implements OnClickListener {
       
       Button aggiungiPOI = (Button) findViewById(R.id.Aggiungi_POI);
       aggiungiPOI.setOnClickListener(this);
+      Button ricercaPOI = (Button) findViewById(R.id.ricerca_poi);
+      ricercaPOI.setOnClickListener(this);
 	}
 	
 	
@@ -275,10 +280,12 @@ public class MenuActivity extends Activity implements OnClickListener {
 					  progressBar.setMessage("Autenticazione riuscita");
 				  if(progressBarStatus == 20)
 					  progressBar.setMessage("Recupero la lista delle categorie");
-				  if(progressBarStatus == 50 ){
-					  progressBar.setMessage("Lista categorie recuperata");
-					  
-					  }
+				 if(progressBarStatus == 40){
+					 categoryAdapter = new CategoryAdapter(getApplicationContext(), categoryHandler.getCategorie());
+				        categoryHandler.setSelectionCategory(listView, getApplicationContext(),categoryAdapter);
+					 progressBar.setMessage("Lista categorie recuperata");}
+				 if ( progressBarStatus == 55)
+					 progressBar.setMessage("impossibile recupererare la lista delle categorie");
 				  if(progressBarStatus == 90 )
 					  progressBar.setMessage("Fine inizializzazione...");
 				}
@@ -317,10 +324,17 @@ public class MenuActivity extends Activity implements OnClickListener {
 			} else if (fileSize == 200000) {
 				return 20;
 			} else if (fileSize == 300000){
-				CategoryHandler gestoreCategorie = new CategoryHandler();
-				Services services = new Services();
-				services.asd();
 				
+				CategoryListResponse categoryListResponse = categoryHandler.richiediCategorieFromWeb();
+				if ( categoryListResponse != null && categoryListResponse.getStatus() == 200)
+				{
+					categoryHandler.setCategorie((ArrayList<Category>) categoryListResponse.getCategories());
+					
+					return 40;
+				}
+				else {
+					return 55;
+				}
 			}
 			else if (fileSize == 500000) {
 				
@@ -337,9 +351,19 @@ public class MenuActivity extends Activity implements OnClickListener {
 	}
 	
 	public void onClick(View v) {
+		if ( categoryHandler.getCategorie() == null)
+			UtilDialog.alertDialog(v.getContext(), "Impossibile procedere,lista categorie non recuperata").show();
+		else {
 			if (v.getId() == R.id.Aggiungi_POI){ 
-				Intent intent2 = new Intent(v.getContext(), AddPOIActivity.class);
-		        startActivity(intent2);
+				Intent intent = new Intent(v.getContext(), AddPOIActivity.class);
+		        startActivity(intent);
+		        
+			}
+			if (v.getId() == R.id.ricerca_poi)
+			{
+				Intent intent = new Intent(v.getContext(), POISearch.class);
+		        startActivity(intent);
+		      
 			}
 			/*Intent intent = new Intent(v.getContext(), POISearch.class);
 	        startActivity(intent);
@@ -351,6 +375,7 @@ public class MenuActivity extends Activity implements OnClickListener {
 	
 		Intent intent3 = new Intent(v.getContext(), ChoseCategoryActivity.class);
         startActivity(intent);*/
+		}
 	}
 	public void inizializzaFileCategorie()
 	{

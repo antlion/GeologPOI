@@ -15,6 +15,7 @@ import prova2.WSs;
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
 import com.geolog.util.AuthGoogle;
+import com.geolog.util.ParametersBridge;
 import com.geolog.util.ResourcesHandler;
 import com.geolog.util.UtilDialog;
 import com.geolog.web.Services;
@@ -78,6 +79,7 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 	private int progressBarStatus;
 	private Thread prova;
 	private ConfrimResponse responseWeb;
+	private boolean resourceAdded = false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,8 +87,11 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 		setContentView(R.layout.add_poi_activity_layout);
 
 		context = this;
-		mylocation = null;
-		categoryHandler = new CategoryHandler();
+		  ParametersBridge bridge = ParametersBridge.getInstance();
+	        mylocation= (Location)bridge.getParameter("Location");
+	      
+	
+		categoryHandler = CategoryHandler.getGestoreCategorie();
 		hasLocation = false;
 		services = new Services();
 
@@ -96,14 +101,6 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 		Spinner spinner = (Spinner) findViewById(R.id.spinner1);
 		Button button = (Button) findViewById(R.id.ok);
 		button.setOnClickListener(this);
-
-
-
-
-
-
-
-
 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 				this,
@@ -160,7 +157,8 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 		};
 
 
-
+	
+		
 
 	}
 
@@ -191,8 +189,10 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 				if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true)
 				{
 					//Aspetto che venga presa la location
+					if ( mylocation == null)
 					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
-					//	getLocation(this);
+					else{
+					hasLocation = true;}
 					final ProgressDialog progress = new ProgressDialog(this);
 					progress.setIndeterminate(true);
 					progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -209,11 +209,12 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 							else  if (responseWeb == null){
 								UtilDialog.alertDialog(context, "Impossibile insrire il poi").show();
 							}
-							UtilDialog.alertDialog(context, "POI aggiunto con successo");
-
+							else{
+							UtilDialog.alertDialog(context, "POI aggiunto con successo").show();
+							}
 						}
 					};
-					Thread thread = new Thread(new Runnable() {
+					 Thread thread = new Thread(new Runnable() {
 
 						@Override
 						public void run() {
@@ -234,18 +235,25 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 									Spinner spinner = (Spinner) findViewById(R.id.spinner1);
 									int id = categoryHandler.getCategoryIdFromSource(spinner.getSelectedItem().toString());
 									final Poi poi = HandlerPOI.creaPOI(mylocation, id, et1.getText().toString(), et2.getText().toString(),  date);
-									
 									responseWeb = HandlerPOI.addPOI(poi, context, "io");
-									if ( responseWeb == null)
+									if ( responseWeb == null || responseWeb.getStatus() != 200){
 										handler.sendEmptyMessage(0);
+										}
+									else {
 									int idPOI = Integer.parseInt(responseWeb.getResult());
-
+								
+									if (photo != null){
 									responseWeb = (ConfrimResponse) HandlerPOI.uploadPoiResource(idPOI, context, ResourcesHandler.covertBitmapToByte(photo), "image/jpeg");
-									if (responseWeb == null)
+									if (responseWeb == null || responseWeb.getStatus() != 200)
 										handler.sendEmptyMessage(0);
 									else {
 										handler.sendEmptyMessage(0);
 									}
+									}
+									else{
+										handler.sendEmptyMessage(0);
+									}
+								}
 								}
 								else
 									handler.sendEmptyMessage(0);	

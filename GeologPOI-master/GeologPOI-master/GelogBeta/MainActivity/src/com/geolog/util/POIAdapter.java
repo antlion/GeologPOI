@@ -6,16 +6,19 @@ import java.util.Date;
 import com.geolog.HandlerPOI;
 import com.geolog.R;
 import com.geolog.dominio.Poi;
+import com.geolog.web.domain.ConfrimResponse;
 import com.google.android.maps.MapView;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.util.FloatMath;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -76,7 +79,7 @@ public View getView(final int position, View convertView, ViewGroup parent) thro
 	   
 	   ImageView information = (ImageView) convertView.findViewById(R.id.poi_image);
 	   poi.get(position).setImageFromResource(context);
-	   Drawable d = poi.get(position).getDrawableImage();
+	   Drawable d = poi.get(position).setImageFromResource(context);
 	   
 	   
 	   
@@ -107,12 +110,7 @@ public View getView(final int position, View convertView, ViewGroup parent) thro
 			  // Do something with value!
 			  String descrption = input.getText().toString();
 				Log.d("edit",descrption);
-			if(	(HandlerPOI.segnalaPOI(poi.get(position), descrption, new Date(), v.getContext())) )
-			{
-				UtilDialog.createBaseToast("Segnlazione inviata", context);
-			}
-			else
-				UtilDialog.createBaseToast("Segnalazione non iviata", context);
+				Suggestion(poi.get(position), descrption, new Date(), v.getContext());
 			  }
 			});
 
@@ -141,19 +139,39 @@ public View getView(final int position, View convertView, ViewGroup parent) thro
 
 
 
-// see http://androidsnippets.com/distance-between-two-gps-coordinates-in-meter
+public void Suggestion(final Poi poiBase,final String description,final Date date,final Context context)
+	{
+	 
+		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+			ProgressDialog dialog;
+			private ConfrimResponse response;
+
+			protected void onPreExecute(){
+
+				dialog = ProgressDialog.show(context, "Attendere...", "Invio Segnalazione");
+
+			}
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+
+				 response = HandlerPOI.segnalaPOI(poiBase, description, date, context);
+				return null;
+				
+			}
+			protected void onPostExecute(String result) {
+				dialog.dismiss();
+				if(response== null || response.getStatus() != 200)
+				{
+					UtilDialog.createBaseToast("Segnalazione non inviata", context).show();
+				}
+				else
+					UtilDialog.createBaseToast("Segnalazione iniviata", context).show();
 
 
-
-   /*public View getView(int position, View convertView, ViewGroup parent) {
-        convertView = MenuInflater.inflate(IGNORE_ITEM_VIEW_TYPE, null);
- 
-       // ImageView iv = (ImageView)convertView.findViewById(R.id.immagine_vista);
-       // iv.setImageDrawable(immagini.getDrawable(position));
- 
-        TextView tv = (TextView)convertView.findViewById(R.id.testo_vista);
-        tv.setText(poi.get(position).getNome());
- 
-        return convertView;
-    }*/
+			}
+		};
+		task.execute(null);
+		
+	}
 }

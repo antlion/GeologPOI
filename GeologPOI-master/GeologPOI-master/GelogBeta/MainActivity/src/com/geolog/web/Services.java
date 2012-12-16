@@ -40,7 +40,7 @@ import com.google.gson.GsonBuilder;
 public class Services {
 
 	private WSs webService;
-	private static final String WEB_SERVICE_URL = "http://160.80.145.216:8080/GelogWeb/services/WS";
+	private static final String WEB_SERVICE_URL = "http://192.168.0.103:8080/GeologWeb/services/WS";
 	private JSONObject result;
 
 	//tutti i metodi mi ritoranano un oggetto di tipo BaseResponse
@@ -108,157 +108,82 @@ public class Services {
 		return baseResponse;
 	}
 
-	public BaseResponse asd()
+
+
+
+	public  ConfrimResponse addSuggestion(Suggestion suggestion, Context context)
 	{
-		try {
-			String response = webService.listCategories();
-			GsonBuilder builder = new GsonBuilder();
-			Gson gson = builder.create();
-			CategoryListResponse responseWeb= gson.fromJson(response, CategoryListResponse.class);
-			if ( responseWeb.getStatus() == 200){
-				baseResponse = responseWeb;
-			}
+		ConfrimResponse response = null;
+		JSONObject result = new JSONObject();
+		JSONObject categoria = new JSONObject();
+		categoria.put("id",suggestion.getPoi().getCategoria().getId());
+		JSONObject poi = new JSONObject();
+		poi.put("nome",suggestion.getPoi().getNome());
+		poi.put("descrizione", suggestion.getPoi().getDescrizione());
+		poi.put("id", suggestion.getPoi().getIdTipo());
+		poi.put("latitude", suggestion.getPoi().getLatitude());
+		poi.put("longitude", suggestion.getPoi().getLongitude());
+		poi.put("category",categoria);
+		result.put("id", suggestion.getId());
+		result.put("user",suggestion.getUser());
 
-			else
-				baseResponse = null;
-
-		} 
+		result.put("creationDate", suggestion.getCreationDate());
+		result.put("description", suggestion.getDescription());
+		result.put("poi", poi);
+		
+		try{
+		String responseWeb = webService.reportPoi(suggestion.getPoi().getIdTipo(), suggestion.getDescription(), suggestion.getUser());
+		GsonBuilder builder = new GsonBuilder();
+		Gson gson = builder.create();
+		response = gson.fromJson(responseWeb,ConfrimResponse.class);
+		return response;
+		}
 		catch (Exception e) {
 			// TODO Auto-generated catch block
-			baseResponse = null;
-			return null;
+
+			e.printStackTrace();
 		}
-		return null;
-	}
-	public CategoryListResponse getListCategory(final Context context)
-	{
-		
-
-				try {
-					String response = webService.listCategories();
-					GsonBuilder builder = new GsonBuilder();
-					Gson gson = builder.create();
-					CategoryListResponse responseWeb= gson.fromJson(response, CategoryListResponse.class);
-					if ( responseWeb.getStatus() == 200){
-						return responseWeb;
-					}
-
-					else
-						return null;
-
-				} 
-				catch (Exception e) {
-					// TODO Auto-generated catch block
-					
-					return null;
-				}
-				
-			}
-			
-	
-
-	public BaseResponse addSuggestion(final Suggestion suggestion,final Context context)
-	{
-		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
-			ProgressDialog dialog;
-
-			protected void onPreExecute(){
-				result = new JSONObject();
-				JSONObject categoria = new JSONObject();
-				categoria.put("id",suggestion.getPoi().getCategoria().getId());
-
-				JSONObject poi = new JSONObject();
-				poi.put("nome",suggestion.getPoi().getNome());
-				poi.put("descrizione", suggestion.getPoi().getDescrizione());
-				poi.put("id", suggestion.getPoi().getIdTipo());
-				poi.put("latitude", suggestion.getPoi().getLatitude());
-				poi.put("longitude", suggestion.getPoi().getLongitude());
-				poi.put("category",categoria);
-				result.put("id", suggestion.getId());
-				result.put("user",suggestion.getUser());
-
-				result.put("creationDate", suggestion.getCreationDate());
-				result.put("description", suggestion.getDescription());
-				result.put("poi", poi);
-				dialog = ProgressDialog.show(context, "Attendere...", "Invio segnalazione al Server");
-
-			}
-			@Override
-			protected String doInBackground(Void... params) {
-				// TODO Auto-generated method stub
-				//locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
-
-				try {
-					String response = webService.getSuggestion(result.toJSONString());
-					GsonBuilder builder = new GsonBuilder();
-					Gson gson = builder.create();
-					SuggestionResponse responseWeb= gson.fromJson(response, SuggestionResponse.class);
-					if ( responseWeb.getStatus() == 200){
-						baseResponse = responseWeb;
-					}
-
-					else
-						baseResponse = null;
-
-				} 
-				catch (Exception e) {
-					// TODO Auto-generated catch block
-					baseResponse = null;
-					return null;
-				}
-				return null;
-			}
-			protected void onPostExecute(String result) {
-				dialog.dismiss();
-				if ( baseResponse == null)
-				{
-					UtilDialog.alertDialog(context, "Impossibile stabilire la conessione con il server").show();
-				}
-
-			}
-		};
-		task.execute(null);
-		return baseResponse;
-
-
-
+		return response;
 	}
 
-	
-	public Drawable downloadResource(String url,Context context)
+
+
+	public Drawable downloadResource(String url,Context context,String nome)
 	{
-		
-		
-	
+
+
+
 
 		String path = (context.getFilesDir().toString());
 		try{
 			URL web = new URL(url); 
-			File file = new File(path+"salem.jpg");
+			
+			File file = new File(path,nome);
 
 			long startTime = System.currentTimeMillis();
-		
+
 			URLConnection ucon = web.openConnection();
 
-			
+
 			InputStream is = ucon.getInputStream();
 			BufferedInputStream bis = new BufferedInputStream(is);
 
-			
+
 			ByteArrayBuffer baf = new ByteArrayBuffer(50);
 			int current = 0;
 			while ((current = bis.read()) != -1) {
 				baf.append((byte) current);
 			}
 
-		
+
 			FileOutputStream fos = new FileOutputStream(file);
 			fos.write(baf.toByteArray());
 			fos.close();
 			Log.d("ImageManager", "download ready in"
 					+ ((System.currentTimeMillis() - startTime) / 1000)
 					+ " sec");
-			Drawable d = new BitmapDrawable(context.getResources(),path+"salem.jpg");
+		
+			Drawable d = new BitmapDrawable(context.getResources(),path+"//"+nome);
 			return d;
 		}
 
@@ -271,72 +196,82 @@ public class Services {
 			return null;
 		}
 	}
-	
+
 	public ConfrimResponse uploadResource(final Context context,final int idPOI,final String typeResource,final byte[] data)
 	{
-		
-				// TODO Auto-generated method stub
-				ConfrimResponse confirm;
 
+		// TODO Auto-generated method stub
+		ConfrimResponse confirm = null;
+
+		try {
+			WSs services = new WSs();
+			services.setUrl(WEB_SERVICE_URL);
+			String response = services.upload(idPOI, typeResource, data);
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			confirm= gson.fromJson(response,ConfrimResponse.class);
+			return confirm;
+
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+
+			e.printStackTrace();
+		}
+		return confirm;
+	}
+
+
+
+
+	public ConfrimResponse addPOI(Poi poi,Context context,String user)
+	{
+		final JSONObject result = new JSONObject();
+		ConfrimResponse confirmResponse = null;
+
+		result.put("name",poi.getNome());
+		result.put("longitude",poi.getLongitude());
+		result.put("latitude",poi.getLongitude());
+		result.put("description", poi.getDescrizione());
+		//attenzione questo valore
+		result.put("category_id",8);
+		try {
+			WSs services = new WSs();
+			services.setUrl(WEB_SERVICE_URL);
+			services.setTimeOut(100);
+			String response = services.addPoi(result.toJSONString(),user);
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			confirmResponse= gson.fromJson(response, ConfrimResponse.class);
+			Log.d("resoonse",String.valueOf(confirmResponse.getStatus()));
+			return confirmResponse;
+
+		} 
+		catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return confirmResponse;
+	}
+	
+	public CategoryListResponse getListCategory()
+	{
+		CategoryListResponse responseWeb = null;
+	
 				try {
-					WSs services = new WSs();
-					services.setUrl(WEB_SERVICE_URL);
-					String response = services.upload(idPOI, typeResource, data);
+					String response = webService.listCategories();
 					GsonBuilder builder = new GsonBuilder();
 					Gson gson = builder.create();
-					 confirm= gson.fromJson(response,ConfrimResponse.class);
-					if ( confirm.getStatus() == 200){
-						return confirm;
-					}
+					 responseWeb= gson.fromJson(response, CategoryListResponse.class);
+					 return responseWeb;
 
-					else
-						return null;
 
 				} 
 				catch (Exception e) {
 					// TODO Auto-generated catch block
 					
-					return null;
+					e.printStackTrace();
 				}
-				
+				return responseWeb;
 			}
-		
-	
-	
-	
-public ConfrimResponse addPOI(Poi poi,Context context,String user)
-{
-	final JSONObject result = new JSONObject();
-	final ConfrimResponse confirmResponse;
-	
-	result.put("name",poi.getNome());
-	result.put("longitude",poi.getLongitude());
-	result.put("latitude",poi.getLongitude());
-	result.put("description", poi.getDescrizione());
-	//attenzione questo valore
-	result.put("category_id",8);
-	try {
-		WSs services = new WSs();
-		services.setUrl(WEB_SERVICE_URL);
-		services.setTimeOut(10);
-		String response = services.addPoi(result.toJSONString(),user);
-		GsonBuilder builder = new GsonBuilder();
-		Gson gson = builder.create();
-		ConfrimResponse responseWeb= gson.fromJson(response, ConfrimResponse.class);
-		
-		if ( responseWeb.getStatus() == 200){
-			return responseWeb;
-		}
-
-		else
-			return null;
-
-	} 
-	catch (Exception e) {
-		// TODO Auto-generated catch block
-		
-		return null;
-	
-	}
-}
 }

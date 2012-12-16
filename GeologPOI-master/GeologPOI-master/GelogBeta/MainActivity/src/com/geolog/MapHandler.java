@@ -9,6 +9,7 @@ import java.util.List;
 import com.geolog.dominio.*;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
@@ -57,6 +59,10 @@ import android.widget.Toast;
 
 
 import com.geolog.util.*;
+import com.geolog.web.Services;
+import com.geolog.web.domain.BaseResponse;
+import com.geolog.web.domain.ConfrimResponse;
+import com.geolog.web.domain.PoiListResponse;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.MapActivity;
@@ -65,6 +71,9 @@ import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.Projection;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.markupartist.android.widget.ActionBar;
 
 public class MapHandler extends MapActivity implements VisHandler{
 	private GeoPoint currentPosition; 
@@ -82,17 +91,19 @@ public class MapHandler extends MapActivity implements VisHandler{
 	private LocationManager locationManager;
 	private LocationListener myLocationListener;
 	private CategoryAdapter categoryAdapter;
+	private Context context ;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       
+   
+       context = getApplicationContext();
         setContentView(R.layout.map_poi);
        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
         poi = new ArrayList<Poi>();
         ParametersBridge bridge = ParametersBridge.getInstance();
         poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
         mylocation =(Location)ParametersBridge.getInstance().getParameter("location");
-        gestoreCategorie = new CategoryHandler();
+        gestoreCategorie = CategoryHandler.getGestoreCategorie();
         
         //inizializzo la mappa
         MapView mapView = (MapView) findViewById(R.id.mapView);
@@ -118,7 +129,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 	      
 	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
 	    
-	    categoryAdapter = new CategoryAdapter(getApplicationContext(), gestoreCategorie.richiediCategorie());
+	    categoryAdapter = new CategoryAdapter(getApplicationContext(), gestoreCategorie.getCategorie());
         gestoreCategorie.setSelectionCategory(v, getApplicationContext(),categoryAdapter);
       
 	   // v.setAdapter(pois);
@@ -260,13 +271,13 @@ public class MapHandler extends MapActivity implements VisHandler{
 			//aggiunta dopo dominio
 			
 			GeoPoint point = createNewGeoPoint(pois.getPOILocation());
-			Drawable drawable = this.getResources().getDrawable(pois.getCategoria().getIcon());
+			
+			Drawable drawable = pois.getCategoria().getIconFromResource(context);
 			PositionOverlay itemizedoverlay = new PositionOverlay(drawable, this,pois); 
 			OverlayItem overlayitem = new OverlayItem(point, pois.getNome(), pois.getDescrizione());
 			 itemizedoverlay.addOverlay(overlayitem);
 		     mapOverlays.add(itemizedoverlay);
-			//mapView.getOverlays().add(new PositionOverlay(GestoreMappa.this.getResources(),
-			   //     BitmapFactory.decodeResource(res, pois.getImage()),createNewGeoPoint(pois.getLocation()), this));
+			
 		}
 		
 	}
@@ -323,7 +334,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 			    mOverlays.add(overlay);
 			    populate();
 			}
-			/*public boolean onTouchEvent(MotionEvent event, MapView mapView) 
+		/*	public boolean onTouchEvent(MotionEvent event, MapView mapView) 
 		    {   
 		        //---when user lifts his finger---
 		        if (event.getAction() == 1) {                
@@ -336,14 +347,52 @@ public class MapHandler extends MapActivity implements VisHandler{
 		                    Toast.LENGTH_SHORT).show();
 		        }                            
 		        return false;
-		    }   */
+		    } */  
+			 @Override
+			    public boolean onTap(final GeoPoint p, MapView mapView) {
+			        // If it was the parent that was tapped, do nothing
+			        if(super.onTap(p, mapView)) {
+			        	
+			            return true;
+			        }
+			        AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+
+					alert.setIcon(R.drawable.ex_mark2);
+					alert.setTitle("AggiungiPOI");
+					alert.setMessage("Vuoi aggiungere un punto di intresse in questa posizione?");
+					alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int whichButton) {
+					
+						 Location location = new Location("nuova");
+					        location.setLatitude(p.getLatitudeE6() / 1E6);
+					        location.setLongitude(p.getLongitudeE6() /1E6);
+					        
+					        ParametersBridge.getInstance().addParameter("Location", location);
+					        Intent intent = new Intent(getBaseContext(), AddPOIActivity.class);
+					        startActivity(intent);
+					}
+					});
+
+					alert.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+					  public void onClick(DialogInterface dialog, int whichButton) {
+					    // Canceled.
+					  }
+					});
+
+					alert.show();
+			       
+			                
+			              
+					return true;
+			       
+			        }           
 			
 			
 			
 			
 		@Override	
 		protected boolean onTap(final int index) {
-				 
+				
 			 OverlayItem item = mOverlays.get(index);
 			
 		 if(item.getTitle().equals("MiaPosizione")){
@@ -402,7 +451,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 				     final ImageView segnalazione = (ImageView)popUp.findViewById(R.id.segnalzione);
 				     segnalazione.setOnClickListener(new OnClickListener() 
 				     {
-				         public void onClick(View v) 
+				         public void onClick(final View v) 
 				         {
 				        	 map.removeView(popUp);
 				        	 final View popUp2 = getLayoutInflater().inflate(R.layout.inserisci_segnalazione_dialog, map, false);
@@ -430,14 +479,8 @@ public class MapHandler extends MapActivity implements VisHandler{
 								
 								  // Do something with value!
 								  String descrption = input.getText().toString();
-									Log.d("edit",descrption);
-								if(	(HandlerPOI.segnalaPOI(poi, descrption, new Date(), popUp2.getContext())) )
-								{
-									UtilDialog.createBaseToast("Segnlazione inviata", mContext);
+								Suggestion(poi, descrption, new Date(), v.getContext());
 								}
-								else
-									UtilDialog.createBaseToast("Segnalazione non iviata", mContext);
-								  }
 								});
 
 								alert.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
@@ -449,26 +492,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 								alert.show();
 						     
 						     
-						   /*  final Button close = (Button) popUp2.findViewById(R.id.chiudi);
-						    close.setOnClickListener(new OnClickListener()
-						    {
-
-								public void onClick(View arg0) {
-									// TODO Auto-generated method stub
-									map.removeView(popUp2);
-								}
-						    	
-						    });
-						    final Button invia = (Button) popUp2.findViewById(R.id.invia);
-						    close.setOnClickListener(new OnClickListener()
-						    {
-
-								public void onClick(View arg0) {
-									// TODO Auto-generated method stub
-									//invia Segnalazione al cupis
-								}
-						    	
-						    });*/
+						 
 				         }
 				     });
 				  
@@ -480,11 +504,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 			
 			
 		}
-	 public boolean onTap(GeoPoint p, MapView mapView) {
-           System.out.println("ontap2");
-           //  return super.onTap(p, mapView);
-             return true;
-     }
+	
 	
 	 @Override
 	protected boolean isRouteDisplayed() {
@@ -492,6 +512,42 @@ public class MapHandler extends MapActivity implements VisHandler{
 		return false;
 	}
 
-	
+	 //Vedere se si può mettere in un altra classe)
+	 public void Suggestion(final Poi poiBase,final String description,final Date date,final Context context)
+		{
+		 
+			final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+				ProgressDialog dialog;
+				private ConfrimResponse response;
+
+				protected void onPreExecute(){
+
+					dialog = ProgressDialog.show(context, "Attendere...", "Invio Segnalazione");
+
+				}
+				@Override
+				protected String doInBackground(Void... params) {
+					// TODO Auto-generated method stub
+
+					 response = HandlerPOI.segnalaPOI(poiBase, description, date, context);
+					return null;
+					
+				}
+				protected void onPostExecute(String result) {
+					dialog.dismiss();
+					if(response== null || response.getStatus() != 200)
+					{
+						UtilDialog.createBaseToast("Segnalazione non inviata", context).show();
+					}
+					else
+						UtilDialog.createBaseToast("Segnalazione iniviata", context).show();
+
+
+				}
+			};
+			task.execute(null);
+			
+		}
+
 	
 }

@@ -2,6 +2,7 @@ package com.geolog;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -30,64 +31,41 @@ public class HandlerPOI {
 	
 	public static Poi creaPOI(Location location,int idCategory,String nome,String descrizione,Date date)
 	{
-		Category category = new CategoryHandler().getCategoryFromId(idCategory);
+		
+		Category category = CategoryHandler.getGestoreCategorie().getCategoryFromId(idCategory);
 		Poi newPOI = new Poi(category, nome, descrizione, date, location);
 		return newPOI;
 	}
 	
-	public static boolean segnalaPOI(Poi poiBase,String descrizione,Date date,Context context){
+	public static ConfrimResponse segnalaPOI(Poi poiBase,String descrizione,Date date,Context context){
 		
 		Suggestion suggestion = new Suggestion(0, "io", poiBase, date,descrizione);
 		Services service = new Services();
-		SuggestionResponse response = (SuggestionResponse) service.addSuggestion(suggestion, context);
-		if(response == null)
-			return false;
-		if(response.getStatus() != 200 )
-			return false;
-		
-		return true;
-		
-		
-		//Suggestion suggestionPOI = new Suggestion();
-	
+		ConfrimResponse response =  service.addSuggestion(suggestion, context);
+		return response;	
 	}
 	
 	public static ConfrimResponse addPOI(Poi poi, Context context,String user)
 	{
 		Services service = new Services();
-		service.addPOI(poi, context, user);
-		ConfrimResponse confirmResponse = (ConfrimResponse) service.getBaseResponse() ;
-		if (confirmResponse == null)
-			return null;
-		if(confirmResponse.getStatus() != 200)
-			return null;
+		ConfrimResponse confirmResponse = service.addPOI(poi, context, user);
 		return confirmResponse;
 	}
 	
 	public static ConfrimResponse uploadPoiResource(int idPOI,Context context,byte[] resource,String typeRespurce)
 	{	Services service = new Services();
-		ConfrimResponse responseWeb = (ConfrimResponse) service.uploadResource(context, idPOI, typeRespurce, resource);
-		if (responseWeb == null && responseWeb.getStatus() != 200)
+		ConfrimResponse responseWeb =  service.uploadResource(context, idPOI, typeRespurce, resource);
+		if (responseWeb == null || responseWeb.getStatus() != 200)
 			return null;
 		else {
 			return responseWeb;
 		}
 	}
 	
-	public static List<Category> getListCategory(Context context)
-	{
-		Services services = new Services();
-		CategoryListResponse response = (CategoryListResponse) services.getListCategory(context);
-		if ( response == null)
-			return null;
-		if ( response.getStatus() != 200 )
-			return null;
-		return response.getCategory();
-					
-	}
+
 	public static ArrayList<Poi> cercaPOI(Location location,Context context) 
 	{
-		CategoryHandler categoryHandler = new CategoryHandler();
+		CategoryHandler categoryHandler = CategoryHandler.getGestoreCategorie();
 		/*Services services = new Services();
 		PoiListResponse poiListResponse = (PoiListResponse) services.findNearby(location,categoryHandler.getIdSelectedCategory(), context);
 		//chiama il servizio del web service
@@ -110,14 +88,14 @@ public class HandlerPOI {
 		location2.setLatitude(42.703422);
 		location2.setLongitude(20.690868);
 		ArrayList<Poi> arrayPOI = new ArrayList<Poi>();
-    	Poi newPOI = new Poi(new Category("Emergenza",1,R.drawable.croce_rossa),"Ospedale PTV", "ospedale qui viicno",1,null, location2, R.drawable.ptv);
+    	Poi newPOI = new Poi(categoryHandler.getCategorie().get(0),"Ospedale PTV", "ospedale qui viicno",1,null, location2, R.drawable.ptv);
     	Location location1 = new Location("aaaa");
 		location1.setLatitude(37.422006);
 		location1.setLongitude(32.084095);
     	Poi newPOI2 = new Poi(new Category("risto",1,R.drawable.food_icon),"sushi", "schifo",1,null, location1, R.drawable.kfc);
     	
-    	Resource resource = new Resource(0, "http://www.direttanews.it/wp-content/uploads/megan-fox-544.jpg", "immagine di meganFox", newPOI, new ResourceType("image/jpeg"));
-    	List<Resource> res =  new ArrayList<Resource>();
+    	Resource resource = new Resource(0, "http://images.movieplayer.it/2009/04/29/megan-fox-e-ciliege-114949.jpg", "immagine di meganFox", newPOI, new ResourceType("image/jpeg"));
+    	Set<Resource> res =  new HashSet<Resource>();
     	res.add(resource);
     	newPOI.setResources(res);
     	arrayPOI.add(newPOI);

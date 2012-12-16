@@ -27,40 +27,42 @@ import org.ksoap2.HeaderProperty;
 import java.util.List;
 import org.ksoap2.serialization.MarshalFloat;
 
+import android.util.Log;
+
 import com.geolog.web.domain.CategoryListResponse;
 
 public class WSs{
-    public String NAMESPACE =" http://math";
-    public String url="{0}";
-    public int timeOut = 60000;
-    
+	public String NAMESPACE =" http://math";
+	public String url="{0}";
+	public int timeOut = 60000;
 
 
-    public void setTimeOut(int seconds){
-        this.timeOut = seconds * 1000;
-    }
-    public void setUrl(String url){
-        this.url = url;
-    }
-   /* public String addPOI(String poi){
+
+	public void setTimeOut(int seconds){
+		this.timeOut = seconds * 1000;
+	}
+	public void setUrl(String url){
+		this.url = url;
+	}
+	/* public String addPOI(String poi){
         return addPOI(poi,null);
     }
 
 
     public String addPOI(String poi,List<HeaderProperty> headers){
-    
+
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
         SoapObject soapReq = new SoapObject("http://math","addPOI");
         soapReq.addProperty("poi",poi);
-        
+
         new MarshalFloat().register(soapEnvelope);
-        
+
         soapEnvelope.setOutputSoapObject(soapReq);
         HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
         try{
-            
+
             if (headers!=null){
                 httpTransport.call("http://math/addPOI", soapEnvelope,headers);
             }else{
@@ -81,223 +83,245 @@ public class WSs{
         }
         return null;
     }
-    
+
     public String findNearby(float latitude,boolean latitudeSpecified,float langitude,boolean langitudeSpecified){
         return findNearby(latitude,latitudeSpecified,langitude,langitudeSpecified,null);
     }*/
 
 
-    public String findNearby(float latitude,boolean latitudeSpecified,float langitude,boolean langitudeSpecified,List<HeaderProperty> headers){
-    
-        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        soapEnvelope.implicitTypes = true;
-        soapEnvelope.dotNet = true;
-        SoapObject soapReq = new SoapObject("http://math","findNearby");
-        soapReq.addProperty("latitude",latitude);
-        soapReq.addProperty("latitudeSpecified",latitudeSpecified);
-        soapReq.addProperty("langitude",langitude);
-        soapReq.addProperty("langitudeSpecified",langitudeSpecified);
-        
-        new MarshalFloat().register(soapEnvelope);
-        
-        soapEnvelope.setOutputSoapObject(soapReq);
-        HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
-        try{
-            
-            if (headers!=null){
-                httpTransport.call("http://math/findNearby", soapEnvelope,headers);
-            }else{
-                httpTransport.call("http://math/findNearby", soapEnvelope);
-            }
-            SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-            if (result.hasProperty("findNearbyResult"))
-            {
-                Object obj = result.getProperty("findNearbyResult");
-                if (obj.getClass().equals(SoapPrimitive.class)){
-                    SoapPrimitive j1 =(SoapPrimitive) result.getProperty("findNearbyResult");
-                    String resultVariable = j1.toString();
-                    return resultVariable;
-                }
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    public String getSuggestion(String suggestion){
-        return getSuggestion(suggestion,null);
-    }
+	public String findNearby(float latitude,boolean latitudeSpecified,float langitude,boolean langitudeSpecified,List<HeaderProperty> headers){
+
+		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		soapEnvelope.implicitTypes = true;
+		soapEnvelope.dotNet = true;
+		SoapObject soapReq = new SoapObject("http://math","findNearby");
+		soapReq.addProperty("latitude",latitude);
+		soapReq.addProperty("latitudeSpecified",latitudeSpecified);
+		soapReq.addProperty("langitude",langitude);
+		soapReq.addProperty("langitudeSpecified",langitudeSpecified);
+
+		new MarshalFloat().register(soapEnvelope);
+
+		soapEnvelope.setOutputSoapObject(soapReq);
+		HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+		try{
+
+			if (headers!=null){
+				httpTransport.call("http://math/findNearby", soapEnvelope,headers);
+			}else{
+				httpTransport.call("http://math/findNearby", soapEnvelope);
+			}
+			SoapObject result=(SoapObject)soapEnvelope.bodyIn;
+			if (result.hasProperty("findNearbyResult"))
+			{
+				Object obj = result.getProperty("findNearbyResult");
+				if (obj.getClass().equals(SoapPrimitive.class)){
+					SoapPrimitive j1 =(SoapPrimitive) result.getProperty("findNearbyResult");
+					String resultVariable = j1.toString();
+					return resultVariable;
+				}
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	  public String reportPoi(int poi_id,String msg,String user){
+	        return reportPoi(poi_id,msg,user,null);
+	    }
 
 
-    public String getSuggestion(String suggestion,List<HeaderProperty> headers){
-    
-        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        soapEnvelope.implicitTypes = true;
-        soapEnvelope.dotNet = true;
-        SoapObject soapReq = new SoapObject("http://math","getSuggestion");
-        soapReq.addProperty("suggestion",suggestion);
-        
-        new MarshalFloat().register(soapEnvelope);
-        
-        soapEnvelope.setOutputSoapObject(soapReq);
-        HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
-        try{
-            
-            if (headers!=null){
-                httpTransport.call("http://math/getSuggestion", soapEnvelope,headers);
-            }else{
-                httpTransport.call("http://math/getSuggestion", soapEnvelope);
-            }
-            SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-            if (result.hasProperty("getSuggestionResult"))
-            {
-                Object obj = result.getProperty("getSuggestionResult");
-                if (obj.getClass().equals(SoapPrimitive.class)){
-                    SoapPrimitive j2 =(SoapPrimitive) result.getProperty("getSuggestionResult");
-                    String resultVariable = j2.toString();
-                    return resultVariable;
-                }
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    public String listCategories(){
-        return listCategories(null);
-    }
-
-
- public String listCategories(List<HeaderProperty> headers){
-    
-        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        soapEnvelope.implicitTypes = true;
-        soapEnvelope.dotNet = true;
-        SoapObject soapReq = new SoapObject("http://math","listCategories");
-        
-        new MarshalFloat().register(soapEnvelope);
-        
-        soapEnvelope.setOutputSoapObject(soapReq);
-        HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
-        try{
-            
-            if (headers!=null){
-                httpTransport.call("http://math/listCategories", soapEnvelope,headers);
-            }else{
-                httpTransport.call("http://math/listCategories", soapEnvelope);
-            }
-            SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-            if (result.hasProperty("listCategoriesResult"))
-            {
-                Object obj = result.getProperty("listCategoriesResult");
-                if (obj.getClass().equals(SoapPrimitive.class)){
-                    SoapPrimitive j3 =(SoapPrimitive) result.getProperty("listCategoriesResult");
-                    String resultVariable = j3.toString();
-                    return resultVariable;
-                }
-            }
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-
-
- 
- public String upload(int poi_id,String type,byte[] data){
-     return upload(poi_id,type,data,null);
- }
-
-
- public String upload(int poi_id,String type,byte[] data,List<HeaderProperty> headers){
- 
-     SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-     soapEnvelope.implicitTypes = true;
-     soapEnvelope.dotNet = true;
-     SoapObject soapReq = new SoapObject("http://ws/xsd/","upload");
-     soapReq.addProperty("poi_id",poi_id);
-    
-     soapReq.addProperty("type",type);
-     soapReq.addProperty("data",data);
-     
-     //new MarshalFloat().register(soapEnvelope);
-     
-
- 
-
-new MarshalBase64().register(soapEnvelope); //serialization
-soapEnvelope.encodingStyle = SoapEnvelope.ENC; 
-     
-     soapEnvelope.setOutputSoapObject(soapReq);
-     HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
-     try{
-         
-         if (headers!=null){
-             httpTransport.call("http://ws/upload", soapEnvelope,headers);
-         }else{
-             httpTransport.call("http://ws/upload", soapEnvelope);
-         }
-         SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-      
-         
-         if (result.hasProperty("return"))
-         {
-             Object obj = result.getProperty("return");
-             if (obj.getClass().equals(SoapPrimitive.class)){
-                 SoapPrimitive j3 =(SoapPrimitive) result.getProperty("return");
-                 String resultVariable = j3.toString();
-                 return resultVariable;
-             }
-         }
-     }catch (Exception e) {
-         e.printStackTrace();
-     }
-     return null;
- }
- public String addPoi(String poi,String user){
-     return addPoi(poi,user,null);
- }
- 
- public String addPoi(String poi,String user,List<HeaderProperty> headers){
+	    public String reportPoi(int poi_id,String msg,String user,List<HeaderProperty> headers){
 	    
-     SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-     soapEnvelope.implicitTypes = true;
-     soapEnvelope.dotNet = false;
-     SoapObject soapReq = new SoapObject("http://ws/xsd/","addPoi");
-     soapReq.addProperty("poi",poi);
-     soapReq.addProperty("user",user);
-     
-     new MarshalFloat().register(soapEnvelope);
-     
-     soapEnvelope.setOutputSoapObject(soapReq);
-     HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
-     try{
-         
-         if (headers!=null){
-             httpTransport.call("http://ws/addPoi", soapEnvelope,headers);
-         }else{
-             httpTransport.call("http://ws/addPoi", soapEnvelope);
-         }
-         SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-         if (result.hasProperty("addPoiResult"))
+	        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+	        soapEnvelope.implicitTypes = true;
+	        soapEnvelope.dotNet = true;
+	        SoapObject soapReq = new SoapObject("http://ws/xsd/","reportPoi");
+	        soapReq.addProperty("poi_id",poi_id);
+	       
+	        soapReq.addProperty("msg",msg);
+	        soapReq.addProperty("user",user);
+	        
+	        new MarshalFloat().register(soapEnvelope);
+	        
+	        soapEnvelope.setOutputSoapObject(soapReq);
+	        HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+	        try{
+	            
+	            if (headers!=null){
+	                httpTransport.call("http://ws/reportPoi", soapEnvelope,headers);
+	            }else{
+	                httpTransport.call("http://ws/reportPoi", soapEnvelope);
+	            }
+	            SoapObject result=(SoapObject)soapEnvelope.bodyIn;
+	            if (result != null){
+	            	Log.d("sopab",result.getProperty(0).toString());
+					return result.getProperty(0).toString();
+	            }
+	           /* if (result.hasProperty("listCategoriesResult"))
+	            {
+	                Object obj = result.getProperty("listCategoriesResult");
+	                if (obj.getClass().equals(SoapPrimitive.class)){
+	                    SoapPrimitive j5 =(SoapPrimitive) result.getProperty("listCategoriesResult");
+	                    String resultVariable = j5.toString();
+	                    return resultVariable;
+	                }
+	            }*/
+	        }catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return null;
+	    }
+
+	 public String listCategories(){
+	        return listCategories(null);
+	    }
+
+
+	    public String listCategories(List<HeaderProperty> headers){
+	    
+	        SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+	        soapEnvelope.implicitTypes = true;
+	        soapEnvelope.dotNet = true;
+	        SoapObject soapReq = new SoapObject("http://ws/xsd/","listCategories");
+	        
+	        new MarshalFloat().register(soapEnvelope);
+	        
+	        soapEnvelope.setOutputSoapObject(soapReq);
+	        HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+	        try{
+	            
+	            if (headers!=null){
+	                httpTransport.call("http://ws/listCategories", soapEnvelope,headers);
+	            }else{
+	                httpTransport.call("http://ws/listCategories", soapEnvelope);
+	            }
+	            SoapObject result=(SoapObject)soapEnvelope.bodyIn;
+	            if (result != null){
+	            	Log.d("sopab",result.getProperty(0).toString());
+					return result.getProperty(0).toString();
+	            }
+	           /* if (result.hasProperty("listCategoriesResult"))
+	            {
+	                Object obj = result.getProperty("listCategoriesResult");
+	                if (obj.getClass().equals(SoapPrimitive.class)){
+	                    SoapPrimitive j5 =(SoapPrimitive) result.getProperty("listCategoriesResult");
+	                    String resultVariable = j5.toString();
+	                    return resultVariable;
+	                }
+	            }*/
+	        }catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        return null;
+	    }
+
+
+
+
+
+	public String upload(int poi_id,String type,byte[] data){
+		return upload(poi_id,type,data,null);
+	}
+
+
+	public String upload(int poi_id,String type,byte[] data,List<HeaderProperty> headers){
+
+		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		soapEnvelope.implicitTypes = true;
+		soapEnvelope.dotNet = true;
+		SoapObject soapReq = new SoapObject("http://ws/xsd/","upload");
+		soapReq.addProperty("poi_id",poi_id);
+
+		soapReq.addProperty("type",type);
+		soapReq.addProperty("data",data);
+
+		//new MarshalFloat().register(soapEnvelope);
+
+
+
+
+		new MarshalBase64().register(soapEnvelope); //serialization
+		soapEnvelope.encodingStyle = SoapEnvelope.ENC; 
+
+		soapEnvelope.setOutputSoapObject(soapReq);
+		HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+		try{
+
+			if (headers!=null){
+				httpTransport.call("http://ws/upload", soapEnvelope,headers);
+			}else{
+				httpTransport.call("http://ws/upload", soapEnvelope);
+			}
+			SoapObject result=(SoapObject)soapEnvelope.bodyIn;
+			if ( result != null){
+				Log.d("sopab",result.getProperty(0).toString());
+				return result.getProperty(0).toString();
+			}
+				
+
+			/*if (result.hasProperty("uploadResponse"))
+			{
+				Object obj = result.getProperty("uploadResponse");
+				if (obj.getClass().equals(SoapPrimitive.class)){
+					SoapPrimitive j3 =(SoapPrimitive) result.getProperty("return");
+					String resultVariable = j3.toString();
+					return resultVariable;
+				}
+			}*/
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public String addPoi(String poi,String user){
+		return addPoi(poi,user,null);
+	}
+
+	public String addPoi(String poi,String user,List<HeaderProperty> headers){
+
+		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		soapEnvelope.implicitTypes = true;
+		soapEnvelope.dotNet = false;
+		SoapObject soapReq = new SoapObject("http://ws/xsd/","addPoi");
+		soapReq.addProperty("poi",poi);
+		soapReq.addProperty("user",user);
+
+		new MarshalFloat().register(soapEnvelope);
+
+		soapEnvelope.setOutputSoapObject(soapReq);
+		HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
+		try{
+
+			if (headers!=null){
+				httpTransport.call("http://ws/addPoi", soapEnvelope,headers);
+			}else{
+				httpTransport.call("http://ws/addPoi", soapEnvelope);
+			}
+			SoapObject result=(SoapObject)soapEnvelope.bodyIn;
+			if ( result != null){
+
+				Log.d("sopab",result.getProperty(0).toString());
+				return result.getProperty(0).toString();
+
+
+				/*  if (result.hasProperty("addPoiResponse"))
          {
-             Object obj = result.getProperty("addPoiResult");
+             Object obj = result.getProperty("addPoiResponse");
              if (obj.getClass().equals(SoapPrimitive.class)){
                  SoapPrimitive j0 =(SoapPrimitive) result.getProperty("addPoiResult");
                  String resultVariable = j0.toString();
                  return resultVariable;
              }
-         }
-     }catch (Exception e) {
-         e.printStackTrace();
-     }
-     return null;
- }
- 
- 
-   
+         }*/
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+
+
 }

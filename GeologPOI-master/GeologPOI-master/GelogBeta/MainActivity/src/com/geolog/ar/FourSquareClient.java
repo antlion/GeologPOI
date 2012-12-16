@@ -63,7 +63,9 @@ public class FourSquareClient
 				location.setLongitude(newPoi.getLongitude());
 				FourSqareVenue curVen1 = new FourSqareVenue(HandlerAR.ctx);
 			     curVen1.location = location;
-			     curVen1.icon = newPoi.getCategoria().getIcon();
+			     
+			     //curVen1.icon = newPoi.getCategoria().getIcon();
+			     
 			     curVen1.name=newPoi.getNome();
 			     curVen1.mylocation = Loc;
 			     v.add(curVen1);
