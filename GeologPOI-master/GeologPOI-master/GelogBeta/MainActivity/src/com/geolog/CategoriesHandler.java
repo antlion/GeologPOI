@@ -13,25 +13,25 @@ import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.geolog.dominio.Category;
-import com.geolog.util.CategoryAdapter;
+import com.geolog.util.CategoriesAdapter;
 import com.geolog.web.Services;
 import com.geolog.web.domain.CategoryListResponse;
 
-public class CategoryHandler {
+public class CategoriesHandler {
 	
 		private ArrayList<Category> categorie;
 		private ArrayList<Category> categorieSelezionate;
 		private HashMap<String,String> categorySelected2;
 		
-		private static CategoryHandler gestoreCategorie = null;
+		private static CategoriesHandler gestoreCategorie = null;
 		
 		
-		public static synchronized CategoryHandler getGestoreCategorie() {
+		public static synchronized CategoriesHandler getGestoreCategorie() {
 	        if (gestoreCategorie == null) 
-	            gestoreCategorie = new CategoryHandler();
+	            gestoreCategorie = new CategoriesHandler();
 	        return gestoreCategorie;
 	    	}
-		private CategoryHandler()
+		private CategoriesHandler()
 		{
 			
 		}
@@ -107,8 +107,9 @@ public class CategoryHandler {
 				return categoria;
 			}
 			return null;
+			//ricordare di gestire il caso in cui c'è una nuova categoria
 		}
-		public void checkMenuCategory(CategoryAdapter categoryChoose)
+		public void checkMenuCategory(CategoriesAdapter categoryChoose)
 		{
 			ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();
 			
@@ -129,7 +130,7 @@ public class CategoryHandler {
 			
 			}
 		
-		public void setSelectionCategory(ListView listView,Context context,CategoryAdapter category)
+		public void setSelectionCategory(ListView listView,Context context,CategoriesAdapter category)
 		{
 			
 			listView.setAdapter(category);
@@ -144,7 +145,7 @@ public class CategoryHandler {
 						long arg3) {
 					// TODO Auto-generated method stub
 					CheckBox cb = (CheckBox) arg1.findViewById(R.id.category_checkbox);
-					CategoryAdapter nuovo =(CategoryAdapter)arg0.getAdapter();
+					CategoriesAdapter nuovo =(CategoriesAdapter)arg0.getAdapter();
 					Category category = (Category) nuovo.getItem(arg2);
 					if (cb.isChecked()){
 						cb.setChecked(false);
@@ -173,8 +174,8 @@ public class CategoryHandler {
 		public void setCategorySelected2(HashMap<String, String> categorySelected2) {
 			this.categorySelected2 = categorySelected2;
 		}
-		public static void setGestoreCategorie(CategoryHandler gestoreCategorie) {
-			CategoryHandler.gestoreCategorie = gestoreCategorie;
+		public static void setGestoreCategorie(CategoriesHandler gestoreCategorie) {
+			CategoriesHandler.gestoreCategorie = gestoreCategorie;
 		}
 		
 		

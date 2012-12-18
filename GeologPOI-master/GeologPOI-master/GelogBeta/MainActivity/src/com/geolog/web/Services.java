@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
@@ -27,6 +28,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.geolog.dominio.*;
+import com.geolog.util.ResourcesHandler;
 import com.geolog.util.UtilDialog;
 import com.geolog.web.domain.AddPOIResponse;
 import com.geolog.web.domain.BaseResponse;
@@ -40,7 +42,7 @@ import com.google.gson.GsonBuilder;
 public class Services {
 
 	private WSs webService;
-	private static final String WEB_SERVICE_URL = "http://192.168.0.103:8080/GeologWeb/services/WS";
+	private static final String WEB_SERVICE_URL = "http://160.80.130.101:8080/GeologWeb/services/WS";
 	private JSONObject result;
 
 	//tutti i metodi mi ritoranano un oggetto di tipo BaseResponse
@@ -59,8 +61,28 @@ public class Services {
 	public void setBaseResponse(BaseResponse baseResponse) {
 		this.baseResponse = baseResponse;
 	}
+	
+	
+	public PoiListResponse findNearby(final Location location,String id,final Context context)
+	{
+		PoiListResponse response = null;
+		try{
+			String responseWeb = webService.findNearby(location.getLatitude(), location.getLongitude(), 0);
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+			response = gson.fromJson(responseWeb,PoiListResponse.class);
+			return response;
+			}
+			catch (Exception e) {
+				// TODO Auto-generated catch block
 
-	public BaseResponse findNearby(final Location location,String id,final Context context)
+				e.printStackTrace();
+			}
+			return response;
+		
+	}
+
+	/*public BaseResponse findNearby(final Location location,String id,final Context context)
 	{
 		final AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 			ProgressDialog dialog;
@@ -107,7 +129,7 @@ public class Services {
 		task.execute(null);
 		return baseResponse;
 	}
-
+*/
 
 
 
@@ -148,17 +170,16 @@ public class Services {
 
 
 
-	public Drawable downloadResource(String url,Context context,String nome)
+	public Drawable downloadResource(String url,Context context)
 	{
-
-
-
 
 		String path = (context.getFilesDir().toString());
 		try{
 			URL web = new URL(url); 
 			
-			File file = new File(path,nome);
+			//Ritorna il nome del file();
+		
+			File file = new File(path,ResourcesHandler.getNameFileFromUrl(url));
 
 			long startTime = System.currentTimeMillis();
 
@@ -183,7 +204,7 @@ public class Services {
 					+ ((System.currentTimeMillis() - startTime) / 1000)
 					+ " sec");
 		
-			Drawable d = new BitmapDrawable(context.getResources(),path+"//"+nome);
+			Drawable d = new BitmapDrawable(context.getResources(),path+"//"+ResourcesHandler.getNameFileFromUrl(url));
 			return d;
 		}
 

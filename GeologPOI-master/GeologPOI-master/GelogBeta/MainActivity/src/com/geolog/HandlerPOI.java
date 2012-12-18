@@ -32,7 +32,7 @@ public class HandlerPOI {
 	public static Poi creaPOI(Location location,int idCategory,String nome,String descrizione,Date date)
 	{
 		
-		Category category = CategoryHandler.getGestoreCategorie().getCategoryFromId(idCategory);
+		Category category = CategoriesHandler.getGestoreCategorie().getCategoryFromId(idCategory);
 		Poi newPOI = new Poi(category, nome, descrizione, date, location);
 		return newPOI;
 	}
@@ -63,10 +63,10 @@ public class HandlerPOI {
 	}
 	
 
-	public static ArrayList<Poi> cercaPOI(Location location,Context context) 
+	public static PoiListResponse cercaPOI(Location location,Context context) 
 	{
-		CategoryHandler categoryHandler = CategoryHandler.getGestoreCategorie();
-		/*Services services = new Services();
+		/*CategoryHandler categoryHandler = CategoryHandler.getGestoreCategorie();
+		Services services = new Services();
 		PoiListResponse poiListResponse = (PoiListResponse) services.findNearby(location,categoryHandler.getIdSelectedCategory(), context);
 		//chiama il servizio del web service
 		ArrayList<Poi> arrayPOI = new ArrayList<Poi>();
@@ -82,7 +82,7 @@ public class HandlerPOI {
 		List<Poi> poiList = poiListResponse.getPois();
 		for(Poi poi: poiList){
 			arrayPOI.add(poi);
-		}*/
+		}
 		
 		Location location2 = new Location("prova");
 		location2.setLatitude(42.703422);
@@ -99,8 +99,10 @@ public class HandlerPOI {
     	res.add(resource);
     	newPOI.setResources(res);
     	arrayPOI.add(newPOI);
-    	arrayPOI.add(newPOI2);
+    	arrayPOI.add(newPOI2);*/
+		Services service = new Services();
+		PoiListResponse response =service.findNearby(location, "0", context);
 		
-		return arrayPOI;
+		return response;
 		}
 }

@@ -3,6 +3,7 @@ package com.geolog.dominio;
 import java.util.Set;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 
 import com.geolog.R;
@@ -64,12 +65,12 @@ public class Category {
 
 	public Drawable getIconFromResource(Context context)
 	{
-		if (ResourcesHandler.controlImageResource(String.valueOf(getId()), context))
-			return  Drawable.createFromPath(context.getFilesDir().toString()+"//"+String.valueOf(getId()));
-		Drawable d = ResourcesHandler.getDrawableFromUri(icon, context,String.valueOf(getId()));
+		if (ResourcesHandler.controlImageResource(icon, context))
+			return  Drawable.createFromPath(context.getFilesDir().toString()+"//"+ResourcesHandler.getNameFileFromUrl(icon));
+		Drawable d = ResourcesHandler.getDrawableFromUri(icon, context);
 		if ( d == null)
 			return  context.getResources().getDrawable( R.drawable.no_image_icon);
-		return ResourcesHandler.getDrawableFromUri(icon, context,String.valueOf(getId()));
+		return ResourcesHandler.getDrawableFromUri(icon, context);
 	}
 
 }

@@ -25,6 +25,8 @@ import android.widget.TabHost.TabSpec;
 import com.geolog.dominio.Poi;
 import com.geolog.util.AuthGoogle;
 import com.geolog.util.UtilDialog;
+import com.geolog.web.Services;
+import com.geolog.web.domain.PoiListResponse;
 
 public class POISearch extends TabActivity {
 
@@ -39,6 +41,7 @@ public class POISearch extends TabActivity {
 	private boolean hasLocation; 
 	private Context context;
 	private boolean setTab;
+	private CategoriesHandler categoryHandler;
 	public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
   //AuthGoogle.aaaaa(this);
@@ -47,7 +50,7 @@ public class POISearch extends TabActivity {
        context = this; 
        mylocation = null;
        hasLocation = false;
-       CategoryHandler category = CategoryHandler.getGestoreCategorie();
+     categoryHandler = CategoriesHandler.getGestoreCategorie();
       
        locationManager = (LocationManager) this.getSystemService(this.LOCATION_SERVICE);
        myLocationListener = new LocationListener() { 
@@ -77,8 +80,8 @@ public class POISearch extends TabActivity {
 				//chiama web Service
 				//pois = GestorePOI.cercaPOI(location);
 				mylocation = location;
-				location.setLatitude(41.703422);
-	        	location.setLongitude(12.690868);
+				//location.setLatitude(41.703422);
+	        	//location.setLongitude(12.690868);
 	        	/*Poi newPOI = new Poi(new Category("Emergenza",1,R.drawable.croce_rossa),"Ospedale PTV", "ospedale qui viicno",1,null, location, R.drawable.ptv);
 	        	Location location2 = new Location("prova");
 	        	location2.setLatitude(42.703422);
@@ -86,15 +89,14 @@ public class POISearch extends TabActivity {
 	        	Poi newPOI2 = new Poi(new Category("Ristoro",2,R.drawable.food_icon),"SushiBar", "Ristorante cinese pienodi schifezze",2,null, location2, R.drawable.kfc);
 	        	pois.add(newPOI);
 	        	pois.add(newPOI2);*/
-	        	gestoreVisualizzazione.setPois(HandlerPOI.cercaPOI(mylocation, context));
-	        	gestoreVisualizzazione.setMylocation(mylocation);
-	        	LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
+	        	
+	        	/*LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE); 
 	  		  	locationManager.removeUpdates(myLocationListener);
 	  		  	if (setTab == false)
 	  		  	{ 
 	  		  		setTab();
 	  		  		setTab = true;
-	  		  	}
+	  		  	}*/
 				//Log.d("size",String.valueOf(pois.size()));
 			} 
 			 };
@@ -124,7 +126,7 @@ public class POISearch extends TabActivity {
 		
 				if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true)
 				{
-					getLocationForSearchPOI(this);
+					searchPOI(this);
 					
 			       	     
 				}
@@ -170,7 +172,7 @@ public class POISearch extends TabActivity {
 		
 	}
 							
-		public void getLocationForSearchPOI(final Context context){
+		public void searchPOI(final Context context){
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 			
 			ProgressDialog dialog;
@@ -192,6 +194,31 @@ public class POISearch extends TabActivity {
 	                    e.printStackTrace();
 	                }
 	            };
+	            
+	            
+	            if (hasLocation)
+	            {
+	            	
+	            	//dialog.setMessage("Ricerco i poi");
+	            
+	            	PoiListResponse response = HandlerPOI.cercaPOI(mylocation, context);
+	            	if (response == null || response.getStatus() != 200)
+	            	{
+	            		dialog.dismiss();
+	            		UtilDialog.alertDialog(context, "impossibile recuperare i poi").show();
+	            	}
+	            	else {
+	            			pois = (ArrayList<Poi>) response.getPois();
+	            			gestoreVisualizzazione.setPois(pois);
+	        	        	gestoreVisualizzazione.setMylocation(mylocation);
+	            			if (pois.size()>0){
+	            				dialog.dismiss();
+	            				UtilDialog.createBaseToast("nessun poi trovato", context);}
+	            			
+	            	}
+	            }
+	            
+	            
 	            return null;
 			
 			}
@@ -213,7 +240,11 @@ public class POISearch extends TabActivity {
 		    		}
 		            else {
 		            	hasLocation = false;
-		            	
+		            	if (setTab == false)
+			  		  	{ 
+			  		  		setTab();
+			  		  		setTab = true;
+			  		  	}
 		            }
 		        }
 			

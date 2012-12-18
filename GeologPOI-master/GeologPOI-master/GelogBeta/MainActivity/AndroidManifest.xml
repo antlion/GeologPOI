@@ -28,7 +28,7 @@
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name="com.geolog.MenuActivity" >
+        <activity android:name="com.geolog.GeologActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -81,7 +81,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 	private String providerId = LocationManager.GPS_PROVIDER; 
 	private ArrayList<Poi> poi;
 	private MapView map;
-	private CategoryHandler gestoreCategorie;
+	private CategoriesHandler gestoreCategorie;
 	private LinearLayout MenuList;
 	private Button btnToggleMenuList;
 	private int screenWidth;
@@ -90,7 +90,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 	private List<Overlay> mapOverlays;
 	private LocationManager locationManager;
 	private LocationListener myLocationListener;
-	private CategoryAdapter categoryAdapter;
+	private CategoriesAdapter categoryAdapter;
 	private Context context ;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,7 +103,7 @@ public class MapHandler extends MapActivity implements VisHandler{
         ParametersBridge bridge = ParametersBridge.getInstance();
         poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
         mylocation =(Location)ParametersBridge.getInstance().getParameter("location");
-        gestoreCategorie = CategoryHandler.getGestoreCategorie();
+        gestoreCategorie = CategoriesHandler.getGestoreCategorie();
         
         //inizializzo la mappa
         MapView mapView = (MapView) findViewById(R.id.mapView);
@@ -129,7 +129,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 	      
 	        ////TypedArray immagini = res.obtainTypedArray(R.array.immagini);
 	    
-	    categoryAdapter = new CategoryAdapter(getApplicationContext(), gestoreCategorie.getCategorie());
+	    categoryAdapter = new CategoriesAdapter(getApplicationContext(), gestoreCategorie.getCategorie());
         gestoreCategorie.setSelectionCategory(v, getApplicationContext(),categoryAdapter);
       
 	   // v.setAdapter(pois);
@@ -215,7 +215,7 @@ public class MapHandler extends MapActivity implements VisHandler{
 	    	isExpanded = false;
 	    	//MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
 	    	gestoreCategorie.checkMenuCategory(categoryAdapter);
-	    	poi = HandlerPOI.cercaPOI(mylocation, this);
+	    	searchPOI(context);
 			if (poi != null)
 			{
 				updateLocationData(mylocation);
@@ -548,6 +548,59 @@ public class MapHandler extends MapActivity implements VisHandler{
 			task.execute(null);
 			
 		}
+	 
+	 public void searchPOI(final Context context){
+			AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+				
+				ProgressDialog dialog;
+				@Override
+				protected void onPreExecute(){
+					locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+					dialog = ProgressDialog.show(context, "Attendere...", "Ricerca poi in corso...");
+				
+				}
+				@Override
+				protected String doInBackground(Void... params) {
+					// TODO Auto-generated method stub
+					
+		            
+		          
+		            	
+		            
+		            	PoiListResponse response = HandlerPOI.cercaPOI(mylocation, context);
+		            	if (response == null || response.getStatus() != 200)
+		            	{
+		            		dialog.dismiss();
+		            		UtilDialog.alertDialog(context, "impossibile recuperare i poi").show();
+		            	}
+		            	else {
+		            			poi = (ArrayList<Poi>) response.getPois();
+		            			ViewPOIHandler view = new ViewPOIHandler(context);
+		            			view.setPois(poi);
+		        	        	view.setMylocation(mylocation);
+		            			if (poi.size()<0){
+		            				dialog.dismiss();
+		            				UtilDialog.createBaseToast("nessun poi trovato", context);}
+		            			else {
+		            				updateLocationData(mylocation);
+		            			}
+		            			
+		            	}
+		            
+		            
+		            
+		            return null;
+				
+				}
+				 protected void onPostExecute(String result) {
+			            dialog.dismiss();
+			       
+			        }
+				
+			};
+			task.execute(null);
+		
+			}
 
 	
 }

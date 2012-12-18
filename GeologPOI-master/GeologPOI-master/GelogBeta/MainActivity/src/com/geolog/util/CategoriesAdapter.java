@@ -19,7 +19,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CheckedTextView;
 import android.widget.TextView;
-public class CategoryAdapter extends BaseAdapter{
+public class CategoriesAdapter extends BaseAdapter{
 	
 
 	
@@ -34,7 +34,7 @@ public class CategoryAdapter extends BaseAdapter{
 	
 	
 
-	public CategoryAdapter(Context context, ArrayList<Category> categorie) {
+	public CategoriesAdapter(Context context, ArrayList<Category> categorie) {
 	   this.context = context; 
 	   this.categorie = categorie; 
 	   

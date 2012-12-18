@@ -44,88 +44,56 @@ public class WSs{
 	public void setUrl(String url){
 		this.url = url;
 	}
-	/* public String addPOI(String poi){
-        return addPOI(poi,null);
+
+
+    public String findNearby(double latitude,double longitude,int category_id){
+        return findNearby(latitude,longitude,category_id,null);
     }
 
 
-    public String addPOI(String poi,List<HeaderProperty> headers){
-
+    public String findNearby(double latitude,double longitude,int category_id,List<HeaderProperty> headers){
+    
         SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         soapEnvelope.implicitTypes = true;
         soapEnvelope.dotNet = true;
-        SoapObject soapReq = new SoapObject("http://math","addPOI");
-        soapReq.addProperty("poi",poi);
-
+        SoapObject soapReq = new SoapObject("http://ws/xsd/","findNearby");
+        soapReq.addProperty("latitude",latitude);
+       
+        soapReq.addProperty("longitude",longitude);
+       
+        soapReq.addProperty("category_id",category_id);
+       
+        
         new MarshalFloat().register(soapEnvelope);
-
+        
         soapEnvelope.setOutputSoapObject(soapReq);
         HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
         try{
-
+            
             if (headers!=null){
-                httpTransport.call("http://math/addPOI", soapEnvelope,headers);
+                httpTransport.call("http://ws/findNearby", soapEnvelope,headers);
             }else{
-                httpTransport.call("http://math/addPOI", soapEnvelope);
+                httpTransport.call("http://ws/findNearby", soapEnvelope);
             }
             SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-            if (result.hasProperty("addPOIResult"))
+            if (result != null){
+            	Log.d("sopab",result.getProperty(0).toString());
+				return result.getProperty(0).toString();
+            }
+           /* if (result.hasProperty("listCategoriesResult"))
             {
-                Object obj = result.getProperty("addPOIResult");
+                Object obj = result.getProperty("listCategoriesResult");
                 if (obj.getClass().equals(SoapPrimitive.class)){
-                    SoapPrimitive j0 =(SoapPrimitive) result.getProperty("addPOIResult");
-                    String resultVariable = j0.toString();
+                    SoapPrimitive j5 =(SoapPrimitive) result.getProperty("listCategoriesResult");
+                    String resultVariable = j5.toString();
                     return resultVariable;
                 }
-            }
+            }*/
         }catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
-    public String findNearby(float latitude,boolean latitudeSpecified,float langitude,boolean langitudeSpecified){
-        return findNearby(latitude,latitudeSpecified,langitude,langitudeSpecified,null);
-    }*/
-
-
-	public String findNearby(float latitude,boolean latitudeSpecified,float langitude,boolean langitudeSpecified,List<HeaderProperty> headers){
-
-		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-		soapEnvelope.implicitTypes = true;
-		soapEnvelope.dotNet = true;
-		SoapObject soapReq = new SoapObject("http://math","findNearby");
-		soapReq.addProperty("latitude",latitude);
-		soapReq.addProperty("latitudeSpecified",latitudeSpecified);
-		soapReq.addProperty("langitude",langitude);
-		soapReq.addProperty("langitudeSpecified",langitudeSpecified);
-
-		new MarshalFloat().register(soapEnvelope);
-
-		soapEnvelope.setOutputSoapObject(soapReq);
-		HttpTransportSE httpTransport = new HttpTransportSE(url,timeOut);
-		try{
-
-			if (headers!=null){
-				httpTransport.call("http://math/findNearby", soapEnvelope,headers);
-			}else{
-				httpTransport.call("http://math/findNearby", soapEnvelope);
-			}
-			SoapObject result=(SoapObject)soapEnvelope.bodyIn;
-			if (result.hasProperty("findNearbyResult"))
-			{
-				Object obj = result.getProperty("findNearbyResult");
-				if (obj.getClass().equals(SoapPrimitive.class)){
-					SoapPrimitive j1 =(SoapPrimitive) result.getProperty("findNearbyResult");
-					String resultVariable = j1.toString();
-					return resultVariable;
-				}
-			}
-		}catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 
 	  public String reportPoi(int poi_id,String msg,String user){
 	        return reportPoi(poi_id,msg,user,null);

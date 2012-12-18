@@ -1,6 +1,8 @@
 package com.geolog.util;
 
 import java.io.ByteArrayOutputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import com.geolog.dominio.Resource;
 import com.geolog.web.Services;
@@ -35,22 +37,37 @@ public class ResourcesHandler {
 	
 	public static boolean controlImageResource(String uri,Context context)
 	{
-		String path = (context.getFilesDir().toString());
-		String[] fileList = context.fileList();
-		for ( String string: fileList)
-		{
-			if ( string.equals(uri))
-				return true;
+		try {
+			URI web = new URI(uri);
+			String path = (context.getFilesDir().toString());
+			String[] fileList = context.fileList();
+			for ( String string: fileList)
+			{
+				if ( string.equals(getNameFileFromUrl(uri)))
+					return true;
+			}
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		return false;
 	}
 	
 	
 	
-	public static Drawable getDrawableFromUri(String uri, Context context,String nome){
+	public static Drawable getDrawableFromUri(String uri, Context context){
 		Services service= new Services();
-		return service.downloadResource(uri, context,nome);
+		return service.downloadResource(uri, context);
 			
 		
+	}
+	
+	public static String getNameFileFromUrl(String url)
+	{
+		
+		int index = url.lastIndexOf('/');
+
+		return url.substring(index+1);
 	}
 }

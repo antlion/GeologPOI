@@ -66,7 +66,7 @@ import android.widget.Toast;
 
 public class AddPOIActivity extends Activity implements OnClickListener, android.view.View.OnClickListener{
 
-	private CategoryHandler categoryHandler;
+	private CategoriesHandler categoryHandler;
 	private static final int CAMERA_PIC_REQUEST = 1337;  
 	private Location mylocation;
 	private LocationManager locationManager;
@@ -91,7 +91,7 @@ public class AddPOIActivity extends Activity implements OnClickListener, android
 	        mylocation= (Location)bridge.getParameter("Location");
 	      
 	
-		categoryHandler = CategoryHandler.getGestoreCategorie();
+		categoryHandler = CategoriesHandler.getGestoreCategorie();
 		hasLocation = false;
 		services = new Services();
 

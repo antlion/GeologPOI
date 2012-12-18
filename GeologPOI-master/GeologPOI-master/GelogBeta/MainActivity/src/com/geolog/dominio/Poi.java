@@ -154,13 +154,13 @@ public class Poi {
 			Resource elemento = it.next();
 			if (elemento.getResourceType().getName().equals("image/jpeg"))
 			{
-				if (ResourcesHandler.controlImageResource(getNome(), context))
-					return  Drawable.createFromPath(context.getFilesDir().toString()+"//"+getNome());
+				if (ResourcesHandler.controlImageResource(elemento.getUrl(), context))
+					return  Drawable.createFromPath(context.getFilesDir().toString()+"//"+ResourcesHandler.getNameFileFromUrl(elemento.getUrl()));
 				
 				
 				
 				Services services = new Services();
-				Drawable d = services.downloadResource(elemento.getUrl(), context,getNome());
+				Drawable d = services.downloadResource(elemento.getUrl(), context);
 				if (d != null){
 					
 					return d;}

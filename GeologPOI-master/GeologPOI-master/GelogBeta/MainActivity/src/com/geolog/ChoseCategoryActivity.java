@@ -32,7 +32,7 @@ public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	private ArrayList<CheckBox> categorie; 
 	private ArrayList<Category> parsedData;
 	private LinearLayout linearLayout;
-	private CategoryHandler gestoreCategorie;	   
+	private CategoriesHandler gestoreCategorie;	   
 	    @Override
 	    public void onCreate(Bundle savedInstanceState) {
 	        super.onCreate(savedInstanceState);
@@ -55,7 +55,7 @@ public class ChoseCategoryActivity extends Activity implements OnClickListener {
 	       // parser.parseXml(this.getApplicationContext());
 	        //parsedData = new ArrayList<Categoria>();
 	        //parsedData = parser.getParsedData();
-	        gestoreCategorie = CategoryHandler.getGestoreCategorie();
+	        gestoreCategorie = CategoriesHandler.getGestoreCategorie();
 	        parsedData = gestoreCategorie.getCategorie();
 	        
 	        for(Category categoria : parsedData)

@@ -1,11 +1,13 @@
 package com.geolog;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
@@ -15,6 +17,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -40,11 +43,12 @@ import android.widget.Toast;
 
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
-import com.geolog.util.CategoryAdapter;
+import com.geolog.util.CategoriesAdapter;
 import com.geolog.util.POIAdapter;
 import com.geolog.util.ParametersBridge;
 import com.geolog.util.UtilDialog;
 import com.geolog.web.FindNearbyService;
+import com.geolog.web.domain.PoiListResponse;
 
 public class ListHandler extends ListActivity implements VisHandler,OnTouchListener {
 
@@ -63,8 +67,8 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 	private ListView listCategory;
 	private Activity activity;
 	TextView view;
-	private CategoryAdapter categoryAdapter ;
-	private CategoryHandler gestoreCategorie;
+	private CategoriesAdapter categoryAdapter ;
+	private CategoriesHandler gestoreCategorie;
 	private ListView listaPOI;
 
 	private boolean itemListPOIClicked = false;
@@ -85,13 +89,13 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 	        myLocation =(Location)ParametersBridge.getInstance().getParameter("location");
 	        
 	        
-	        gestoreCategorie = CategoryHandler.getGestoreCategorie();
+	        gestoreCategorie = CategoriesHandler.getGestoreCategorie();
 	        isExpanded = false;
 	   
 	       setListPOI();
 	        
 	        listCategory = (ListView) findViewById(R.id.list_category);
-	        categoryAdapter = new CategoryAdapter(this, gestoreCategorie.getCategorie());
+	        categoryAdapter = new CategoriesAdapter(this, gestoreCategorie.getCategorie());
 	        gestoreCategorie.setSelectionCategory(listCategory, getApplicationContext(), categoryAdapter);
 	       // listCategory.setAdapter(categoryAdapter);
 	        listCategory.setVisibility(View.GONE);
@@ -218,7 +222,8 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 	    			//MenuList.startAnimation(new com.geolog.slide.CollapseAnimation(MenuList, 0,(int)(screenWidth*0.7), 20));
 	    			 listCategory.setVisibility(View.GONE);
 	    			 gestoreCategorie.checkMenuCategory(categoryAdapter);
-	    			 poi = HandlerPOI.cercaPOI(myLocation, this);
+	    			 searchPOI(ctx);
+	    			// poi = HandlerPOI.cercaPOI(myLocation, this);
 	    				updateLocationData(myLocation);
 	    			// checkMenuCategory((CategoryAdapter)listCategory.getAdapter());
 	    		}else {
@@ -246,7 +251,7 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 		    }
 		}
 
-		public void checkMenuCategory(CategoryAdapter categoryChoose)
+		public void checkMenuCategory(CategoriesAdapter categoryChoose)
 		{
 			ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();
 			int number = categoryChoose.getCount();
@@ -257,8 +262,9 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 			}
 			gestoreCategorie.salvaSelezione(categoriaSelezionate);
 			
-			poi = HandlerPOI.cercaPOI(myLocation, this);
-			updateLocationData(myLocation);
+			searchPOI(ctx);
+			/*poi = HandlerPOI.cercaPOI(myLocation, this);
+			updateLocationData(myLocation);*/
 		}
 	 
 	@Override
@@ -309,7 +315,60 @@ public class ListHandler extends ListActivity implements VisHandler,OnTouchListe
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
 		return false;
-	}        
+	}  
+	
+	public void searchPOI(final Context context){
+		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+			
+			ProgressDialog dialog;
+			@Override
+			protected void onPreExecute(){
+				locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+				dialog = ProgressDialog.show(context, "Attendere...", "Ricerca poi in corso...");
+			
+			}
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				
+	            
+	          
+	            	
+	            
+	            	PoiListResponse response = HandlerPOI.cercaPOI(myLocation, context);
+	            	if (response == null || response.getStatus() != 200)
+	            	{
+	            		dialog.dismiss();
+	            		UtilDialog.alertDialog(context, "impossibile recuperare i poi").show();
+	            	}
+	            	else {
+	            			poi = (ArrayList<Poi>) response.getPois();
+	            			ViewPOIHandler view = new ViewPOIHandler(context);
+	            			view.setPois(poi);
+	        	        	view.setMylocation(myLocation);
+	            			if (poi.size()<0){
+	            				dialog.dismiss();
+	            				UtilDialog.createBaseToast("nessun poi trovato", context);}
+	            			else {
+	            				updateLocationData(myLocation);
+	            			}
+	            			
+	            	}
+	            
+	            
+	            
+	            return null;
+			
+			}
+			 protected void onPostExecute(String result) {
+		            dialog.dismiss();
+		       
+		        }
+			
+		};
+		task.execute(null);
+	
+		}
 	       
 	}
 	
