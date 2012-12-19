@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Geolog</string>
@@ -7,5 +6,14 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="noGpsProvider">questoTelefono non dispone del GPS</string>
     <string name="title_activity_prova">Prova</string>
+    <string name="title_progress_dialog_inzialization">Inzializzazione</string>
+    <string name="message_progress_dialog_inzialization">Inzializzo applicazione</string>
+    <string name="message_autentication_progress_bar">Autenticazione in corso...</string>
+    <string name="positive_auth_progress_bar">Autenticazione Riuscita</string>
+    <string name="negative_auth_progress_bar"/>
+    <string name="search_category_progress_bar">Recupero Lista Categorie</string>
+    <string name="finish_inizialization_progress_bar">Fine inizializzazione</string>
+    <string name="pos_search_category_progress_bar">Lista categorie recuperata..</string>
+    <string name="neg_search_categories">Lista categorie non recuperata</string>
 
 </resources>
