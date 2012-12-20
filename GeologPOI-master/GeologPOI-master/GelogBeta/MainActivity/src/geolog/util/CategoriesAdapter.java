@@ -1,7 +1,8 @@
-package com.geolog.util;
+package geolog.util;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.geolog.CategoriesManager;
 import com.geolog.R;
 import com.geolog.dominio.Category;
 
@@ -107,6 +108,10 @@ public class CategoriesAdapter extends BaseAdapter{
 		CheckBox chk = (CheckBox) convertView.findViewById(R.id.category_checkbox);
 		chk.setClickable(false);
 		
+		if (CategoriesManager.getCategoriesManager().getCategoriesSelected().contains(categories.get(position))){
+			chk.setChecked(true);
+			updateCategorySelected(categories.get(position), "true");
+		}
 		//Recupero il nome che rappresenta la categoria specifica
 		TextView tx = (TextView) convertView.findViewById(R.id.textView1);
 		tx.setText(categories.get(position).getNomeCategoria());

@@ -1,15 +1,16 @@
 package com.geolog;
 
+
+import geolog.util.ParametersBridge;
+import geolog.util.PositionOverlay;
+import geolog.util.UtilDialog;
+
 import java.util.ArrayList;
 
 import java.util.List;
 
 import com.geolog.R;
 import com.geolog.dominio.*;
-import com.geolog.util.CategoriesAdapter;
-import com.geolog.util.ParametersBridge;
-import com.geolog.util.PositionOverlay;
-import com.geolog.util.UtilDialog;
 import com.geolog.web.domain.PoiListResponse;
 
 import android.app.ProgressDialog;
@@ -22,7 +23,6 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.ListView;
 
 import com.google.android.maps.GeoPoint;
@@ -34,8 +34,10 @@ import com.google.android.maps.OverlayItem;
 
 /**
  * 
- * Gestione della visualizzazione dei Poi sulla mappa. Vengono aggiunti gli overlay della posizione dell'utente e dei poi ricercati. Inoltre è possibile selezionare le
- * categorie di rcierca da un apposito menu.
+ * Gestione della visualizzazione dei Poi sulla mappa. Vengono aggiunti gli
+ * overlay della posizione dell'utente e dei poi ricercati. Inoltre è possibile
+ * selezionare le categorie di rcierca da un apposito menu.
+ * 
  * @author Lorenzo
  * 
  */
@@ -47,10 +49,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 	private ArrayList<Poi> poi;
 	// Mappa
 	private MapView mapView;
-	// Gestore delle categorie
-	private CategoriesManager categoriesManager;
-	// Stato di apertura del menu delle categorie
-	private boolean isExpandedMenucategories;
+
 	// Locazione dell'utente
 	private Location mylocation;
 	// Overlays della mappa
@@ -59,10 +58,10 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 	private LocationManager locationManager;
 	// Listenr delle location
 	private LocationListener myLocationListener;
-	// adattatore delle categorie
-	private CategoriesAdapter categoryAdapter;
 	// Contesto dell'applicazione
 	private Context context;
+	// Menu delle categorie
+	private MenuCategory menuCategory;
 
 	@SuppressWarnings("unchecked")
 	public void onCreate(Bundle savedInstanceState) {
@@ -87,9 +86,6 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 		mylocation = (Location) ParametersBridge.getInstance().getParameter(
 				"location");
 
-		// Inizilizzo i lgestore delle categorie
-		categoriesManager = CategoriesManager.getCategoriesManager();
-
 		// Inizializzo la mappa
 		mapView = (MapView) findViewById(R.id.mapView);
 		mapView.setClickable(true);
@@ -105,16 +101,12 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 		// Aggiorno la posizione dell'utente
 		updateLocationData(mylocation);
 
-		// Ottengo il riferimento alla listView delle categorie
-		ListView listViewCategories = (ListView) findViewById(R.id.listViewCategories);
-		// Inzializzo il categoryAdapeter
-		categoryAdapter = new CategoriesAdapter(getApplicationContext(),
-				categoriesManager.getCategories());
-		// Setto le categorie di scelta
-		categoriesManager.setSelectionCategory(listViewCategories,
-				getApplicationContext(), categoryAdapter);
-		// Il menu delle categorie non è inzialmente visibile
-		listViewCategories.setVisibility(View.GONE);
+		// Inzializzo il menu delle categorie
+		menuCategory = new MenuCategory(false,
+				(ListView) findViewById(R.id.listViewCategories),
+				CategoriesManager.getCategoriesManager(), context);
+		// Il menù delle categorie non + inizialmente visibile
+		menuCategory.setVisibilityListCategory(false);
 
 		// Inzializzo il location manager
 		locationManager = (LocationManager) this
@@ -166,6 +158,10 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 		super.onResume();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 
+		// Aggiorno il menu delle categorie
+		menuCategory = new MenuCategory(false,
+				(ListView) findViewById(R.id.listViewCategories),
+				CategoriesManager.getCategoriesManager(), context);
 		// richiedo l'aggiornamento della posizione
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -184,32 +180,16 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 		// categorie è aperto
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 
-			// Ottengo il riferimento alla lista delel categorie
-			ListView listViewCategories = (ListView) findViewById(R.id.listViewCategories);
-
 			// Se il menù è stato aperto, verrà chiuso
-			if (isExpandedMenucategories) {
-
-				listViewCategories.setVisibility(View.GONE);
-				// aggiorno lo stato del menù
-				isExpandedMenucategories = false;
-
-				// Controllo la selezione delle categorie da parte dell'utente
-				categoriesManager.checkMenuCategory(categoryAdapter);
-
-				// Ricerco i poi in base alle categorie
+			if (menuCategory.checkMenuCategory()) {
 				searchPoi(context);
 
 				// Se ho ottenuto dei poi aggiorno la mia locazione
 				if (poi != null) {
 					updateLocationData(mylocation);
 				}
-
-			} else {
-				isExpandedMenucategories = true;
-				listViewCategories.setVisibility(View.VISIBLE);
-
 			}
+
 			return true;
 		} else {
 			return super.onKeyDown(keyCode, event);
@@ -349,36 +329,45 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
 
-				// Chiedo al gestore dei poi di ricercare i poi
-				PoiListResponse response = PoiManager.searchPoi(mylocation,
-						context);
+				// Controllo che ci sia almeno una categoria di ricerca
+				if (CategoriesManager.getCategoriesManager().getCategories()
+						.size() > 0) {
+					// Chiedo al gestore dei poi di ricercare i poi
+					PoiListResponse response = PoiManager.searchPoi(mylocation,
+							context, CategoriesManager.getCategoriesManager()
+									.getCategoriesSelected());
 
-				// Se la risposta è nulla o si è verificato un errore, termino
-				// con un messaggio di errore, altrimenti aggiorno la lista dei
-				// Poi
-				if (response == null || response.getStatus() != 200) {
-					dialog.dismiss();
-					UtilDialog.alertDialog(context,
-							"impossibile recuperare i poi").show();
-				} else {
-					// Prendo la lista dei poi dalla risposta del Poi manager
-					poi = (ArrayList<Poi>) response.getPois();
-					// aggiungo i poi trovati e la mia locazione al gestore
-					// della visualizzazione
-					PoiViewManager view = new PoiViewManager(context);
-					view.setPois(poi);
-					view.setMylocation(mylocation);
-
-					// se non sono stati trovati i poi termino con un messaggio
-					// d'errore, altrimenti eseguo lupdate della locazione
-					if (poi.size() < 0) {
+					// Se la risposta è nulla o si è verificato un errore,
+					// termino
+					// con un messaggio di errore, altrimenti aggiorno la lista
+					// dei
+					// Poi
+					if (response == null || response.getStatus() != 200) {
 						dialog.dismiss();
-						UtilDialog.createBaseToast("nessun poi trovato",
-								context);
+						UtilDialog.alertDialog(context,
+								"impossibile recuperare i poi").show();
 					} else {
-						updateLocationData(mylocation);
-					}
+						// Prendo la lista dei poi dalla risposta del Poi
+						// manager
+						poi = (ArrayList<Poi>) response.getPois();
+						// aggiungo i poi trovati e la mia locazione al gestore
+						// della visualizzazione
+						PoiViewManager view = new PoiViewManager(context);
+						view.setPois(poi);
+						view.setMylocation(mylocation);
 
+						// se non sono stati trovati i poi termino con un
+						// messaggio
+						// d'errore, altrimenti eseguo lupdate della locazione
+						if (poi.size() < 0) {
+							dialog.dismiss();
+							UtilDialog.createBaseToast("nessun poi trovato",
+									context);
+						} else {
+							updateLocationData(mylocation);
+						}
+
+					}
 				}
 				return null;
 			}

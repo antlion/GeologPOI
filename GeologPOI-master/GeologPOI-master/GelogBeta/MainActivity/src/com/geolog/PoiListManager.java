@@ -1,9 +1,11 @@
 package com.geolog;
 
+
+import geolog.util.POIAdapter;
+import geolog.util.ParametersBridge;
+import geolog.util.UtilDialog;
+
 import java.util.ArrayList;
-
-
-
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
@@ -28,124 +30,94 @@ import android.widget.TextView;
 
 import com.geolog.R;
 import com.geolog.dominio.Poi;
-import com.geolog.util.CategoriesAdapter;
-import com.geolog.util.POIAdapter;
-import com.geolog.util.ParametersBridge;
-import com.geolog.util.UtilDialog;
+
 import com.geolog.web.domain.PoiListResponse;
 
-
-
-
 /**
- * Gestore della visualizzazione dei Poi una lista. Ogni elmento della lista è cliccabile ed è possibile visionare le informazioni 
- * del poi cliccato. 
+ * Gestore della visualizzazione dei Poi una lista. Ogni elmento della lista è
+ * cliccabile ed è possibile visionare le informazioni del poi cliccato.
  * 
  * @author Lorenzo
- *
+ * 
  */
-public class PoiListManager extends ListActivity implements ItypeOfViewPoi,OnTouchListener {
+public class PoiListManager extends ListActivity implements ItypeOfViewPoi,
+		OnTouchListener {
 
-	//Array di poi contenente i poi resituiti da una ricerca di punti di interesse
+	// Array di poi contenente i poi resituiti da una ricerca di punti di
+	// interesse
 	private ArrayList<Poi> pois;
 
-	//Contesto dell'attività
+	// Contesto dell'attività
 	private Context context;
 
-	//Location dell'utente
+	// Location dell'utente
 	private Location myLocation;
 
-	//adattore dei Poi
+	// adattore dei Poi
 	private POIAdapter poisAdapter;
 
-	//Stato dell'espansione del menu delle categorie
-	private boolean isExpandedMenuCateogories;
-
-	//ListView delle categorie
-	private ListView listCategory;
-
-
+	// Menu delle categorie
 	private MenuCategory menuCategory;
 
-	//Adattatore delle categorie
-	private CategoriesAdapter categoryAdapter;
-
-	//gestore delle categorie
-	private CategoriesManager categoriesManager;
-
-	//ListaView di poi
+	// ListaView di poi
 	private ListView poiList;
 
-	//Stato del click del menu dei poi
+	// Stato del click del menu dei poi
 	private boolean itemListPOIClicked;
 
-	//Gestore delle Location
+	// Gestore delle Location
 	private LocationManager locationManager;
 
-	//Listenr delle location
+	// Listenr delle location
 	private LocationListener myLocationListener;
-
 
 	@SuppressWarnings("unchecked")
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.poi_list_layout);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-		
-		//La visibilità delle informazioni relative ad uno specifico poi è nascosta
+
+		// La visibilità delle informazioni relative ad uno specifico poi è
+		// nascosta
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
 		rl.setVisibility(View.GONE);
 
-		//Il menu delle categorie non è espanso
-		isExpandedMenuCateogories = false;
-		
-		//Inzializzo lo stato dei click dei poi a false. 
+		// Inzializzo lo stato dei click dei poi a false.
 		itemListPOIClicked = false;
-		
-		//Salvo il contesto dell'attività
+
+		// Salvo il contesto dell'attività
 		context = this;
-		
-		//Inizializzo l'arrayList dei poi
+
+		// Inizializzo l'arrayList dei poi
 		pois = new ArrayList<Poi>();
-		//Recupero i poi ricercati da una precedente ricerca
+		// Recupero i poi ricercati da una precedente ricerca
 		ParametersBridge bridge = ParametersBridge.getInstance();
-		//aggiorno la lista dei poi
+		// aggiorno la lista dei poi
 		pois = ((ArrayList<Poi>) bridge.getParameter("listaPOI"));
-		
-		//Aggiorno la posizione dell'utente
-		myLocation =(Location)ParametersBridge.getInstance().getParameter("location");
-		
-		//aggiorno la lista deiPOI
+
+		// Aggiorno la posizione dell'utente
+		myLocation = (Location) ParametersBridge.getInstance().getParameter(
+				"location");
+
+		// aggiorno la lista deiPOI
 		setPoiList();
-		
-		
 
-		//Inzializzo il gestore delle categorie
-		categoriesManager = CategoriesManager.getCategoriesManager();
-		
-		//Ottengo il riferimento alla lista delle categorie
-		listCategory = (ListView) findViewById(R.id.list_category);
-		//La lista delle categore non è inzialmente visibile
-		listCategory.setVisibility(View.GONE);
-		
-		//Creo un nuovo categoriesAdaoter
-		categoryAdapter = new CategoriesAdapter(this, categoriesManager.getCategories());
-		//Inzializzo le categorie che possono essere selezionate
-		//categoriesManager.setSelectionCategory(listCategory, getApplicationContext(), categoryAdapter);
-		menuCategory = new MenuCategory(false, listCategory, categoryAdapter, categoriesManager, null, context);
+		// Inzializzo il menu delle categorie
+		menuCategory = new MenuCategory(false,
+				(ListView) findViewById(R.id.list_category),
+				CategoriesManager.getCategoriesManager(), context);
+		// Il menù non è inzialmente visibile
 		menuCategory.setVisibilityListCategory(false);
-	
-	/*	DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);*/
 
-		//Inzializzo il locationManager
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-		//inizializzo il locationListner
-		myLocationListener = new LocationListener() { 
+		// Inzializzo il locationManager
+		locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		// inizializzo il locationListner
+		myLocationListener = new LocationListener() {
 
 			public void onLocationChanged(Location location) {
 				// TODO Auto-generated method stub
-				//Aggionrno la locaazione
+				// Aggionrno la locaazione
 				updateLocationData(location);
 			}
 
@@ -160,49 +132,55 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi,OnTou
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
 				// TODO Auto-generated method stub
-			} 
-		};   
-		
-		//Richiedo la ricerca della poszione dell'utente
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
-		
-		//Aggiungo la possibilità di visualizzare le informazioni dei poi
+			}
+		};
+
+		// Richiedo la ricerca della poszione dell'utente
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5,
+				1, myLocationListener);
+
+		// Aggiungo la possibilità di visualizzare le informazioni dei poi
 		setPoiListInformation();
 	}
 
 	/**
-	 * Metodo che aggiung ogni elemento della lista dei poi ad un listener.Cliccando su un elemnto della lista dei poi, si ottengono 
+	 * Metodo che aggiung ogni elemento della lista dei poi ad un
+	 * listener.Cliccando su un elemnto della lista dei poi, si ottengono
 	 * informazioni più dettagliate sul poi
 	 */
 	private void setPoiListInformation() {
-		//Se la lista dei poi è diversa da null, si aggiungono i vari listner agli elementi della lista
+		// Se la lista dei poi è diversa da null, si aggiungono i vari listner
+		// agli elementi della lista
 		if (pois != null) {
 			poiList.setOnItemClickListener(new OnItemClickListener() {
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-					//lo stato dell'elemento cliccato viene aggiornato
+					// lo stato dell'elemento cliccato viene aggiornato
 					itemListPOIClicked = true;
-					
-					//Recupero i layout dell'interfaccia grafica
+
+					// Recupero i layout dell'interfaccia grafica
 					final LinearLayout ln = (LinearLayout) findViewById(R.id.linearLayout5);
 					final RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
 
-					//Setto la visibilità della lista delle categorie e dei layout
+					// Setto la visibilità della lista delle categorie e dei
+					// layout
+					// Inizializzo la lista delle categorie
+					ListView listCategory = (ListView) findViewById(R.id.list_category);
 					listCategory.setVisibility(View.GONE);
 					ln.setVisibility(View.GONE);
 					rl.setVisibility(View.VISIBLE);
-					
-					//Recupero il poi che è stato selezionato
+
+					// Recupero il poi che è stato selezionato
 					Poi poi = (Poi) poisAdapter.getItem(arg2);
-					//Visualizzo l'immagine rappresentativa del poi
+					// Visualizzo l'immagine rappresentativa del poi
 					ImageView imageDescriptionPOi = (ImageView) findViewById(R.id.imagePOI);
 					imageDescriptionPOi.setImageDrawable(poi
 							.setImageFromResource(context));
-					
-					//Visualizzo il nome del poi
+
+					// Visualizzo il nome del poi
 					TextView titoloPOI = (TextView) findViewById(R.id.nomePOI);
 					titoloPOI.setText(poi.getNome());
-					//Visualizzo la descrizione del poi
+					// Visualizzo la descrizione del poi
 					TextView descrizionePOI = (TextView) findViewById(R.id.descriptionPOI);
 					descrizionePOI.setText(poi.getDescrizione());
 
@@ -211,45 +189,20 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi,OnTou
 
 		}
 	}
-	
 
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
 		// Se viene premuto il pulsante del menu, si procede a visualizzare la
 		// lista delle categorie
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
-			if (menuCategory.checkMenuCategoty()){
+			if (menuCategory.checkMenuCategory()) {
 				searchPoi(context);
-			/*
-				//Se il menù delle categorie è già aperto,viene chiuso e controllato se sono state selezionate nuove categorie
-			if (isExpandedMenuCateogories) {
-				
-				//aggiorno lo stato dell'apertua delle categorie
-				isExpandedMenuCateogories = false;
-				//La lista delle categorie non è più visibile
-				listCategory.setVisibility(View.GONE);
-				
-				//Controllo delle categorie selezionate
-				categoriesManager.checkMenuCategory(categoryAdapter);
-				
-				//Nuova ricerca dei POI
-				searchPoi(context);
-				
-				//aggiorno la poszione
-				
-				
-			} else {
-				isExpandedMenuCateogories = true;
-			
-				listCategory.setVisibility(View.VISIBLE);*/
 			}
 			return true;
-			}
-			
-		
+		}
 
-		
-		//se è stato premuto il pulsante indietro e ci troviamo nell'informazione del  poi, viene chiusa l'informazione dei poi
+		// se è stato premuto il pulsante indietro e ci troviamo
+		// nell'informazione del poi, viene chiusa l'informazione dei poi
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (itemListPOIClicked) {
 				itemListPOIClicked = false;
@@ -265,58 +218,58 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi,OnTou
 		}
 	}
 
-	
-	
 	@Override
-	public void onPause() { 
-		super.onPause(); 
-		//Rimuovo il locationManager dal listener
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE); 
-		locationManager.removeUpdates(myLocationListener); 
-	} 
-	
-	@Override
-	public void onResume()
-	{
-		super.onResume();
-		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-		
-		//Richedo la poszione dell'utente
-		locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE); 
-		Location location = locationManager.getLastKnownLocation(
-				LocationManager.GPS_PROVIDER
-				);
-		if (location != null) {
-			myLocation = location;
-			//updateLocationData(location);
-		}
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+	public void onPause() {
+		super.onPause();
+		// Rimuovo il locationManager dal listener
+		LocationManager locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		locationManager.removeUpdates(myLocationListener);
 	}
 
-	
+	@Override
+	public void onResume() {
+		super.onResume();
+		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
+		// aggiorno il menù delle categorie
+		menuCategory.updateMenuCategory();
+		// Richedo la poszione dell'utente
+		locationManager = (LocationManager) this
+				.getSystemService(Context.LOCATION_SERVICE);
+		Location location = locationManager
+				.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (location != null) {
+			myLocation = location;
+			// updateLocationData(location);
+		}
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5,
+				1, myLocationListener);
+	}
+
 	public void updateLocationData(Location location) {
 		// TODO Auto-generated method stub
-		
-		//Aggiorno la location
+
+		// Aggiorno la location
 		myLocation = location;
-		
-		//Aggiorno la lista dei poi
+
+		// Aggiorno la lista dei poi
 		setPoiList();
 
 	}
-	
-	
+
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		// TODO Auto-generated method stub
 		return false;
-	}  
+	}
 
-	
 	/**
 	 * 
-	 * Metodo che ricerca i punti di interesse in base alle categorie scelte dall'utente
-	 * @param context contesto dell'attività
+	 * Metodo che ricerca i punti di interesse in base alle categorie scelte
+	 * dall'utente
+	 * 
+	 * @param context
+	 *            contesto dell'attività
 	 */
 	@Override
 	public void searchPoi(final Context context) {
@@ -343,39 +296,47 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi,OnTou
 			protected String doInBackground(Void... params) {
 				// TODO Auto-generated method stub
 
-				// Rhiedo la ricerca dei poi al servizio web
-				PoiListResponse response = PoiManager.searchPoi(myLocation,
-						context);
+				// Controllo che ci sia almeno una categoria per ricercare i poi
+				if (CategoriesManager.getCategoriesManager().getCategories()
+						.size() > 0) {
+					// Rhiedo la ricerca dei poi al servizio web
+					PoiListResponse response = PoiManager.searchPoi(myLocation,
+							context, CategoriesManager.getCategoriesManager()
+									.getCategoriesSelected());
 
-				// se la risposta è negativa o si è verifcato un errore viene
-				// mostrato un messaggio d'errore e la
-				// barra di progresso viene chiusa, altrimenti viene aggiornata
-				// la lista dei poi
-				if (response == null || response.getStatus() != 200) {
-					dialog.dismiss();
-					UtilDialog.alertDialog(context,
-							"impossibile recuperare i poi").show();
-				} else {
-					// Aggiorno la lista dei poi
-					pois = (ArrayList<Poi>) response.getPois();
-
-					// Recupero il gestore della visualizzazione dei poi
-					PoiViewManager view = new PoiViewManager(context);
-					// aggiorno i poi del visualizzatore
-					view.setPois(pois);
-					// aggiorno la location del visualizzatore
-					view.setMylocation(myLocation);
-
-					// Se è stato trovato almeno un poi, aggiorno la locazione,
-					// altrimenti resituisco un messaggio d'errore
-					if (pois.size() < 0) {
+					// se la risposta è negativa o si è verifcato un errore
+					// viene
+					// mostrato un messaggio d'errore e la
+					// barra di progresso viene chiusa, altrimenti viene
+					// aggiornata
+					// la lista dei poi
+					if (response == null || response.getStatus() != 200) {
 						dialog.dismiss();
-						UtilDialog.createBaseToast("nessun poi trovato",
-								context);
+						UtilDialog.alertDialog(context,
+								"impossibile recuperare i poi").show();
 					} else {
-						
-					}
+						// Aggiorno la lista dei poi
+						pois = (ArrayList<Poi>) response.getPois();
 
+						// Recupero il gestore della visualizzazione dei poi
+						PoiViewManager view = new PoiViewManager(context);
+						// aggiorno i poi del visualizzatore
+						view.setPois(pois);
+						// aggiorno la location del visualizzatore
+						view.setMylocation(myLocation);
+
+						// Se è stato trovato almeno un poi, aggiorno la
+						// locazione,
+						// altrimenti resituisco un messaggio d'errore
+						if (pois.size() < 0) {
+							dialog.dismiss();
+							UtilDialog.createBaseToast("nessun poi trovato",
+									context);
+						} else {
+
+						}
+
+					}
 				}
 				return null;
 
@@ -383,46 +344,37 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi,OnTou
 
 			protected void onPostExecute(String result) {
 				dialog.dismiss();
-				if(pois.size() >0)
+				if (pois.size() > 0)
 					updateLocationData(myLocation);
 			}
 
 		};
-		task.execute((Void[])null);
+		task.execute((Void[]) null);
 
 	}
-	
+
 	/**
-	 * La lista dei poi ricerca dall'utente viene aggiunta all'adattatore dei poi, che andarà a popolare la ListView dei poi.
+	 * La lista dei poi ricerca dall'utente viene aggiunta all'adattatore dei
+	 * poi, che andarà a popolare la ListView dei poi.
 	 * 
 	 */
-	private void setPoiList()
-	{
-		//Se la lista dei poi contiene è diversa da null, si procede a creare un nuovo adattatore e a popolarlo,altrimenti viene
-		//visualizzato un messaggio d'errore.
-		if( pois !=null && myLocation != null){
-			poisAdapter = new POIAdapter(this, pois,myLocation);
+	private void setPoiList() {
+		// Se la lista dei poi contiene è diversa da null, si procede a creare
+		// un nuovo adattatore e a popolarlo,altrimenti viene
+		// visualizzato un messaggio d'errore.
+		if (pois != null && myLocation != null) {
+			poisAdapter = new POIAdapter(this, pois, myLocation);
 			setListAdapter(poisAdapter);
 			poiList = getListView();
 			poiList.setTextFilterEnabled(true);
 			poiList.setVisibility(View.GONE);
-			poiList.setVisibility(View.VISIBLE);}
-		else {
-			
-			//UtilDialog.createBaseToast("impossibile recuperare poi", this).show();
+			poiList.setVisibility(View.VISIBLE);
+		} else {
+
+			// UtilDialog.createBaseToast("impossibile recuperare poi",
+			// this).show();
 
 		}
 	}
 
-	
-
-	
-
 }
-
-
-
-
-
-
-

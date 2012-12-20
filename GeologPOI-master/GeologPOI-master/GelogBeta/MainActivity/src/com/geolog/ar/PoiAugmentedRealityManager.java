@@ -2,12 +2,13 @@ package com.geolog.ar;
 
 
 
+import geolog.util.ParametersBridge;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
 import com.geolog.dominio.Poi;
-import com.geolog.util.ParametersBridge;
 
 
 
@@ -24,7 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-public class HandlerAR extends Activity {
+public class PoiAugmentedRealityManager extends Activity {
     /** Called when the activity is first created. */
 	CustomCameraView cv;
 	public static volatile Context ctx;

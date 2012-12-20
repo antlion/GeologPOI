@@ -62,7 +62,7 @@ public class FourSquareClient
 				Location location = newPoi.getPOILocation();
 				location.setLatitude(newPoi.getLatitude());
 				location.setLongitude(newPoi.getLongitude());
-				FourSqareVenue curVen1 = new FourSqareVenue(HandlerAR.ctx);
+				FourSqareVenue curVen1 = new FourSqareVenue(PoiAugmentedRealityManager.ctx);
 			     curVen1.location = location;
 			     
 			     //curVen1.icon = newPoi.getCategoria().getIcon();

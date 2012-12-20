@@ -2,6 +2,8 @@ package com.geolog;
 
 
 
+import geolog.web.WebService;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -16,7 +18,6 @@ import com.geolog.dominio.Poi;
 import com.geolog.dominio.Resource;
 import com.geolog.dominio.ResourceType;
 import com.geolog.dominio.Suggestion;
-import com.geolog.web.Services;
 import com.geolog.web.domain.ConfrimResponse;
 import com.geolog.web.domain.PoiListResponse;
 
@@ -74,7 +75,7 @@ public class PoiManager {
 		Suggestion suggestion = new Suggestion(0, user, poiBase, date,descrizione);
 		
 		//Inzializzo il servizio web
-		Services service = new Services();
+		WebService service = new WebService();
 		
 		//Ottengo la risposta del servizio web
 		ConfrimResponse response =  service.addSuggestion(suggestion, context);
@@ -94,7 +95,7 @@ public class PoiManager {
 	 */
 	public static ConfrimResponse addPOI(Poi poi, Context context,String user)
 	{
-		Services service = new Services();
+		WebService service = new WebService();
 		ConfrimResponse confirmResponse = service.addPOI(poi, context, user);
 		return confirmResponse;
 	}
@@ -114,7 +115,7 @@ public class PoiManager {
 	public static ConfrimResponse uploadPoiResource(int idPOI,Context context,byte[] resource,String typeRespurce)
 	{	
 		//Inzializzo il servizio Web
-		Services service = new Services();
+		WebService service = new WebService();
 		
 		//Ottengo la risposta per l'upload della risorsa
 		ConfrimResponse responseWeb =  service.uploadResource(context, idPOI, typeRespurce, resource);
@@ -131,20 +132,16 @@ public class PoiManager {
 	 * 
 	 * @param location location in cui si trova l'utente
 	 * @param context contesto dell'attività che richiede il servizio
-	 * 
+	 * @param categorySelected categorie scelte dall'utente per la ricerca dei poi
 	 * 
 	 * 
 	 * @return PoiListresponse 
 	 */
-	public static PoiListResponse searchPoi(Location location,Context context) 
+	public static PoiListResponse searchPoi(Location location,Context context,ArrayList<Category> categorySelected) 
 	{
 		CategoriesManager categoryHandler = CategoriesManager.getCategoriesManager();
-		
-	
-		
-
-		
-
+		String categoriesIdSelected = categoryHandler.getStringIdFromSelectedCategory();
+	  
 		Location location2 = new Location("prova");
 		location2.setLatitude(42.703422);
 		location2.setLongitude(20.690868);
@@ -161,7 +158,7 @@ public class PoiManager {
     	newPOI.setResources(res);
     	arrayPOI.add(newPOI);
     	arrayPOI.add(newPOI2);
-		Services service = new Services();
+		WebService service = new WebService();
 		PoiListResponse response =new PoiListResponse();
 		response.setPois(arrayPOI);
 		response.setStatus(200);

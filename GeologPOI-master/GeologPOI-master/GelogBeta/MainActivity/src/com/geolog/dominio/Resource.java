@@ -1,15 +1,33 @@
 package com.geolog.dominio;
 
 
+/**
+ * Risorse dei poi. Le risorse vengono scaricate dal web service e salvate nel dispositivo mobile.
+ * @author Lorenzo
+ *
+ */
 public class Resource  {
-	
+
+	//Identificativo della risorsa
 	private int id;
+	//Url dove si trova la risorsa
 	private String url;
+	//descrizione della risorsa
 	private String description;
+	//Il poi a cui è assoicata la risorsa
 	private Poi poi;
+	//Il tipo di risora
 	private ResourceType resourceType;
 	
 	
+	/**
+	 * Costruttore della classe
+	 * @param id identificativo della risorsa
+	 * @param url url della risorsa
+	 * @param description descrizione della riosrsa
+	 * @param poi poi a cui è associata la risorsa
+	 * @param resourceType tipo di riosrsa
+	 */
 	public Resource(int id, String url, String description, Poi poi,
 			ResourceType resourceType) {
 		super();
@@ -20,7 +38,7 @@ public class Resource  {
 		this.resourceType = resourceType;
 	}
 
-	public Resource(){}
+	
 	
 	public int getId() {
 		return this.id;

@@ -1,5 +1,8 @@
 package com.geolog;
 
+
+import geolog.util.UtilDialog;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -20,7 +23,6 @@ import android.widget.TabHost.TabSpec;
 
 import com.geolog.R;
 import com.geolog.dominio.Poi;
-import com.geolog.util.UtilDialog;
 import com.geolog.web.domain.PoiListResponse;
 
 /**
@@ -230,9 +232,12 @@ public class PoiSearchActivity extends TabActivity {
 					// visualizzazioni
 					viewPoiManager.setMylocation(mylocation);
 
+					//Controllo che le ci sia almeno un categoria per effettuare una ricerca
+					if (CategoriesManager.getCategoriesManager().getCategories().size()>0){
+						
 					// Richiesta al gestore dei poi di ircercare i poi
 					PoiListResponse response = PoiManager.searchPoi(mylocation,
-							context);
+							context, CategoriesManager.getCategoriesManager().getCategoriesSelected());
 
 					// Se la risposta del gestore è nulla o si è verificato un
 					// errore,termino la ricerca,altrimenti
@@ -246,6 +251,7 @@ public class PoiSearchActivity extends TabActivity {
 						// salvo i poi nel gestore del visulizzatore
 						viewPoiManager.setPois(pois);
 
+					}
 					}
 				}
 

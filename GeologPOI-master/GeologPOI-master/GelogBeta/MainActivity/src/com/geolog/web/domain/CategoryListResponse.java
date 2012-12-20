@@ -4,17 +4,22 @@ import java.util.List;
 
 import com.geolog.dominio.Category;
 
-
-
-
-
-
+/**
+ * Riposta alla richesta delle categorie di ricerca poi
+ * 
+ * @author Lorenzo
+ * 
+ */
 public class CategoryListResponse extends BaseResponse {
 
-
+	private static final long serialVersionUID = 1L;
+	// Numero della categorie nella riposta
 	private int count;
+	// ??
 	private String icon;
-	
+	// Lista delle categorie
+	private List<Category> categories;
+
 	public String getIcon() {
 		return icon;
 	}
@@ -23,9 +28,6 @@ public class CategoryListResponse extends BaseResponse {
 		this.icon = icon;
 	}
 
-
-	private List<Category> categories;
-	
 	public int getCount() {
 		return count;
 	}
@@ -42,13 +44,10 @@ public class CategoryListResponse extends BaseResponse {
 		this.categories = categories;
 	}
 
-	
 	@Override
 	public String serialize() {
 		return null;
 
 	}
 
-
 }
-

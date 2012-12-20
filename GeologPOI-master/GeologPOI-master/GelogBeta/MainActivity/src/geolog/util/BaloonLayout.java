@@ -1,4 +1,4 @@
-package com.geolog.util;
+package geolog.util;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,6 +7,11 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.widget.LinearLayout;
 
+/**
+ * Layout dei ballon dei poi che sono visualizzati sulla mappa. La classe crea un nuovo layout personalizzato
+ * @author Lorenzo
+ *
+ */
 public class BaloonLayout extends LinearLayout {
 
   

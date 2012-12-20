@@ -1,42 +1,55 @@
 package com.geolog.dominio;
 
-import java.util.Set;
-
+import geolog.util.ResourcesManager;
 import android.content.Context;
-import android.content.res.Resources;
+
 import android.graphics.drawable.Drawable;
 
 import com.geolog.R;
-import com.geolog.util.ResourcesHandler;
 
-
-
+/**
+ * Categoria di poi. La categoria rappresenta un isieme di poi che condividono
+ * le stesse informazioni.Ogni categoria ha un nome,un id univoco una
+ * descrizione e un icona rappresentativa.
+ * 
+ * @author Lorenzo
+ * 
+ */
 public class Category {
-	private String name;
-	
 
+	// nome della categoria
+	private String name;
+	// Id della categoria
 	private int id;
+	// descrizione della categoria
 	private String description;
-	
+	// icona della categoria
 	private String icon;
-	private Set<Poi> pois;
-	
-	
-	public Category(String nomeCategoria,int idTipo,int icon)
-	{
+
+	/**
+	 * Costruttore
+	 * 
+	 * @param nomeCategoria
+	 *            nome della categoria
+	 * @param idTipo
+	 *            id della categoria
+	 * @param icon
+	 *            icona della categoria
+	 */
+	public Category(String nomeCategoria, int idTipo, int icon) {
 		this.name = nomeCategoria;
 		this.id = idTipo;
-		
+
 	}
-	
+
 	public int getId() {
 		return id;
 	}
 
-
 	public void setId(int id) {
 		this.id = id;
 	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -53,8 +66,6 @@ public class Category {
 		this.icon = icon;
 	}
 
-	
-
 	public String getNomeCategoria() {
 		return name;
 	}
@@ -63,14 +74,26 @@ public class Category {
 		this.name = charSequence;
 	}
 
-	public Drawable getIconFromResource(Context context)
-	{
-		if (ResourcesHandler.controlImageResource(icon, context))
-			return  Drawable.createFromPath(context.getFilesDir().toString()+"//"+ResourcesHandler.getNameFileFromUrl(icon));
-		Drawable d = ResourcesHandler.getDrawableFromUri(icon, context);
-		if ( d == null)
-			return  context.getResources().getDrawable( R.drawable.no_image_icon);
-		return ResourcesHandler.getDrawableFromUri(icon, context);
+	/**
+	 * Creazione di un oggetto di tipo drawable che rappresenta l'icona della
+	 * categoria
+	 * 
+	 * @param context
+	 *            contesto dell'applicazione che richiama il metodo
+	 * @return Drawable l'icona della categoria sotto forma di drawable
+	 */
+	public Drawable getIconFromResource(Context context) {
+		// Se l'icona è stata già scaricata, viene resituita, altrimenti viene
+		// scaricata
+		if (ResourcesManager.controlImageResource(icon, context))
+			return Drawable.createFromPath(context.getFilesDir().toString()
+					+ "//" + ResourcesManager.getNameFileFromUrl(icon));
+		Drawable d = ResourcesManager.getDrawableFromUri(icon, context);
+		// Se si è verificato un errore durante lo scaricamento, viene
+		// restituita un icona base,altrimenti l'icona della categoria
+		if (d == null)
+			return context.getResources().getDrawable(R.drawable.no_image_icon);
+		return ResourcesManager.getDrawableFromUri(icon, context);
 	}
 
 }
