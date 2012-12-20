@@ -27,7 +27,8 @@ import org.ksoap2.HeaderProperty;
 import java.util.List;
 import org.ksoap2.serialization.MarshalFloat;
 
-import activity.web.domain.CategoryListResponse;
+import com.geolog.web.domain.CategoryListResponse;
+
 import android.util.Log;
 
 
