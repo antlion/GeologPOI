@@ -21,7 +21,7 @@ import android.os.Bundle;
 import android.widget.TabHost;
 import android.widget.TabHost.TabSpec;
 
-import com.geolog.R;
+
 import com.geolog.dominio.Poi;
 import com.geolog.web.domain.PoiListResponse;
 

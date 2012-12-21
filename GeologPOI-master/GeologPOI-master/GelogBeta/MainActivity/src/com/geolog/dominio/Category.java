@@ -1,11 +1,13 @@
 package com.geolog.dominio;
 
+import com.geolog.R;
+
 import geolog.util.ResourcesManager;
 import android.content.Context;
 
 import android.graphics.drawable.Drawable;
 
-import com.geolog.R;
+
 
 /**
  * Categoria di poi. La categoria rappresenta un isieme di poi che condividono

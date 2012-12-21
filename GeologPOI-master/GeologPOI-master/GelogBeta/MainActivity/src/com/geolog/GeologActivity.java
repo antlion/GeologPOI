@@ -6,7 +6,7 @@ import geolog.util.UtilDialog;
 
 import java.util.ArrayList;
 
-import com.geolog.R;
+
 import com.geolog.dominio.Category;
 import com.geolog.web.domain.CategoryListResponse;
 import com.markupartist.android.widget.ActionBar;
@@ -127,7 +127,7 @@ public class GeologActivity extends Activity implements OnClickListener {
 
 			// Seleziona un'icona per rappresentare l'azione appena aggiunta
 			public int getDrawable() {
-				return R.drawable.menu_categories_button;
+				return R.drawable.menucategories;
 			}
 		});
 
@@ -148,7 +148,7 @@ public class GeologActivity extends Activity implements OnClickListener {
 			// Se il bottone premuto corrisponde all'addPoiButton, viene avviata
 			// l'attività di aggiunta dei poi.
 			if (v.getId() == R.id.add_poi) {
-				Intent intent = new Intent(v.getContext(), AddPOIActivity.class);
+				Intent intent = new Intent(v.getContext(), AddPoiActivity.class);
 				startActivity(intent);
 			}
 

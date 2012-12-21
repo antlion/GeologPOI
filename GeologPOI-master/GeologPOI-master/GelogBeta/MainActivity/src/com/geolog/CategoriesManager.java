@@ -16,7 +16,7 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.geolog.R;
+
 import com.geolog.dominio.Category;
 import com.geolog.web.domain.CategoryListResponse;
 

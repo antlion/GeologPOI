@@ -1,4 +1,4 @@
-package com.geolog.ar;
+package geolog.ar;
 
 import java.util.Enumeration;
 import java.util.Vector;

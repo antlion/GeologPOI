@@ -6,6 +6,7 @@ import java.util.Date;
 
 import com.geolog.PoiManager;
 import com.geolog.R;
+
 import com.geolog.dominio.Poi;
 import com.geolog.web.domain.ConfrimResponse;
 

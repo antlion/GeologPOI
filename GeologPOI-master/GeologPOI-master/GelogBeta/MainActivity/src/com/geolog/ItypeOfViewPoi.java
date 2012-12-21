@@ -6,6 +6,7 @@ package com.geolog;
 import android.content.Context;
 import android.location.Location;
 
+
 /**
  * @author Lorenzo
  *

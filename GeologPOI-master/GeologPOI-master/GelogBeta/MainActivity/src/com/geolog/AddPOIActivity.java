@@ -8,7 +8,7 @@ import geolog.util.UtilDialog;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.geolog.R;
+
 import com.geolog.dominio.Poi;
 import com.geolog.web.domain.ConfrimResponse;
 import com.markupartist.android.widget.ActionBar;
@@ -46,7 +46,7 @@ import android.widget.Spinner;
  * 
  */
 @SuppressLint("HandlerLeak")
-public class AddPOIActivity extends Activity implements OnClickListener,
+public class AddPoiActivity extends Activity implements OnClickListener,
 		android.view.View.OnClickListener {
 
 	// Variabile statica che contiene il codice per accedere alla fotocamera del

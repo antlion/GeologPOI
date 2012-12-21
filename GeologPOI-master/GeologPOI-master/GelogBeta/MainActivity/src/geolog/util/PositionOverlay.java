@@ -21,9 +21,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.geolog.AddPOIActivity;
+import com.geolog.AddPoiActivity;
 import com.geolog.PoiManager;
 import com.geolog.R;
+
 import com.geolog.dominio.Poi;
 import com.geolog.web.domain.ConfrimResponse;
 import com.google.android.maps.GeoPoint;
@@ -134,7 +135,7 @@ public class PositionOverlay extends ItemizedOverlay {
 				ParametersBridge.getInstance().addParameter("Location",
 						location);
 				// viene aperta l'attività dell'aggiunta poi
-				Intent intent = new Intent(context, AddPOIActivity.class);
+				Intent intent = new Intent(context, AddPoiActivity.class);
 				context.startActivity(intent);
 			}
 		});

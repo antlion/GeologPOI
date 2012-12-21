@@ -12,7 +12,7 @@ import java.util.Set;
 import android.content.Context;
 import android.location.Location;
 
-import com.geolog.R;
+
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
 import com.geolog.dominio.Resource;

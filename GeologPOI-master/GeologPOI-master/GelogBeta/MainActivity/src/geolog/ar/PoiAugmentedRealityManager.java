@@ -1,4 +1,4 @@
-package com.geolog.ar;
+package geolog.ar;
 
 
 
@@ -34,6 +34,7 @@ public class PoiAugmentedRealityManager extends Activity {
 	private ArrayList<Poi> poi;
 	private LocationListener gpsListener = new LocationListener(){
 
+		@SuppressWarnings("unchecked")
 		public void onLocationChanged(Location location)
 		{
 			Log.e("HoldMe","Got first");

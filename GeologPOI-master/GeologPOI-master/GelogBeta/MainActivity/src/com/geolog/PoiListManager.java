@@ -28,7 +28,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.geolog.R;
+
 import com.geolog.dominio.Poi;
 
 import com.geolog.web.domain.PoiListResponse;

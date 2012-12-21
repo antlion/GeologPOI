@@ -1,6 +1,6 @@
 package geolog.util;
 
-import com.geolog.R;
+
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -104,7 +104,7 @@ public class UtilDialog {
 	 */
 	public static AlertDialog createAlertNoProviderGps(final Context context) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setMessage(context.getString(R.string.noGpsProvider));
+		builder.setMessage(context.getString(com.geolog.R.string.noGpsProvider));
 		builder.setCancelable(false);
 		final AlertDialog alert = builder.create();
 		return alert;

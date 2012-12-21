@@ -1,6 +1,6 @@
-package com.geolog.ar;
+package geolog.ar;
 
-import com.geolog.R;
+
 
 
 import android.content.Context;

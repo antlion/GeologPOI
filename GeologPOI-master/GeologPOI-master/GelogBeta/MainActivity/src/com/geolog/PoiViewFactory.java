@@ -1,10 +1,11 @@
 package com.geolog;
 
+
+import geolog.ar.PoiAugmentedRealityManager;
 import geolog.util.ParametersBridge;
 
 import java.util.ArrayList;
 
-import com.geolog.ar.PoiAugmentedRealityManager;
 import com.geolog.dominio.Poi;
 
 import android.content.Context;

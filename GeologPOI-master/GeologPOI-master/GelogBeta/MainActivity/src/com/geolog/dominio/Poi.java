@@ -9,6 +9,8 @@ import java.util.Set;
 
 import com.geolog.R;
 
+
+
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.location.Location;

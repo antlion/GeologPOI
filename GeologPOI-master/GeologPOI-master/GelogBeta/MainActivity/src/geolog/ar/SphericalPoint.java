@@ -1,4 +1,4 @@
-package com.geolog.ar;
+package geolog.ar;
 
 public class SphericalPoint
 {

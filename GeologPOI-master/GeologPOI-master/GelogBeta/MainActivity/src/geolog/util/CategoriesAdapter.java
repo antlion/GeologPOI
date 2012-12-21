@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.geolog.CategoriesManager;
 import com.geolog.R;
+
 import com.geolog.dominio.Category;
 
 

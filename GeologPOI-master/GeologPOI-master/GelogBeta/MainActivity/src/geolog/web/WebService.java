@@ -285,6 +285,9 @@ public class WebService {
 		CategoryListResponse responseWeb = null;
 
 		try {
+			// Setto il timeOut per la richiesta
+			webServices.setTimeOut(7);
+			
 			// Richedo la lista delle categorie
 			String response = webServices.listCategories();
 			GsonBuilder builder = new GsonBuilder();

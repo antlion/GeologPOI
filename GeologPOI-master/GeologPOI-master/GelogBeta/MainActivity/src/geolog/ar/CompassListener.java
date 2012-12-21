@@ -1,4 +1,4 @@
-package com.geolog.ar;
+package geolog.ar;
 //package haseman.project.where4;
 //
 //import android.content.Context;

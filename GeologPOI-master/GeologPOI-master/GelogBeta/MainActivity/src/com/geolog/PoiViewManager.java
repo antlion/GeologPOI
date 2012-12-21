@@ -1,5 +1,6 @@
 package com.geolog;
 
+
 import java.util.ArrayList;
 
 import com.geolog.dominio.Poi;

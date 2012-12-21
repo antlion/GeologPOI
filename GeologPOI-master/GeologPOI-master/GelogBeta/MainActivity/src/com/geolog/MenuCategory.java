@@ -1,5 +1,6 @@
 package com.geolog;
 
+
 import geolog.util.CategoriesAdapter;
 import android.content.Context;
 import android.view.View;

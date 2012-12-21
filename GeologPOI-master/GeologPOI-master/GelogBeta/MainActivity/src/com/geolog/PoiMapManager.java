@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import com.geolog.R;
+
 import com.geolog.dominio.*;
 import com.geolog.web.domain.PoiListResponse;
 
