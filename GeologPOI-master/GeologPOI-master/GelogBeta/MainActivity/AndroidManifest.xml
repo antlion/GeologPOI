@@ -58,7 +58,7 @@
             android:name="com.geolog.AddPoiActivity">
         </activity>
          <activity
-            android:name="com.geolog.ar.PoiAugmentedRealityManager"
+            android:name="geolog.ar.PoiAugmentedRealityManager"
             >
         </activity>
     </application>

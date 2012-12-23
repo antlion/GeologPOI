@@ -25,17 +25,17 @@ public class FourSquareClient
 		Enumeration e = v.elements();
 		while(e.hasMoreElements())
 		{
-			FourSqareVenue ven = (FourSqareVenue)e.nextElement();
+			PoiOnCamera ven = (PoiOnCamera)e.nextElement();
 			ven.inclination = (ven.checkins / highestCheckin) * 100;
 			Log.e("inc","Inclination is "+ven.inclination);
 		}
 	}
 	
-	public Vector<FourSqareVenue> prova(Location Loc, ArrayList<Poi> poi)
+	public Vector<PoiOnCamera> prova(Location Loc, ArrayList<Poi> poi)
 	{
 		
 		
-		Vector<FourSqareVenue> v = new Vector<FourSqareVenue>();
+		Vector<PoiOnCamera> v = new Vector<PoiOnCamera>();
 		//gli passo la mia posizione
 		/*Location curLocation = null;
 		curLocation = Loc;
@@ -62,9 +62,9 @@ public class FourSquareClient
 				Location location = newPoi.getPOILocation();
 				location.setLatitude(newPoi.getLatitude());
 				location.setLongitude(newPoi.getLongitude());
-				FourSqareVenue curVen1 = new FourSqareVenue(PoiAugmentedRealityManager.ctx);
+				PoiOnCamera curVen1 = new PoiOnCamera(PoiAugmentedRealityManager.ctx);
 			     curVen1.location = location;
-			     
+			    
 			     //curVen1.icon = newPoi.getCategoria().getIcon();
 			     
 			     curVen1.name=newPoi.getNome();

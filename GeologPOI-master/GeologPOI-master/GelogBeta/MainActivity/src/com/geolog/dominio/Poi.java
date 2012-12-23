@@ -43,6 +43,8 @@ public class Poi {
 	private double latitude;
 	// Longitudine del poi
 	private double longitude;
+	
+	
 
 	/**
 	 * Costruttore della classe

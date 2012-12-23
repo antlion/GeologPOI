@@ -27,9 +27,9 @@ import android.widget.FrameLayout;
 
 public class PoiAugmentedRealityManager extends Activity {
     /** Called when the activity is first created. */
-	CustomCameraView cv;
+	private CustomCameraView cv;
 	public static volatile Context ctx;
-	ARLayout ar;
+	private ARLayout ar;
 	volatile Location curLocation = null;
 	private ArrayList<Poi> poi;
 	private LocationListener gpsListener = new LocationListener(){
@@ -50,7 +50,7 @@ public class PoiAugmentedRealityManager extends Activity {
 			new Thread(){
 	    		public void run(){
 	    			FourSquareClient fc = new FourSquareClient();
-	    			Vector<FourSqareVenue> vc = fc.prova(curLocation,poi);
+	    			Vector<PoiOnCamera> vc = fc.prova(curLocation,poi);
 	    			//Vector<FourSqareVenue> vc = fc.getVenuList(curLocation);
 	    			Log.e("Where4","CurLocation LA:"+curLocation.getLatitude()+" LO:"+curLocation.getLongitude());
 	    			
@@ -60,7 +60,7 @@ public class PoiAugmentedRealityManager extends Activity {
 	    				Enumeration e = vc.elements();
 	    				while(e.hasMoreElements())
 	    				{
-	    					FourSqareVenue fq = (FourSqareVenue) e.nextElement();
+	    					PoiOnCamera fq = (PoiOnCamera) e.nextElement();
 	    					Log.e("Where4","Got Venue:"+fq.name);
 	    					if(fq.location != null)
 	    					Log.i("Where4", "Lat:"+fq.location.getLatitude()+":"+fq.location.getLongitude());
@@ -86,37 +86,37 @@ public class PoiAugmentedRealityManager extends Activity {
     
 	private void addLoadingLayouts()
 	{
-		FourSqareVenue fs = new FourSqareVenue(this.getApplicationContext());
+		PoiOnCamera fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 0;
 		fs.inclination = 0;
 		fs.name = "Loading";
 		ar.addARView(fs);
-		fs = new FourSqareVenue(this.getApplicationContext());
+		fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 45;
 		fs.inclination = 0;
 		fs.name = "Loading";
 		ar.addARView(fs);
-		fs = new FourSqareVenue(this.getApplicationContext());
+		fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 90;
 		fs.inclination = 0;
 		fs.name = "Loading";
 		ar.addARView(fs);
-		fs = new FourSqareVenue(this.getApplicationContext());
+		fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 135;
 		fs.inclination = 0;
 		fs.name = "Loading";
 		ar.addARView(fs);
-		fs = new FourSqareVenue(this.getApplicationContext());
+		fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 180;
 		fs.inclination = 0;
 		fs.name = "Loading";
 		ar.addARView(fs);
-		fs = new FourSqareVenue(this.getApplicationContext());
+		fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 210;
 		fs.inclination = 0;
 		fs.name = "Loading";
 		ar.addARView(fs);
-		fs = new FourSqareVenue(this.getApplicationContext());
+		fs = new PoiOnCamera(this.getApplicationContext());
 		fs.azimuth = 270;
 		fs.inclination = 0;
 		fs.name = "Loading";

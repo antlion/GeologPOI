@@ -28,6 +28,8 @@ public class Category {
 	// icona della categoria
 	private String icon;
 
+	//Icona per la realtà aumentata
+	private int iconAR;
 	/**
 	 * Costruttore
 	 * 
@@ -98,4 +100,5 @@ public class Category {
 		return ResourcesManager.getDrawableFromUri(icon, context);
 	}
 
+	
 }
