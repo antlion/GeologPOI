@@ -30,9 +30,10 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
         android:text="Large Text"
-        android:textAppearance="?android:attr/textAppearanceLarge" 
-        android:textColor="#33CCFF"/>
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#33CCFF" />
 
     <ImageView
         android:id="@+id/imagePOI"

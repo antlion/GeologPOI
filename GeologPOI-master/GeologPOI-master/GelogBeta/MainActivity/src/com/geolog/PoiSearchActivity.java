@@ -135,7 +135,6 @@ public class PoiSearchActivity extends TabActivity {
 
 	public void onResume() {
 		super.onResume();
-
 		// richiedo l'aggiornamento della posizione dell'utente
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				&& locationManager.getProvider(LocationManager.GPS_PROVIDER) != null) {

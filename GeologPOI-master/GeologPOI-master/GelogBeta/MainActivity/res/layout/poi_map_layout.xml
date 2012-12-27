@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-
-
-<!--  <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" 
-        android:id="@+id/relative">
-		
-<com.google.android.maps.MapView
-android:apiKey="0RKzE3GmM5HAhVMrImhviRswQH20hg-kZiM330w"
-android:id="@+id/mapView"
-android:layout_width="match_parent"
-android:layout_height="match_parent" />
-
-<ListView
-    android:id="@+id/listView1"
-    android:layout_width="200dp"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentLeft="true"
-   >
-
-</ListView>
-        
-</RelativeLayout> 
-
--->
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent" android:layout_height="match_parent">
 
@@ -76,15 +49,17 @@ android:layout_height="match_parent" />
         android:layout_alignParentBottom="true"
         android:background="#45303030">
         <ImageButton android:layout_below="@+id/mapview" android:text="Cerca"
-            android:id="@+id/Button01" android:layout_width="wrap_content"
+            android:id="@+id/searchButton" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentLeft="true"
-            android:background="@drawable/search"></ImageButton>
+           android:background="@null"
+            android:src="@drawable/search"></ImageButton>
         <Button android:layout_below="@+id/mapview" android:text="Categorie"
-            android:id="@+id/Button02" android:layout_width="wrap_content"
+            android:id="@+id/categoryButton" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_centerInParent="true"></Button>
-        <Button android:text="livelli" android:id="@+id/Button01"
+        <Button android:text="livelli" android:id="@+id/levelsButton"
             android:layout_width="wrap_content" android:layout_toLeftOf="@+id/mapview"
-            android:layout_height="wrap_content" android:layout_alignParentRight="true"></Button>
+            android:layout_height="wrap_content" android:layout_alignParentRight="true"
+            android:src="@drawable/levels"></Button>
     </RelativeLayout>
 
 			</RelativeLayout>

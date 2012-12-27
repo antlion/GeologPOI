@@ -1,6 +1,5 @@
 package com.geolog;
 
-
 import geolog.util.ParametersBridge;
 import geolog.util.PositionOverlay;
 import geolog.util.UtilDialog;
@@ -9,12 +8,14 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-
 import com.geolog.dominio.*;
 import com.geolog.web.domain.PoiListResponse;
 
+import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -23,6 +24,15 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.android.maps.GeoPoint;
@@ -41,7 +51,8 @@ import com.google.android.maps.OverlayItem;
  * @author Lorenzo
  * 
  */
-public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
+public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
+		OnClickListener {
 
 	// Controller della mappa
 	private MapController mapController;
@@ -62,6 +73,12 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 	private Context context;
 	// Menu delle categorie
 	private MenuCategory menuCategory;
+	// CheckBox per la vista da satellite della mappa
+	private CheckBox satelliteCheckBox;
+	// CheckBox per la street View della mappa
+	private CheckBox streetViewCheckBox;
+	// CheckBox per la vista del traffico della mappa
+	private CheckBox trrafficCheckBox;
 
 	@SuppressWarnings("unchecked")
 	public void onCreate(Bundle savedInstanceState) {
@@ -107,6 +124,17 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 				CategoriesManager.getCategoriesManager(), context);
 		// Il menù delle categorie non + inizialmente visibile
 		menuCategory.setVisibilityListCategory(false);
+
+		// Configuro i buttons visibili sull'iterfaccia grafica
+		// Button per la ricerca
+		ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
+		searchButton.setOnClickListener(this);
+		// Button per il men delle categorie
+		Button categoryButton = (Button) findViewById(R.id.categoryButton);
+		categoryButton.setOnClickListener(this);
+		// Button per i livelli della mappa
+		Button levelsMap = (Button) findViewById(R.id.levelsButton);
+		levelsMap.setOnClickListener(this);
 
 		// Inzializzo il location manager
 		locationManager = (LocationManager) this
@@ -380,6 +408,109 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi {
 		};
 		task.execute((Void[]) null);
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+
+		// Se è stato premuto il bottone di ricerca effettuo la ricerca dei poi
+		if (v.getId() == R.id.search_poi) {
+			searchPoi(context);
+			// Se ho ottenuto dei poi aggiorno la mia locazione
+			if (poi != null) {
+				updateLocationData(mylocation);
+			}
+		}
+		// Se è stato premuto il bottone delle categorie, apro il menu delle
+		// categorie
+		if (v.getId() == R.id.categoryButton) {
+			if (menuCategory.checkMenuCategory()) {
+				
+
+				
+			}
+		}
+		// Se è stato premuto il bottone dei livelli,visualizzo un dialogo per i
+		// livelli
+		if (v.getId() == R.id.levelsButton) {
+			// Creo un nuovo dialogo, dove vengono visualizzate le checkBox per
+			// la visualizzazione
+			// dell view della mappa
+			AlertDialog.Builder adb = new AlertDialog.Builder(this);
+			LayoutInflater adbInflater = LayoutInflater.from(this);
+			View eulaLayout = adbInflater.inflate(R.layout.map_levels_layout,
+					null);
+			adb.setView(eulaLayout);
+			satelliteCheckBox = (CheckBox) eulaLayout
+					.findViewById(R.id.satelliteCheckBox);
+			satelliteCheckBox
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							// TODO Auto-generated method stub
+							if (streetViewCheckBox.isChecked()) {
+								streetViewCheckBox.setChecked(false);
+								mapView.setSatellite(isChecked);
+
+							}
+							mapView.setSatellite(isChecked);
+							satelliteCheckBox.setChecked(isChecked);
+						}
+					});
+			streetViewCheckBox = (CheckBox) eulaLayout
+					.findViewById(R.id.streetViewCheckBox);
+			streetViewCheckBox
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							// TODO Auto-generated method stub
+							if (satelliteCheckBox.isChecked()) {
+								mapView.setSatellite(false);
+								satelliteCheckBox.setChecked(false);
+								mapView.setStreetView(isChecked);
+								streetViewCheckBox.setChecked(isChecked);
+
+							} else {
+								mapView.setStreetView(isChecked);
+								streetViewCheckBox.setChecked(isChecked);
+
+							}
+						}
+					});
+			trrafficCheckBox = (CheckBox) eulaLayout
+					.findViewById(R.id.trafficCheckBox);
+			trrafficCheckBox
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							// TODO Auto-generated method stub
+							mapView.setTraffic(isChecked);
+							trrafficCheckBox.setChecked(isChecked);
+
+						}
+					});
+			adb.setNegativeButton("Cancel",
+					new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int which) {
+
+						}
+					});
+
+			adb.show();
+			if (mapView.isStreetView() == false)
+				streetViewCheckBox.setChecked(true);
+			if (mapView.isSatellite())
+				satelliteCheckBox.setChecked(true);
+			if (mapView.isTraffic())
+				trrafficCheckBox.setChecked(true);
+		}
 	}
 
 }
