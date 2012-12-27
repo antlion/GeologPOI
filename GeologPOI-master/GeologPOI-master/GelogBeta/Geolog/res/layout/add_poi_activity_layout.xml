@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#303030"
+    android:orientation="vertical" >
+
+    <com.markupartist.android.widget.ActionBar
+        xmlns:app="http://schemas.android.com/apk/res/com.geolog.activity"
+        android:id="@+id/actionbar"
+        style="@style/ActionBar"
+        app:title="Geolog" />
+
+    <EditText
+        android:id="@+id/editText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:ems="10"
+        android:hint="Inserisci info"
+        android:inputType="textEmailAddress"
+        android:textColorHint="#3366CC" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/actionbar"
+        android:cursorVisible="true"
+        android:ems="10"
+        android:hint="Inserisci il nome del POI"
+        android:textColorHint="#3366CC" />
+
+    <Spinner
+        android:id="@+id/spinner1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/editText1"
+        android:hint="Scegli categoria" />
+
+    <ImageView
+        android:id="@+id/imagePic"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/ok"
+        android:src="@drawable/customshape" />
+
+    <Button
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText2"
+        android:layout_marginLeft="14dp"
+        android:text="Aggiungi POI" />
+
+</RelativeLayout>
