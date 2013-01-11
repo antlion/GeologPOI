@@ -143,8 +143,8 @@ public class PoiSearchActivity extends TabActivity {
 		// se il provider gps non è supportato dal device, viene resituito un
 		// messaggio d'errore e viene terminata l'attività
 		if (locationManager.getProvider(LocationManager.GPS_PROVIDER) == null) {
-			UtilDialog.createAlertNoGps(context).show();
-			finish();
+			UtilDialog.createAlertNoProviderGps(context, this).show();
+			
 		}
 
 		// se il gps è abilitato si procede alla ricerca dei punti di
@@ -153,8 +153,8 @@ public class PoiSearchActivity extends TabActivity {
 			searchPOI(this);
 
 		} else {
-			UtilDialog.createAlertNoGps(this).show();
-			finish();
+			UtilDialog.createAlertNoGps(this, this).show();
+	
 		}
 	}
 
@@ -178,6 +178,7 @@ public class PoiSearchActivity extends TabActivity {
 
 			}
 		}
+		
 
 	}
 
@@ -193,17 +194,18 @@ public class PoiSearchActivity extends TabActivity {
 		// Creo la tabella per la mappa
 		TabSpec poiMap = tabHost.newTabSpec("Mappa");
 		poiMap.setIndicator("", getResources()
-				.getDrawable(R.drawable.maps_icon));
+				.getDrawable(R.drawable.googlemaps));
 		poiMap.setContent(viewPoiManager.createNewViewIntent("Map"));
 
 		// Tab per la lista dei poi
 		TabSpec poiList = tabHost.newTabSpec("Lista");
-		poiList.setIndicator("Lista", null);
+		poiList.setIndicator("", getResources()
+				.getDrawable(R.drawable.list));
 		poiList.setContent(viewPoiManager.createNewViewIntent("List"));
 
 		// Tab per la realtà aumentata
 		TabSpec poiAr = tabHost.newTabSpec("AR");
-		poiAr.setIndicator("", getResources().getDrawable(R.drawable.ar_icon));
+		poiAr.setIndicator("", getResources().getDrawable(R.drawable.camera));
 		poiAr.setContent(viewPoiManager.createNewViewIntent("Ar"));
 
 		// Aggiungo le tab al gestore delle tab
@@ -255,8 +257,10 @@ public class PoiSearchActivity extends TabActivity {
 						e.printStackTrace();
 					}
 				}
-				;
-
+				//aggiungo la mia locazione e i poi al gestore delle viste
+				viewPoiManager.setMylocation(mylocation);
+				viewPoiManager.setPois(pois);
+				
 				// Se è stata trovata una locazione procedo alla ricerca dei
 				// poi, altrimenti termino la ricerca
 				if (hasLocation) {
@@ -282,7 +286,7 @@ public class PoiSearchActivity extends TabActivity {
 						pois = (ArrayList<Poi>) response.getPois();
 						// salvo i poi nel gestore del visulizzatore
 						viewPoiManager.setPois(pois);
-
+  
 					}
 					}
 				}
@@ -295,7 +299,7 @@ public class PoiSearchActivity extends TabActivity {
 				dialog.dismiss();
 
 				// se la locazion non è stata trovata, resituisco un messaggio
-				// d'errore e termino l'attività,
+				// d'errore 
 				// altrimenti, setto lo stato della location e inzializzo le tab
 				if (mylocation == null) {
 					final AlertDialog.Builder builder = new AlertDialog.Builder(
@@ -308,11 +312,15 @@ public class PoiSearchActivity extends TabActivity {
 								int which) {
 							// TODO Auto-generated method stub
 							dialog.dismiss();
+							if (setTab == false) {
+								setTab();
+								setTab = true;
+							}
 						}
 					});
-					builder.setCancelable(true);
-
-					finish();
+					builder.setCancelable(false);
+					builder.show();
+					//finish();
 				} else {
 					hasLocation = false;
 					if (setTab == false) {

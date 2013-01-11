@@ -1,7 +1,7 @@
 package geolog.web;
 
 
-import geolog.util.ResourcesManager;
+import geolog.managers.ResourcesManager;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -39,7 +39,7 @@ import com.google.gson.GsonBuilder;
 public class WebService {
 
 	// Indirizzo di acesso del servizo web
-	private static final String WEB_SERVICE_URL = "http://192.168.0.103:8080/GeologWeb/services/WS";
+	private static final String WEB_SERVICE_URL = "http://192.168.0.105:8080/GeologWeb/services/WS";
 
 	// Servizi offerti dal Servizioweb
 	/**
@@ -106,10 +106,10 @@ public class WebService {
 		// Creo una nuova risposta
 		ConfrimResponse response = null;
 
-		// creo gli oggeti jason
+		// creo gli oggeti json
 		JSONObject result = new JSONObject();
 		JSONObject categoria = new JSONObject();
-		categoria.put("id", suggestion.getPoi().getCategoria().getId());
+		categoria.put("id", suggestion.getPoi().getCategory().getId());
 		JSONObject poi = new JSONObject();
 		poi.put("nome", suggestion.getPoi().getNome());
 		poi.put("descrizione", suggestion.getPoi().getDescrizione());

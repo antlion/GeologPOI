@@ -8,12 +8,22 @@
     <string name="title_activity_prova">Prova</string>
     <string name="title_progress_dialog_inzialization">Inzializzazione</string>
     <string name="message_progress_dialog_inzialization">Inzializzo applicazione</string>
-    <string name="message_autentication_progress_bar">Autenticazione in corso...</string>
+    <string name="message_autentication_progress_bar">Autenticazione in corso</string>
     <string name="positive_auth_progress_bar">Autenticazione Riuscita</string>
     <string name="negative_auth_progress_bar"/>
     <string name="search_category_progress_bar">Recupero Lista Categorie</string>
     <string name="finish_inizialization_progress_bar">Fine inizializzazione</string>
     <string name="pos_search_category_progress_bar">Lista categorie recuperata..</string>
     <string name="neg_search_categories">Lista categorie non recuperata</string>
+    <string name="searchPoiDrawerImage">image drwer search poi</string>
+    <string name="searchPoi">Ricerca POI</string>
+    <string name="addPoi">Aggiungi POI</string>
+    <string name="insertPoiName">inserisci nome del Poi</string>
+    <string name="addInfo">inserisci info</string>
+    <string name="selectCategory">seleziona categoria</string>
+    <string name="insertSuggestionHint">Inserisci descrizione della segnalazione</string>
+    <string name="update">Update</string>
+    <string name="categories">Categorie</string>
+    <string name="search">cerca</string>
 
 </resources>

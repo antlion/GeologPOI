@@ -1,6 +1,9 @@
 package geolog.poi.visualization;
 
 
+import geolog.activities.PoiAugmentedRealityManager;
+import geolog.activities.PoiListManager;
+import geolog.activities.PoiMapManager;
 import geolog.util.ParametersBridge;
 
 import java.util.ArrayList;

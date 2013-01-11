@@ -10,6 +10,7 @@ import com.geolog.dominio.Category;
 
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -131,8 +132,13 @@ public class CategoriesAdapter extends BaseAdapter{
 			updateCategorySelected(categories.get(position), "true");
 		}
 		//Recupero il nome che rappresenta la categoria specifica
+		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
+	   
+	    
 		TextView tx = (TextView) convertView.findViewById(R.id.textView1);
 		tx.setText(categories.get(position).getNomeCategoria());
+		
+		tx.setTypeface(myTypeface);
 
 		return convertView;
 

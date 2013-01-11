@@ -42,5 +42,13 @@ public class AuthGoogle {
 		// Ritorno l'account trovato
 		return myAccount;
 	}
+	
+	public static String getAccountName(Activity activity){
+		
+		Account account = googleServiceAviable(activity);
+		if (account!= null)
+			return account.name;
+		return null;
+	}
 
 }

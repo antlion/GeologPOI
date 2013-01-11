@@ -44,22 +44,55 @@
 			        android:apiKey="0RKzE3GmM5HAhVMrImhviRswQH20hg-kZiM330w"
 			        android:clickable="true" />
 			    
+
 			      <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#45303030">
-        <ImageButton android:layout_below="@+id/mapview" android:text="Cerca"
+        
+       <ImageButton android:layout_below="@+id/mapview" android:text="@string/search"
+           android:contentDescription="@string/search"
             android:id="@+id/searchButton" android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:layout_alignParentLeft="true"
-           android:background="@null"
-            android:src="@drawable/search"></ImageButton>
-        <Button android:layout_below="@+id/mapview" android:text="Categorie"
-            android:id="@+id/categoryButton" android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:layout_centerInParent="true"></Button>
-        <Button android:text="livelli" android:id="@+id/levelsButton"
-            android:layout_width="wrap_content" android:layout_toLeftOf="@+id/mapview"
-            android:layout_height="wrap_content" android:layout_alignParentRight="true"
-            android:src="@drawable/levels"></Button>
+            android:background="@drawable/search"
+            android:src="@drawable/search"
+         ></ImageButton>
+
+        <ImageButton
+            android:id="@+id/categoryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/list"
+            android:src="@drawable/list"
+            android:text="@string/categories"
+            android:contentDescription="@string/categories" />
+
+        <ImageButton
+            android:contentDescription="@string/update"
+            android:id="@+id/addPoiButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="44dp"
+            android:layout_toLeftOf="@+id/categoryButton"
+            android:background="@drawable/sign_up"
+            android:src="@drawable/sign_up"
+            android:text="@string/update" />
+
+        <ImageButton
+            android:id="@+id/levelsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="43dp"
+            android:layout_toRightOf="@+id/searchButton"
+            android:background="@drawable/control_panel"
+            android:src="@drawable/control_panel"
+            android:text="livelli" />
+
     </RelativeLayout>
 
 			</RelativeLayout>

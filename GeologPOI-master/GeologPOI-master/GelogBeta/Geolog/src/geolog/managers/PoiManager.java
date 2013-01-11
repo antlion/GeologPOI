@@ -2,22 +2,20 @@ package geolog.managers;
 
 
 
+
 import geolog.web.WebService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+
 
 import android.content.Context;
 import android.location.Location;
 
 
-import com.geolog.activity.R;
+
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
-import com.geolog.dominio.Resource;
-import com.geolog.dominio.ResourceType;
 import com.geolog.dominio.Suggestion;
 import com.geolog.web.domain.ConfrimResponse;
 import com.geolog.web.domain.PoiListResponse;
@@ -140,7 +138,8 @@ public class PoiManager {
 	 */
 	public static PoiListResponse searchPoi(Location location,Context context,ArrayList<Category> categorySelected) 
 	{
-		CategoriesManager categoryHandler = CategoriesManager.getCategoriesManager();
+		if ( categorySelected.size() >0){
+		/*CategoriesManager categoryHandler = CategoriesManager.getCategoriesManager();
 		String categoriesIdSelected = categoryHandler.getStringIdFromSelectedCategory();
 	  
 		Location location2 = new Location("prova");
@@ -158,11 +157,20 @@ public class PoiManager {
     	res.add(resource);
     	newPOI.setResources(res);
     	arrayPOI.add(newPOI);
-    	arrayPOI.add(newPOI2);
+    	arrayPOI.add(newPOI2);*/
+		CategoriesManager categoryHandler = CategoriesManager.getCategoriesManager();
+		String categoriesIdSelected = categoryHandler.getStringIdFromSelectedCategory();
 		WebService service = new WebService();
-		PoiListResponse response =new PoiListResponse();
-		response.setPois(arrayPOI);
-		response.setStatus(200);
-		return response;
+		PoiListResponse response = service.findNearby(location, categoriesIdSelected, context);
+		if (response != null && response.getStatus() == 200)
+		{
+			//Aggiungo ad ogni poi della lista, le rispettive categorie, idetificate dall'id categoria
+			categoryHandler.setCategoriesOnPoi(response.getPois());
+			return response;
+		}
+		//il poi ha una categoria identificata dall'id.
+		return response;		}
+		
+		return null;
 	}
 }

@@ -1,18 +1,19 @@
 package geolog.util;
 
 
-import geolog.activities.AddPoiActivity;
+
 import geolog.managers.PoiManager;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -136,14 +137,14 @@ public class PositionOverlay extends ItemizedOverlay {
 		populate();
 	}
 
-	@Override
-	public boolean onTap(final GeoPoint p, MapView mapView) {
+	
+	/*public boolean onTap(final GeoPoint p, MapView mapView) {
 		// If it was the parent that was tapped, do nothing
 		if (super.onTap(p, mapView)) {
 
-			return true;
+			return false;
 		}
-
+		else{
 		// Quando l'utennte clicca sulla mappa, viene chiesto di aggiungere un
 		// poi tramite un dialofo
 		AlertDialog.Builder alert = new AlertDialog.Builder(context);
@@ -175,10 +176,10 @@ public class PositionOverlay extends ItemizedOverlay {
 					}
 				});
 
-		alert.show();
+		alert.show();}
 		return true;
 
-	}
+	}*/
 
 	/**
 	 * Creazione di un Geopoint a partire da una locazione
@@ -201,14 +202,14 @@ public class PositionOverlay extends ItemizedOverlay {
 
 	@Override
 	protected boolean onTap(final int index) {
-
+		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
 		// Se l'utente clicca su un overlay item, viene presa la sua posizione
 		// nell'array di overlay
 		OverlayItem item = mOverlays.get(index);
 		// Se l'item corrisponde alla posizione dell'utente viene mostrato un
 		// messaggio relativo alla posizione dell'utente,altrimenti
 		// un messaggio relativo al poi toccato
-		if (item.getTitle().equals("MiaPosizione")) {
+		if (item.getTitle().equals("Mi Trovo qui")) {
 			// elimina l'overlay dell'utente
 			mapOverlays.remove(index);
 			// prende il layout della GUI
@@ -230,7 +231,9 @@ public class PositionOverlay extends ItemizedOverlay {
 			final TextView myPosition = (TextView) popUp
 					.findViewById(R.id.balloon_item_title);
 			myPosition.setText("MiaPosizione");
-
+			
+		    
+		    myPosition.setTypeface(myTypeface);
 			// Aggiungo al listenr l'immagine che corrisponde alla chiusura
 			// della view creata
 			final ImageView image = (ImageView) popUp
@@ -273,12 +276,12 @@ public class PositionOverlay extends ItemizedOverlay {
 			final TextView textNamePoi = (TextView) popUp
 					.findViewById(R.id.balloon_item_title);
 			textNamePoi.setText(poi.getNome());
-
+			textNamePoi.setTypeface(myTypeface);
 			// Visualizzo la desscrizione del poi
 			final TextView descrizione = (TextView) popUp
 					.findViewById(R.id.descrizione);
 			descrizione.setText(poi.getDescrizione());
-
+			descrizione.setTypeface(myTypeface);
 			// Aggiungo al lsitner l'immagine di chiusura della view
 			final ImageView image = (ImageView) popUp
 					.findViewById(R.id.balloon_close);
@@ -337,6 +340,7 @@ public class PositionOverlay extends ItemizedOverlay {
 
 		}
 		return true;
+		
 	}
 
 	public void addSuggestion(final Poi poiBase, final String description,
@@ -360,7 +364,7 @@ public class PositionOverlay extends ItemizedOverlay {
 				// TODO Auto-generated method stub
 				// Chiedo al servizio web di aggiungere la segnalzione
 				response = PoiManager.suggestionPoi(poiBase, description, date,
-						"io", context);
+						AuthGoogle.getAccountName((Activity) context), context);
 				return null;
 
 			}

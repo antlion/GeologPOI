@@ -3,9 +3,11 @@ package geolog.util;
 
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.provider.Settings;
 import android.widget.Toast;
@@ -69,7 +71,7 @@ public class UtilDialog {
 	 *            contesto dell'attività
 	 * @return
 	 */
-	public static AlertDialog createAlertNoGps(final Context context) {
+	public static AlertDialog createAlertNoGps(final Context context,final Activity activity) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(
 				"Yout GPS seems to be disabled, do you want to enable it?")
@@ -82,12 +84,14 @@ public class UtilDialog {
 										Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 								intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 								context.startActivity(intent);
+								activity.finish();
 							}
 						})
 				.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(final DialogInterface dialog,
 							final int id) {
-						dialog.cancel();
+						dialog.dismiss();
+						activity.finish();
 					}
 				});
 		final AlertDialog alert = builder.create();
@@ -102,10 +106,18 @@ public class UtilDialog {
 	 *            contesto dell'attività
 	 * @return AlertDialog il dialogo di allerta
 	 */
-	public static AlertDialog createAlertNoProviderGps(final Context context) {
+	public static AlertDialog createAlertNoProviderGps(final Context context,final Activity activity) {
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setMessage(context.getString(com.geolog.activity.R.string.noGpsProvider));
 		builder.setCancelable(false);
+		builder.setNeutralButton("Chiudi", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// TODO Auto-generated method stub
+				activity.finish();
+			}
+		});
 		final AlertDialog alert = builder.create();
 		return alert;
 	}

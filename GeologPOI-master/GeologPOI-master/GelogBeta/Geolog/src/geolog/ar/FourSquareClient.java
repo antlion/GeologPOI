@@ -1,30 +1,29 @@
 package geolog.ar;
 
 
-import geolog.poi.visualization.PoiAugmentedRealityManager;
+import geolog.activities.PoiAugmentedRealityManager;
+import geolog.managers.ResourcesManager;
 
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+
 
 import com.geolog.dominio.*;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.location.LocationManager;
 import android.util.Log;
 
 public class FourSquareClient
 {
-	/**
-	 * @uml.property  name="highestCheckin"
-	 */
+	
 	int highestCheckin = 0;
+	@SuppressWarnings({ "unused", "rawtypes" })
 	private void adjustAz(Vector v)
 	{
 		Enumeration e = v.elements();
@@ -36,7 +35,7 @@ public class FourSquareClient
 		}
 	}
 	
-	public Vector<PoiOnCamera> prova(Location Loc, ArrayList<Poi> poi)
+	public Vector<PoiOnCamera> prova(Location Loc, ArrayList<Poi> poi,Context context)
 	{
 		
 		
@@ -67,13 +66,24 @@ public class FourSquareClient
 				Location location = newPoi.getPOILocation();
 				location.setLatitude(newPoi.getLatitude());
 				location.setLongitude(newPoi.getLongitude());
+				
 				PoiOnCamera curVen1 = new PoiOnCamera(PoiAugmentedRealityManager.ctx);
+
 			     curVen1.location = location;
 			    
 			     //curVen1.icon = newPoi.getCategoria().getIcon();
 			     
 			     curVen1.name=newPoi.getNome();
 			     curVen1.mylocation = Loc;
+			     
+			     if (ResourcesManager.controlImageResource(newPoi.getCategory().getIcon(), context)){
+			    	 
+			    	 Bitmap icon2 = BitmapFactory.decodeFile((context.getFilesDir().toString()
+								+ "//" + ResourcesManager.getNameFileFromUrl((newPoi.getCategory().getIcon()))));
+			    	 curVen1.icon= icon2;
+			    	 }
+			     else
+			     curVen1.icon= null;
 			     v.add(curVen1);
 				
 			}

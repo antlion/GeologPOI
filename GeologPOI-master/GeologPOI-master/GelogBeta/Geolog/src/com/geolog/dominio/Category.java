@@ -2,7 +2,7 @@ package com.geolog.dominio;
 
 import com.geolog.activity.R;
 
-import geolog.util.ResourcesManager;
+import geolog.managers.ResourcesManager;
 import android.content.Context;
 
 import android.graphics.drawable.Drawable;

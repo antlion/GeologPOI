@@ -6,6 +6,7 @@ import geolog.web.WebService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import java.util.Set;
 
@@ -19,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.Category;
+import com.geolog.dominio.Poi;
 import com.geolog.web.domain.CategoryListResponse;
 
 /**
@@ -250,12 +252,26 @@ public class CategoriesManager {
 				if (cb.isChecked()) {
 					cb.setChecked(false);
 					categoryAdapter.updateCategorySelected(category, "false");
+					
+					checkMenuCategory(categoryAdapter);
 				} else {
 					cb.setChecked(true);
 					categoryAdapter.updateCategorySelected(category, "true");
+					checkMenuCategory(categoryAdapter);
+
 				}
 			}
 		});
+	}
+	
+	public List<Poi> setCategoriesOnPoi(List<Poi> poiList)
+	{
+		for(Poi poi: poiList)
+		{
+			Category category = getCategoryFromId(poi.getCategory_id());
+			poi.setCategory(category);
+		}
+		return poiList;
 	}
 
 	public ArrayList<Category> getCategories() {

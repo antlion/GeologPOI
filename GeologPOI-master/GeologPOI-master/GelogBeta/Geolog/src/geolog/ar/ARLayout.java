@@ -3,6 +3,7 @@ package geolog.ar;
 import java.util.Enumeration;
 import java.util.Vector;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -14,102 +15,55 @@ import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.location.GpsStatus.Listener;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+@SuppressLint("DrawAllocation")
 public class ARLayout extends View implements LocationListener, SensorEventListener
 {
 	
-	/**
-	 * @uml.property  name="xAngleWidth"
-	 */
+	
 	private final float xAngleWidth = 29;
-	/**
-	 * @uml.property  name="yAngleWidth"
-	 */
+	
 	private final float yAngleWidth = 19;
 	
-	/**
-	 * @uml.property  name="screenWidth"
-	 */
-	public float screenWidth = 480;
-	/**
-	 * @uml.property  name="screenHeight"
-	 */
-	public float screenHeight = 320;
-	/**
-	 * @uml.property  name="lastLocation"
-	 * @uml.associationEnd  readOnly="true"
-	 */
-	private Location lastLocation;
 	
-	/**
-	 * @uml.property  name="arViews"
-	 * @uml.associationEnd  multiplicity="(0 -1)" elementType="geolog.ar.ARSphericalView"
-	 */
+	public float screenWidth = 480;
+	
+	public float screenHeight = 320;
+	
+	
+	@SuppressWarnings("rawtypes")
 	volatile Vector arViews = new Vector();
 	
-	/**
-	 * @uml.property  name="sensorMan"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+	
 	public SensorManager sensorMan;
-	/**
-	 * @uml.property  name="locMan"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+	
 	public LocationManager locMan;
-	/**
-	 * @uml.property  name="curLocation"
-	 * @uml.associationEnd  
-	 */
+	
 	public Location curLocation = null;
-	/**
-	 * @uml.property  name="ctx"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+	
 	private Context ctx;
-	/**
-	 * @uml.property  name="direction"
-	 */
+	
 	public float direction = (float) 22.4;
-	/**
-	 * @uml.property  name="inclination"
-	 */
+	
 	public double inclination;
-	/**
-	 * @uml.property  name="rollingX"
-	 */
+	
 	public double rollingX = (float)0;
-	/**
-	 * @uml.property  name="rollingZ"
-	 */
+	
 	public double rollingZ = (float)0;
-	/**
-	 * @uml.property  name="kFilteringFactor"
-	 */
+	
 	public float kFilteringFactor = (float)0.05;
-	/**
-	 * @uml.property  name="one"
-	 */
+	
 	public float one = (float)0;
-	/**
-	 * @uml.property  name="two"
-	 */
+	
 	public float two = (float)0;
-	/**
-	 * @uml.property  name="three"
-	 */
+	
 	public float three = (float)0;
-	/**
-	 * @uml.property  name="locationChanged"
-	 */
+
 	private boolean locationChanged = false;
-	/**
-	 * @uml.property  name="debug"
-	 */
+	
 	public boolean debug = false;
 	
 	public ARLayout(Context context)
@@ -213,10 +167,11 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 	}
 	
 	//Sort views by distance
-	private void sortArViews()
+	/*private void sortArViews()
 	{
 		//TODO
-	}
+	}*/
+	@SuppressWarnings("unchecked")
 	public void addARView(ARSphericalView view)
 	{
 		arViews.add(view);
@@ -225,17 +180,17 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 	{
 		arViews.remove(view);
 	}
-	private boolean isVisibleY(float lowerArm, float upperArm, float inc)
+/*	private boolean isVisibleY(float lowerArm, float upperArm, float inc)
 	{
 		return true;//(inc >= lowerArm &&inc <= upperArm);
-	}
+	}*/
 	
 	public void clearARViews()
 	{
 		arViews.removeAllElements();
 	}
 	//Given a point, is it visible on the screen?
-	private boolean isVisibleX(float leftArm, float rightArm, float az)
+	/*private boolean isVisibleX(float leftArm, float rightArm, float az)
 	{
 //		//Flip!
 //		if(leftArm > rightArm)
@@ -250,10 +205,10 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 //		}
 		
 		return true;
-	}
+	}*/
 	private  float calcXvalue(float leftArm, float rightArm, float az)
 	{
-		float ret = 0;
+		
 		float offset;
 		if(leftArm > rightArm)
 		{
@@ -281,6 +236,7 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 		float offset = ((upperArm - yAngleWidth) - inc) * -1;
 		return screenHeight - ((offset/yAngleWidth) * screenHeight);
 	}
+	@SuppressWarnings("unchecked")
 	public void onDraw(Canvas c)
 	{
 		//Log.e("Spec","Updating "+arViews.size()+" views");
@@ -291,9 +247,9 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 			Paint p = new Paint();
 			p.setColor(Color.WHITE);
 
-			c.drawText("Compass:"+String.valueOf(direction), 20, 20, p);
+			/*c.drawText("Compass:"+String.valueOf(direction), 20, 20, p);
 
-			c.drawText("Inclination"+String.valueOf(inclination), 150, 20, p);
+			c.drawText("Inclination"+String.valueOf(inclination), 150, 20, p);*/
 		}
 		while(e.hasMoreElements())
 		{
@@ -320,6 +276,7 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 			float upperArm = zAngle + (yAngleWidth/2);
 			float lowerArm = zAngle - (yAngleWidth/2);
 			
+			@SuppressWarnings("unchecked")
 			Enumeration<ARSphericalView> e = arViews.elements();
 
 			if(arViews.size() == 0)

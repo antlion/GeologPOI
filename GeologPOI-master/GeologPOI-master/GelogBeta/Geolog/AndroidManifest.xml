@@ -37,29 +37,24 @@
             </intent-filter>
         </activity>
         
-        <activity android:name="com.geolog.ChoseCategoryActivity" >
-        </activity>
-       <activity android:name="com.geolog.PoiSearchActivity" 
+        
+       <activity android:name="geolog.activities.PoiSearchActivity" 
             android:configChanges="orientation"> </activity>
-                <activity android:name="com.geolog.PoiMapManager" >
+                <activity android:name="geolog.activities.PoiMapManager" >
         </activity>
-        <activity android:name="com.geolog.PoiListManager" >
+        <activity android:name="geolog.activities.PoiListManager" >
         </activity>
-        <activity android:name="com.geolog.GestoreAR" >
+        <activity android:name="geolog.activities.SettingsActivity" >
         </activity>
-        <activity android:name="haseman.project.where4.HoldMeUp" >
+        <activity android:name="geolog.activities.PoiAugmentedRealityManager" >
         </activity>
-        <activity android:name="com.tutorial.menuList.Facebook" >
-        </activity>
-        <activity android:name="com.geolog.web.WebService" >
-        </activity>
+       
         <activity
-            android:name="com.geolog.AddPoiActivity">
+            android:name="geolog.activities.AddPoiActivity"
+            android:screenOrientation="landscape">
+            
         </activity>
-         <activity
-            android:name="geolog.ar.PoiAugmentedRealityManager"
-            >
-        </activity>
+      
     </application>
 
 </manifest>

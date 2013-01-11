@@ -3,43 +3,37 @@ package geolog.ar;
 
 
 
+
+
+
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.location.Location;
+
 
 public class PoiOnCamera extends ARSphericalView
 {
-	/**
-	 * @uml.property  name="name"
-	 */
+	
 	public String name;
-	/**
-	 * @uml.property  name="icon"
-	 */
-	public int icon;
-	/**
-	 * @uml.property  name="checkins"
-	 */
+	
+	public Bitmap icon;
+	
 	public int checkins;
-	/**
-	 * @uml.property  name="mylocation"
-	 * @uml.associationEnd  
-	 */
+
 	public Location mylocation;
-	/**
-	 * @return
-	 * @uml.property  name="mylocation"
-	 */
+	
+	private Context context;
+	
 	public Location getMylocation() {
 		return mylocation;
 	}
 
 	/**
 	 * @param mylocation
-	 * @uml.property  name="mylocation"
+	 * 
 	 */
 	public void setMylocation(Location mylocation) {
 		this.mylocation = mylocation;
@@ -49,7 +43,7 @@ public class PoiOnCamera extends ARSphericalView
 	{
 		super(ctx);
 		inclination = 0;
-		
+		context = ctx;
 	}
 
 	public void draw(Canvas c)
@@ -57,12 +51,17 @@ public class PoiOnCamera extends ARSphericalView
 		int numero =(int) location.distanceTo(deviceLocation) ; 
 		p.setColor(Color.WHITE);
 		p.setTextSize(25);
+		
+		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
+	   
+		p.setTypeface(myTypeface);
 		if(name != null)
 			c.drawText(name+" distanza: "+String.valueOf(numero), getLeft(), getTop(), p);
-		Bitmap icona = BitmapFactory.decodeResource(getContext().getResources(),
-               icon);
-		if(icona !=null)
-		c.drawBitmap(icona, getLeft(), getTop(), p);
+		
+
+		if(icon !=null)
+		
+		c.drawBitmap(icon, getLeft(), getTop(), p);
 			
 	}
 }

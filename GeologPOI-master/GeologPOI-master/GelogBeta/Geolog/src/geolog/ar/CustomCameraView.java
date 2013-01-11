@@ -1,44 +1,25 @@
 package geolog.ar;
 
-import java.io.IOException;
+
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-import android.hardware.Camera.Size;
 import android.util.AttributeSet;
-import android.util.Config;
-import android.util.Log;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.view.Window;
+
 
 
 public class CustomCameraView extends SurfaceView
 {
-	/**
-	 * @uml.property  name="camera"
-	 * @uml.associationEnd  readOnly="true"
-	 */
+	
 	Camera camera;
-	/**
-	 * @uml.property  name="previewHolder"
-	 * @uml.associationEnd  
-	 */
+	
 	SurfaceHolder previewHolder;
 	
 	//Callback for the surfaceholder
-	/**
-	 * @uml.property  name="surfaceHolderListener"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
 	SurfaceHolder.Callback surfaceHolderListener = new SurfaceHolder.Callback() {
         public void surfaceCreated(SurfaceHolder holder) {
             camera=Camera.open();

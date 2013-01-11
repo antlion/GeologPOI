@@ -11,10 +11,12 @@ import com.geolog.dominio.Poi;
 import com.geolog.web.domain.ConfrimResponse;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -98,15 +100,21 @@ public class POIAdapter extends BaseAdapter {
 			convertView = inflater.inflate(R.layout.riga_lista_gestore_lista,
 					null);
 		}
+		
+		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
+	   
+	 
+		
 		// Visualizzo il nome del poi
 		TextView poiName = (TextView) convertView.findViewById(R.id.nomePOI);
 		poiName.setText(pois.get(position).getNome());
+		poiName.setTypeface(myTypeface);
 		// visualizzo la categoria del poi
 		TextView categoryName = (TextView) convertView
 				.findViewById(R.id.categoriaPOI);
-		categoryName.setText(pois.get(position).getCategoria()
+		categoryName.setText(pois.get(position).getCategory()
 				.getNomeCategoria());
-
+		categoryName.setTypeface(myTypeface);
 		// Visualizzo l'immagine del poi
 		ImageView poiImage = (ImageView) convertView
 				.findViewById(R.id.poi_image);
@@ -177,6 +185,7 @@ public class POIAdapter extends BaseAdapter {
 				.findViewById(R.id.distance);
 		viewDistance.setText(String.valueOf("Distanza: "
 				+ distanceBetweenUserAndPoi + " metri"));
+		viewDistance.setTypeface(myTypeface);
 		return convertView;
 
 	}
@@ -214,7 +223,7 @@ public class POIAdapter extends BaseAdapter {
 				// TODO Auto-generated method stub
 				// Contatto il servizio web per aggiungere la segnalazione
 				response = PoiManager.suggestionPoi(poiBase, description, date,
-						"io", context);
+						AuthGoogle.getAccountName((Activity) context), context);
 				return null;
 
 			}

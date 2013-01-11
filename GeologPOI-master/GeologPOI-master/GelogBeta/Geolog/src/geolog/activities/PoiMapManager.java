@@ -1,8 +1,11 @@
-package geolog.poi.visualization;
+package geolog.activities;
 
 import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
+import geolog.poi.visualization.ItypeOfViewPoi;
+import geolog.poi.visualization.PoiViewManager;
 import geolog.util.MenuCategory;
+
 import geolog.util.ParametersBridge;
 import geolog.util.PositionOverlay;
 import geolog.util.UtilDialog;
@@ -20,19 +23,19 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -60,73 +63,73 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 
 	// Controller della mappa
 	/**
-	 * @uml.property  name="mapController"
-	 * @uml.associationEnd  
+	 * @uml.property name="mapController"
+	 * @uml.associationEnd
 	 */
 	private MapController mapController;
 	// Lista dei poi
 	/**
-	 * @uml.property  name="poi"
+	 * @uml.property name="poi"
 	 */
 	private ArrayList<Poi> poi;
 	// Mappa
 	/**
-	 * @uml.property  name="mapView"
-	 * @uml.associationEnd  
+	 * @uml.property name="mapView"
+	 * @uml.associationEnd
 	 */
 	private MapView mapView;
 
 	// Locazione dell'utente
 	/**
-	 * @uml.property  name="mylocation"
-	 * @uml.associationEnd  
+	 * @uml.property name="mylocation"
+	 * @uml.associationEnd
 	 */
 	private Location mylocation;
 	// Overlays della mappa
 	/**
-	 * @uml.property  name="mapOverlays"
+	 * @uml.property name="mapOverlays"
 	 */
 	private List<Overlay> mapOverlays;
 	// Manager delle location
 	/**
-	 * @uml.property  name="locationManager"
-	 * @uml.associationEnd  
+	 * @uml.property name="locationManager"
+	 * @uml.associationEnd
 	 */
 	private LocationManager locationManager;
 	// Listenr delle location
 	/**
-	 * @uml.property  name="myLocationListener"
-	 * @uml.associationEnd  
+	 * @uml.property name="myLocationListener"
+	 * @uml.associationEnd
 	 */
 	private LocationListener myLocationListener;
 	// Contesto dell'applicazione
 	/**
-	 * @uml.property  name="context"
-	 * @uml.associationEnd  
+	 * @uml.property name="context"
+	 * @uml.associationEnd
 	 */
 	private Context context;
 	// Menu delle categorie
 	/**
-	 * @uml.property  name="menuCategory"
-	 * @uml.associationEnd  
+	 * @uml.property name="menuCategory"
+	 * @uml.associationEnd
 	 */
 	private MenuCategory menuCategory;
 	// CheckBox per la vista da satellite della mappa
 	/**
-	 * @uml.property  name="satelliteCheckBox"
-	 * @uml.associationEnd  
+	 * @uml.property name="satelliteCheckBox"
+	 * @uml.associationEnd
 	 */
 	private CheckBox satelliteCheckBox;
 	// CheckBox per la street View della mappa
 	/**
-	 * @uml.property  name="streetViewCheckBox"
-	 * @uml.associationEnd  
+	 * @uml.property name="streetViewCheckBox"
+	 * @uml.associationEnd
 	 */
 	private CheckBox streetViewCheckBox;
 	// CheckBox per la vista del traffico della mappa
 	/**
-	 * @uml.property  name="trrafficCheckBox"
-	 * @uml.associationEnd  
+	 * @uml.property name="trrafficCheckBox"
+	 * @uml.associationEnd
 	 */
 	private CheckBox trrafficCheckBox;
 
@@ -159,9 +162,10 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		mapView.setBuiltInZoomControls(true);
 		// Inzializzo il mapController
 		mapController = mapView.getController();
-		mapController.setCenter(createNewGeoPoint(mylocation));
+
 		mapView.setBuiltInZoomControls(true);
-		mapController.setZoom(10);
+		mapController.setZoom(8);
+		
 		// Inzializzo gli overlays della mappa
 		mapOverlays = mapView.getOverlays();
 
@@ -180,11 +184,14 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
 		searchButton.setOnClickListener(this);
 		// Button per il men delle categorie
-		Button categoryButton = (Button) findViewById(R.id.categoryButton);
+		ImageButton categoryButton = (ImageButton) findViewById(R.id.categoryButton);
 		categoryButton.setOnClickListener(this);
 		// Button per i livelli della mappa
-		Button levelsMap = (Button) findViewById(R.id.levelsButton);
+		ImageButton levelsMap = (ImageButton) findViewById(R.id.levelsButton);
 		levelsMap.setOnClickListener(this);
+		// Button per l'update
+		ImageButton updateButton = (ImageButton) findViewById(R.id.addPoiButton);
+		updateButton.setOnClickListener(this);
 
 		// Inzializzo il location manager
 		locationManager = (LocationManager) this
@@ -200,10 +207,6 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 				// update della location
 				updateLocationData(mylocation);
 
-				/*
-				 * aggiungiMiaPosizione(mapOverlays,createNewGeoPoint(location));
-				 * if (poi != null){ addPOIOverlay(mapOverlays);}
-				 */
 			}
 
 			public void onProviderDisabled(String arg0) {
@@ -232,6 +235,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		locationManager.removeUpdates(myLocationListener);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void onResume() {
 		super.onResume();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
@@ -240,6 +244,18 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		menuCategory = new MenuCategory(false,
 				(ListView) findViewById(R.id.listViewCategories),
 				CategoriesManager.getCategoriesManager(), context);
+
+		// Recupero la lista dei poi dai parametri passati all'attività
+		poi = ((ArrayList<Poi>) ParametersBridge.getInstance().getParameter(
+				"listaPOI"));
+
+		// Aggiorno la posizione dell'utente
+		mylocation = (Location) ParametersBridge.getInstance().getParameter(
+				"location");
+
+		// aggiorno la lista deiPOI
+		updateLocationData(mylocation);
+
 		// richiedo l'aggiornamento della posizione
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
@@ -251,27 +267,6 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		}
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5,
 				1, myLocationListener);
-	}
-
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		// se è stato premuto il bottone del menù, controllo se il menu delle
-		// categorie è aperto
-		if (keyCode == KeyEvent.KEYCODE_MENU) {
-
-			// Se il menù è stato aperto, verrà chiuso
-			if (menuCategory.checkMenuCategory()) {
-				searchPoi(context);
-
-				// Se ho ottenuto dei poi aggiorno la mia locazione
-				if (poi != null) {
-					updateLocationData(mylocation);
-				}
-			}
-
-			return true;
-		} else {
-			return super.onKeyDown(keyCode, event);
-		}
 	}
 
 	public void updateLocationData(Location location) {
@@ -321,7 +316,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		PositionOverlay itemizedoverlay = new PositionOverlay(drawable, this,
 				null, mapOverlays, mapView, mylocation, mapController);
 		// creo un nuovo overlay item
-		OverlayItem overlayitem = new OverlayItem(geoPoint, "Mi Trvo qui", "");
+		OverlayItem overlayitem = new OverlayItem(geoPoint, "Mi Trovo qui", "");
 		// aggiungo il nuovo overlay alla lista degli overlay
 		itemizedoverlay.addOverlay(overlayitem);
 		// aggiungo l'itemized overlay alla lista degli overlay della mappa
@@ -361,11 +356,9 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 			// Ottengo il geopoint del POI
 			GeoPoint point = createNewGeoPoint(pois.getPOILocation());
 			// ottengo l'icona rappresentativa del poi
-			Drawable drawable = pois.getCategoria()
-					.getIconFromResource(context);
+			Drawable drawable = pois.getCategory().getIconFromResource(context);
 			// creo un nuovo itemized overlay
-			// PositionOverlay itemizedoverlay = new PositionOverlay(drawable,
-			// this,pois);
+
 			PositionOverlay itemizedoverlay = new PositionOverlay(drawable,
 					this, pois, mapOverlays, mapView, mylocation, mapController);
 			// creo un nuovo overlay item
@@ -390,6 +383,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 			// Definisco una nuova progress Dialog
 			ProgressDialog dialog;
+			private PoiListResponse response;
 
 			@Override
 			protected void onPreExecute() {
@@ -411,48 +405,52 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 				if (CategoriesManager.getCategoriesManager().getCategories()
 						.size() > 0) {
 					// Chiedo al gestore dei poi di ricercare i poi
-					PoiListResponse response = PoiManager.searchPoi(mylocation,
-							context, CategoriesManager.getCategoriesManager()
+					response = PoiManager.searchPoi(mylocation, context,
+							CategoriesManager.getCategoriesManager()
 									.getCategoriesSelected());
 
-					// Se la risposta è nulla o si è verificato un errore,
-					// termino
-					// con un messaggio di errore, altrimenti aggiorno la lista
-					// dei
-					// Poi
-					if (response == null || response.getStatus() != 200) {
-						dialog.dismiss();
-						UtilDialog.alertDialog(context,
-								"impossibile recuperare i poi").show();
-					} else {
-						// Prendo la lista dei poi dalla risposta del Poi
-						// manager
-						poi = (ArrayList<Poi>) response.getPois();
-						// aggiungo i poi trovati e la mia locazione al gestore
-						// della visualizzazione
-						PoiViewManager view = new PoiViewManager(context);
-						view.setPois(poi);
-						view.setMylocation(mylocation);
-
-						// se non sono stati trovati i poi termino con un
-						// messaggio
-						// d'errore, altrimenti eseguo lupdate della locazione
-						if (poi.size() < 0) {
-							dialog.dismiss();
-							UtilDialog.createBaseToast("nessun poi trovato",
-									context);
-						} else {
-							updateLocationData(mylocation);
-						}
-
-					}
 				}
 				return null;
 			}
 
 			protected void onPostExecute(String result) {
 				dialog.dismiss();
+				// Se la risposta è nulla o si è verificato un errore,
+				// termino
+				// con un messaggio di errore, altrimenti aggiorno la lista
+				// dei
+				// Poi
+				if (response == null || response.getStatus() != 200) {
+					dialog.dismiss();
+					UtilDialog.alertDialog(context,
+							"impossibile recuperare i poi").show();
+				} else {
+					// Prendo la lista dei poi dalla risposta del Poi
+					// manager
+					poi = (ArrayList<Poi>) response.getPois();
+					// aggiungo i poi trovati e la mia locazione al gestore
+					// della visualizzazione
+					PoiViewManager view = new PoiViewManager(context);
+					view.setPois(poi);
+					view.setMylocation(mylocation);
+					ParametersBridge.getInstance()
+							.addParameter("listaPOI", poi);
+					ParametersBridge.getInstance().addParameter("location",
+							mylocation);
 
+					// se non sono stati trovati i poi termino con un
+					// messaggio
+					// d'errore, altrimenti eseguo lupdate della locazione
+					if (poi.size() < 0) {
+						dialog.dismiss();
+						UtilDialog.createBaseToast("nessun poi trovato",
+								context);
+					} else {
+
+						updateLocationData(mylocation);
+					}
+
+				}
 			}
 
 		};
@@ -464,21 +462,35 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 
+		// Se viene cliccato il bottone di aggiungi poi, viene avviatà
+		// l'attività di aggiungi poi.
+		if (v.getId() == R.id.addPoiButton) {
+			Intent intent = new Intent(context, AddPoiActivity.class);
+			context.startActivity(intent);
+		}
 		// Se è stato premuto il bottone di ricerca effettuo la ricerca dei poi
-		if (v.getId() == R.id.search_poi) {
+		if (v.getId() == R.id.searchButton) {
 			searchPoi(context);
-			// Se ho ottenuto dei poi aggiorno la mia locazione
-			if (poi != null) {
-				updateLocationData(mylocation);
-			}
+
 		}
 		// Se è stato premuto il bottone delle categorie, apro il menu delle
 		// categorie
 		if (v.getId() == R.id.categoryButton) {
-			if (menuCategory.checkMenuCategory()) {
-				
 
-				
+			ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
+			ImageButton levelsMap = (ImageButton) findViewById(R.id.levelsButton);
+			ImageButton updateButton = (ImageButton) findViewById(R.id.addPoiButton);
+			// Se il menù è stato aperto, verrà chiuso
+			if (menuCategory.checkMenuCategory()) {
+				searchButton.setVisibility(View.VISIBLE);
+				updateButton.setVisibility(View.VISIBLE);
+				levelsMap.setVisibility(View.VISIBLE);
+
+			} else {
+				searchButton.setVisibility(View.GONE);
+				updateButton.setVisibility(View.GONE);
+				levelsMap.setVisibility(View.GONE);
+
 			}
 		}
 		// Se è stato premuto il bottone dei livelli,visualizzo un dialogo per i
@@ -494,6 +506,10 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 			adb.setView(eulaLayout);
 			satelliteCheckBox = (CheckBox) eulaLayout
 					.findViewById(R.id.satelliteCheckBox);
+			Typeface myTypeface = Typeface.createFromAsset(getAssets(),
+					"fonts/bebe.otf");
+
+			satelliteCheckBox.setTypeface(myTypeface);
 			satelliteCheckBox
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -512,6 +528,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 					});
 			streetViewCheckBox = (CheckBox) eulaLayout
 					.findViewById(R.id.streetViewCheckBox);
+			streetViewCheckBox.setTypeface(myTypeface);
 			streetViewCheckBox
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -534,6 +551,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 					});
 			trrafficCheckBox = (CheckBox) eulaLayout
 					.findViewById(R.id.trafficCheckBox);
+			trrafficCheckBox.setTypeface(myTypeface);
 			trrafficCheckBox
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 

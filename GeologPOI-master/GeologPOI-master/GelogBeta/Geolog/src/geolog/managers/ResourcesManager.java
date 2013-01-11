@@ -1,12 +1,14 @@
-package geolog.util;
+package geolog.managers;
 
 import geolog.web.WebService;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.Base64;
 
@@ -95,4 +97,53 @@ public class ResourcesManager {
 
 		return url.substring(index + 1);
 	}
+	
+	/**
+	 * Recuper di un custom typeface per customizzare le view dell'applicazione
+	 * @param context contesto dell'applicazione
+	 * @return il typeface da assegnare
+	 */
+	public static Typeface getCustomTypeFace(Context context)
+	{
+		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
+		return myTypeface;
+	}
+	
+	/**
+	 * Viene elminata la cartella dei dati dell'applicazione.
+	 * @param context contesto dell'attività
+	 */
+	public static void clearApplicationData(Context context) {
+		File cache = context.getCacheDir();
+		File appDir = new File(cache.getParent());
+		if (appDir.exists()) {
+			String[] children = appDir.list();
+			for (String s : children) {
+				if (!s.equals("lib")) {
+					deleteDir(new File(appDir, s));
+					
+				}
+			}
+		}
+	}
+
+	/**
+	 * Elminazione di una directory.
+	 * @param dir directory che deve essere elminata
+	 * @return true se la cancellazione è avvenuta con successo, false altrimenti.
+	 */
+	public static boolean deleteDir(File dir) {
+		if (dir != null && dir.isDirectory()) {
+			String[] children = dir.list();
+			for (int i = 0; i < children.length; i++) {
+				boolean success = deleteDir(new File(dir, children[i]));
+				if (!success) {
+					return false;
+				}
+			}
+		}
+
+		return dir.delete();
+	}
+	
 }

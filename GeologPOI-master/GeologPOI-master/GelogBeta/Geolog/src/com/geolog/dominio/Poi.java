@@ -1,6 +1,6 @@
 package com.geolog.dominio;
 
-import geolog.util.ResourcesManager;
+import geolog.managers.ResourcesManager;
 import geolog.web.WebService;
 
 import java.util.Date;
@@ -71,7 +71,7 @@ public class Poi {
 	private double longitude;
 	
 	
-
+	private int category_id;
 	/**
 	 * Costruttore della classe
 	 * 
@@ -167,13 +167,16 @@ public class Poi {
 		this.resources = resources;
 	}
 
-	public Category getCategoria() {
+	
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategoria(Category categoria) {
-		this.category = categoria;
+	public void setCategory(Category category) {
+		this.category = category;
 	}
+
+	
 
 	public Location getPOILocation() {
 		Location poiLocation = new Location("poi");
@@ -296,4 +299,13 @@ public class Poi {
 
 	}
 
+	public int getCategory_id() {
+		return category_id;
+	}
+
+	public void setCategory_id(int category_id) {
+		this.category_id = category_id;
+	}
+
+	
 }

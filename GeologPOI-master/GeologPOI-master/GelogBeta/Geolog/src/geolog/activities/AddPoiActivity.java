@@ -3,8 +3,8 @@ package geolog.activities;
 
 import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
+import geolog.managers.ResourcesManager;
 import geolog.util.ParametersBridge;
-import geolog.util.ResourcesManager;
 import geolog.util.UtilDialog;
 
 import java.util.Calendar;
@@ -159,6 +159,11 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 		// set dell'adapter
 		spinner.setAdapter(adapter);
 
+		ImageView cameraPic = (ImageView) findViewById(R.id.imagePic);
+
+		cameraPic.setImageDrawable(getResources().getDrawable(R.drawable.noimage));
+		
+		
 		// ActionBar dell'applicazione
 		ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 
@@ -175,7 +180,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 
 			// Definisco un'icona per l'azione di scatta fotografia
 			public int getDrawable() {
-				return R.drawable.camera_icon;
+				return R.drawable.picture;
 			}
 		});
 
@@ -213,6 +218,8 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 			}
 		};
 
+		
+		
 	}
 
 	public void onClick(View v) {
@@ -231,8 +238,8 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 				// ricercata la posizione
 				if (locationManager.getProvider(LocationManager.GPS_PROVIDER) == null) {
 
-					UtilDialog.createAlertNoGps(this).show();
-					finish();
+					UtilDialog.createAlertNoGps(this, this).show();
+					
 				}
 
 				// Se il gps è abilitato, si procede all'acquiszione delle
@@ -405,8 +412,8 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 					threadAddPoi.start();
 
 				} else {
-					UtilDialog.createAlertNoGps(this).show();
-
+					UtilDialog.createAlertNoGps(this, this).show();
+					
 				}
 
 			} else
