@@ -28,7 +28,7 @@ import android.widget.TextView;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.Poi;
-import com.geolog.web.domain.ConfrimResponse;
+import com.geolog.dominio.web.ConfrimResponse;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.ItemizedOverlay;

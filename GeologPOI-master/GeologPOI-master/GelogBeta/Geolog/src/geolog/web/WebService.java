@@ -23,9 +23,9 @@ import android.util.Log;
 
 import com.geolog.dominio.Poi;
 import com.geolog.dominio.Suggestion;
-import com.geolog.web.domain.CategoryListResponse;
-import com.geolog.web.domain.ConfrimResponse;
-import com.geolog.web.domain.PoiListResponse;
+import com.geolog.dominio.web.CategoryListResponse;
+import com.geolog.dominio.web.ConfrimResponse;
+import com.geolog.dominio.web.PoiListResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

@@ -35,7 +35,7 @@ import android.widget.TextView;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.Poi;
-import com.geolog.web.domain.PoiListResponse;
+import com.geolog.dominio.web.PoiListResponse;
 
 
 /**

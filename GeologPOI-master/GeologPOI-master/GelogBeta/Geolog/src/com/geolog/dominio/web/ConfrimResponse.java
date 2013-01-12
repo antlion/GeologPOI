@@ -1,4 +1,4 @@
-package com.geolog.web.domain;
+package com.geolog.dominio.web;
 
 /**
  * Risposta di conferma ad un operazione del webService

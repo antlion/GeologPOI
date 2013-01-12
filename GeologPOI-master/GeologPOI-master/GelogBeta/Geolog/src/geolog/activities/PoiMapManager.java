@@ -16,7 +16,7 @@ import java.util.List;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.*;
-import com.geolog.web.domain.PoiListResponse;
+import com.geolog.dominio.web.PoiListResponse;
 
 import android.app.AlertDialog;
 

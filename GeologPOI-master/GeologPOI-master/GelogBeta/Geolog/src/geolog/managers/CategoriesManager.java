@@ -21,7 +21,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.geolog.activity.R;
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
-import com.geolog.web.domain.CategoryListResponse;
+import com.geolog.dominio.web.CategoryListResponse;
 
 /**
  * Classe che si occupa di gestire le categorie. Ogni modifica e aggiunta di una

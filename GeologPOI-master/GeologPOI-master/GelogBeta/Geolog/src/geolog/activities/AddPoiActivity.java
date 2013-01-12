@@ -13,7 +13,7 @@ import java.util.Date;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.Poi;
-import com.geolog.web.domain.ConfrimResponse;
+import com.geolog.dominio.web.ConfrimResponse;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 

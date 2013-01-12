@@ -19,7 +19,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 import com.geolog.dominio.Poi;
-import com.geolog.web.domain.PoiListResponse;
+import com.geolog.dominio.web.PoiListResponse;
 
 
 

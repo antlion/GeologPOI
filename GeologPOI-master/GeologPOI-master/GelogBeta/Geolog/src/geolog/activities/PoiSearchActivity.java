@@ -27,7 +27,7 @@ import android.widget.TabHost.TabSpec;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.Poi;
-import com.geolog.web.domain.PoiListResponse;
+import com.geolog.dominio.web.PoiListResponse;
 
 /**
  * Attività per la ricerca dei punti di interesse. Vengono create le tab che rappresentano le varie visualizzazioni dei poi

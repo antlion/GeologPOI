@@ -17,8 +17,8 @@ import android.location.Location;
 import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
 import com.geolog.dominio.Suggestion;
-import com.geolog.web.domain.ConfrimResponse;
-import com.geolog.web.domain.PoiListResponse;
+import com.geolog.dominio.web.ConfrimResponse;
+import com.geolog.dominio.web.PoiListResponse;
 
 
 

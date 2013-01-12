@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.Category;
-import com.geolog.web.domain.CategoryListResponse;
+import com.geolog.dominio.web.CategoryListResponse;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
