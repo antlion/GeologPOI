@@ -1,4 +1,4 @@
-package geolog.util;
+package geolog.util.ui;
 
 
 import geolog.managers.CategoriesManager;

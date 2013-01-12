@@ -2,6 +2,7 @@ package geolog.web;
 
 
 import geolog.managers.ResourcesManager;
+import geolog.util.web.Services;
 
 import java.io.BufferedInputStream;
 import java.io.File;

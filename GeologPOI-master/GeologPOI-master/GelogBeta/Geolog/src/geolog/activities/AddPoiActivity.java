@@ -5,7 +5,7 @@ import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
 import geolog.managers.ResourcesManager;
 import geolog.util.ParametersBridge;
-import geolog.util.UtilDialog;
+import geolog.util.ui.UtilDialog;
 
 import java.util.Calendar;
 import java.util.Date;

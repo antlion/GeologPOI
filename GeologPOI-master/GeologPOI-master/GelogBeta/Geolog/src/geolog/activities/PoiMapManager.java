@@ -4,11 +4,11 @@ import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
 import geolog.poi.visualization.ItypeOfViewPoi;
 import geolog.poi.visualization.PoiViewManager;
-import geolog.util.MenuCategory;
 
 import geolog.util.ParametersBridge;
-import geolog.util.PositionOverlay;
-import geolog.util.UtilDialog;
+import geolog.util.ui.MenuCategory;
+import geolog.util.ui.PositionOverlay;
+import geolog.util.ui.UtilDialog;
 
 import java.util.ArrayList;
 

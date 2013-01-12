@@ -1,7 +1,8 @@
-package geolog.util;
+package geolog.util.ui;
 
 
 import geolog.managers.PoiManager;
+import geolog.util.AuthGoogle;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,7 +39,7 @@ import android.widget.TextView;
  * 
  * @author Lorenzo
  */
-public class POIAdapter extends BaseAdapter {
+public class PoiAdapter extends BaseAdapter {
 
 	// Contesto dell'attività che ha chiamato il servizio
 	/**
@@ -75,7 +76,7 @@ public class POIAdapter extends BaseAdapter {
 	 * @param myLocation
 	 *            locazione dell'utente
 	 */
-	public POIAdapter(Context context, ArrayList<Poi> pois, Location myLocation) {
+	public PoiAdapter(Context context, ArrayList<Poi> pois, Location myLocation) {
 		this.context = context;
 		this.pois = pois;
 		this.myLocation = myLocation;

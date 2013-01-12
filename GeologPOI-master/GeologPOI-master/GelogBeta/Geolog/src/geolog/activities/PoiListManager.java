@@ -5,10 +5,10 @@ import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
 import geolog.poi.visualization.ItypeOfViewPoi;
 import geolog.poi.visualization.PoiViewManager;
-import geolog.util.MenuCategory;
-import geolog.util.POIAdapter;
 import geolog.util.ParametersBridge;
-import geolog.util.UtilDialog;
+import geolog.util.ui.MenuCategory;
+import geolog.util.ui.PoiAdapter;
+import geolog.util.ui.UtilDialog;
 
 import java.util.ArrayList;
 
@@ -59,7 +59,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 	private Location myLocation;
 
 	// adattore dei Poi
-	private POIAdapter poisAdapter;
+	private PoiAdapter poisAdapter;
 
 	// Menu delle categorie
 	private MenuCategory menuCategory;
@@ -416,7 +416,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		// visualizzato un messaggio d'errore.
 		if (pois != null && myLocation != null) {
 		
-			poisAdapter = new POIAdapter(this, pois, myLocation);
+			poisAdapter = new PoiAdapter(this, pois, myLocation);
 			setListAdapter(poisAdapter);
 			poiList = getListView();
 			poiList.setTextFilterEnabled(true);

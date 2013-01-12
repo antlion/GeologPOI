@@ -2,7 +2,7 @@ package geolog.activities;
 
 import geolog.managers.ResourcesManager;
 import geolog.util.ParametersBridge;
-import geolog.util.UtilDialog;
+import geolog.util.ui.UtilDialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;

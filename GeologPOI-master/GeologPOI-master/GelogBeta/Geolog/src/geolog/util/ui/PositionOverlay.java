@@ -1,8 +1,9 @@
-package geolog.util;
+package geolog.util.ui;
 
 
 
 import geolog.managers.PoiManager;
+import geolog.util.AuthGoogle;
 
 import java.util.ArrayList;
 import java.util.Date;

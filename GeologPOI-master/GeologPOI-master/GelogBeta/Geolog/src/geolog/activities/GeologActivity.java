@@ -4,9 +4,9 @@ import geolog.managers.CategoriesManager;
 
 import geolog.managers.ResourcesManager;
 import geolog.util.AuthGoogle;
-import geolog.util.MenuCategory;
 import geolog.util.ParametersBridge;
-import geolog.util.UtilDialog;
+import geolog.util.ui.MenuCategory;
+import geolog.util.ui.UtilDialog;
 
 import java.util.ArrayList;
 

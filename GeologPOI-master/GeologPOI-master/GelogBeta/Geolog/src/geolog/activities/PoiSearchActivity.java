@@ -4,7 +4,7 @@ package geolog.activities;
 import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
 import geolog.poi.visualization.PoiViewManager;
-import geolog.util.UtilDialog;
+import geolog.util.ui.UtilDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;

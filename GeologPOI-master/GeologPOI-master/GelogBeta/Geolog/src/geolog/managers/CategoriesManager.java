@@ -1,6 +1,6 @@
 package geolog.managers;
 
-import geolog.util.CategoriesAdapter;
+import geolog.util.ui.CategoriesAdapter;
 import geolog.web.WebService;
 
 import java.util.ArrayList;
