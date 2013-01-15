@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Lorenzo
  * 
  */
-public class Suggestion implements IEntity {
+public class Suggestion  {
 
 	// Identificativo della segnalazione
 	/**
@@ -140,10 +140,7 @@ public class Suggestion implements IEntity {
 		this.creationDate = creationDate;
 	}
 
-	public int compareTo(IEntity o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	public String getLabel() {
 		// TODO Auto-generated method stub

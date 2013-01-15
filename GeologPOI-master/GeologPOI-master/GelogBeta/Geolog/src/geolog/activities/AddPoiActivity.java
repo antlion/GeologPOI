@@ -12,7 +12,6 @@ import java.util.Date;
 
 
 import com.geolog.activity.R;
-import com.geolog.dominio.Poi;
 import com.geolog.dominio.web.ConfrimResponse;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
@@ -346,14 +345,15 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 
 								// Creo un nuovo poi con le informazioni
 								// ottenute
-								final Poi poi = PoiManager.createNewPoi(
-										mylocation, id, et1.getText()
-												.toString(), et2.getText()
-												.toString(), date);
+								
+								
 
 								// Uso il servizio web per aggiungere il poi al
 								// sistema
-								webResponse = PoiManager.addPOI(poi, context,
+								webResponse = PoiManager.addPOI(PoiManager.createNewPoi(
+										mylocation, id, et1.getText()
+										.toString(), et2.getText()
+										.toString(), date), context,
 										"io");
 
 								// Se la risposta del servizio web è nulla o c'è

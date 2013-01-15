@@ -28,15 +28,9 @@ import android.location.Location;
 public class Poi {
 
 	// Categoria di appartenza al poi
-	/**
-	 * @uml.property  name="category"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+
 	private Category category;
-	// Nome del poi
-	/**
-	 * @uml.property  name="name"
-	 */
+	
 	private String name;
 	// Descrizione
 	/**

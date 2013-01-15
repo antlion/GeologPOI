@@ -8,7 +8,7 @@ import java.util.Set;
  * @author Lorenzo
  * 
  */
-public class ResourceType implements IEntity {
+public class ResourceType  {
 
 	// Identificativo della risorsa
 	/**
@@ -37,10 +37,7 @@ public class ResourceType implements IEntity {
 		this.name = name;
 	}
 
-	public int compareTo(IEntity o) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	
 
 	/**
 	 * @return

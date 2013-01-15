@@ -3,6 +3,7 @@ package geolog.poi.visualization;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.geolog.dominio.Poi;
 
@@ -74,8 +75,8 @@ public class PoiViewManager {
 		return pois;
 	}
 
-	public void setPois(ArrayList<Poi> pois) {
-		this.pois = pois;
+	public void setPois(List<Poi> list) {
+		this.pois = (ArrayList<Poi>) list;
 	}
 
 	public Context getContext() {

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<notation:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:projects="http://www.soyatec.com/projects" xmi:id="_tvl-QF2kEeKuTKg68dK5jw" type="Projects" measurementUnit="Pixel">
+  <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_tvmlUF2kEeKuTKg68dK5jw" source="Diagram_Wire_Options">
+    <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_tvmlUV2kEeKuTKg68dK5jw" key="Diagram_Wire_Options" value="15"/>
+  </eAnnotations>
+  <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_tvmlUl2kEeKuTKg68dK5jw" source="Show_Weight_Number">
+    <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_tvmlU12kEeKuTKg68dK5jw" key="Show_Weight_Number" value="0"/>
+  </eAnnotations>
+  <children xmi:type="notation:Node" xmi:id="_tvmlVF2kEeKuTKg68dK5jw" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_tvmlVV2kEeKuTKg68dK5jw" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_tvmlVl2kEeKuTKg68dK5jw" type="4002"/>
+    <children xmi:type="notation:Node" xmi:id="_tvmlV12kEeKuTKg68dK5jw" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_tvmlWF2kEeKuTKg68dK5jw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_tvmlWV2kEeKuTKg68dK5jw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_tvmlWl2kEeKuTKg68dK5jw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tvmlW12kEeKuTKg68dK5jw" type="4001"/>
+    <styles xmi:type="notation:DescriptionStyle" xmi:id="_tvmlXF2kEeKuTKg68dK5jw"/>
+    <styles xmi:type="notation:FillStyle" xmi:id="_tvmlXV2kEeKuTKg68dK5jw"/>
+    <styles xmi:type="notation:LineStyle" xmi:id="_tvmlXl2kEeKuTKg68dK5jw"/>
+    <element xmi:type="projects:Project" href="plugins#/actionbar"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tvmlX12kEeKuTKg68dK5jw"/>
+  </children>
+  <children xmi:type="notation:Node" xmi:id="_tvmlYF2kEeKuTKg68dK5jw" type="1001">
+    <children xmi:type="notation:Node" xmi:id="_tvmlYV2kEeKuTKg68dK5jw" type="4001"/>
+    <children xmi:type="notation:Node" xmi:id="_tvmlYl2kEeKuTKg68dK5jw" type="4002"/>
+    <children xmi:type="notation:Node" xmi:id="_tvmlY12kEeKuTKg68dK5jw" type="5001">
+      <styles xmi:type="notation:DrawerStyle" xmi:id="_tvmlZF2kEeKuTKg68dK5jw"/>
+      <styles xmi:type="notation:SortingStyle" xmi:id="_tvmlZV2kEeKuTKg68dK5jw"/>
+      <styles xmi:type="notation:FilteringStyle" xmi:id="_tvmlZl2kEeKuTKg68dK5jw"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tvmlZ12kEeKuTKg68dK5jw" type="4001"/>
+    <styles xmi:type="notation:DescriptionStyle" xmi:id="_tvmlaF2kEeKuTKg68dK5jw"/>
+    <styles xmi:type="notation:FillStyle" xmi:id="_tvmlaV2kEeKuTKg68dK5jw"/>
+    <styles xmi:type="notation:LineStyle" xmi:id="_tvmlal2kEeKuTKg68dK5jw"/>
+    <element xmi:type="projects:Project" href="plugins#/GeologActivity"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_tvmla12kEeKuTKg68dK5jw"/>
+  </children>
+  <styles xmi:type="notation:PageStyle" xmi:id="_tvmlbF2kEeKuTKg68dK5jw"/>
+  <styles xmi:type="notation:GuideStyle" xmi:id="_tvmlbV2kEeKuTKg68dK5jw"/>
+  <styles xmi:type="notation:DescriptionStyle" xmi:id="_tvmlbl2kEeKuTKg68dK5jw"/>
+  <element xmi:type="projects:Diagram" href="plugins#/"/>
+  <edges xmi:type="notation:Edge" xmi:id="_tvmlb12kEeKuTKg68dK5jw" type="3001" source="_tvmlYF2kEeKuTKg68dK5jw" target="_tvmlVF2kEeKuTKg68dK5jw">
+    <children xmi:type="notation:Node" xmi:id="_tvmlcF2kEeKuTKg68dK5jw" type="4003">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_tvmlcV2kEeKuTKg68dK5jw" y="10"/>
+    </children>
+    <children xmi:type="notation:Node" xmi:id="_tvmlcl2kEeKuTKg68dK5jw" type="4004">
+      <layoutConstraint xmi:type="notation:Location" xmi:id="_tvmlc12kEeKuTKg68dK5jw" x="10" y="20"/>
+    </children>
+    <styles xmi:type="notation:RoutingStyle" xmi:id="_tvmldF2kEeKuTKg68dK5jw"/>
+    <styles xmi:type="notation:FontStyle" xmi:id="_tvmldV2kEeKuTKg68dK5jw" fontName="Segoe UI"/>
+    <styles xmi:type="notation:LineStyle" xmi:id="_tvmldl2kEeKuTKg68dK5jw"/>
+    <element xmi:type="projects:Dependency" href="plugins#GeologActivity->actionbar"/>
+    <bendpoints xmi:type="notation:RelativeBendpoints" xmi:id="_tvmld12kEeKuTKg68dK5jw" points="[0, 0, 0, 0]$[0, 0, 0, 0]"/>
+  </edges>
+</notation:Diagram>

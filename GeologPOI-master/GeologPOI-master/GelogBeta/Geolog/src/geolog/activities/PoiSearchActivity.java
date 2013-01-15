@@ -6,7 +6,7 @@ import geolog.managers.PoiManager;
 import geolog.poi.visualization.PoiViewManager;
 import geolog.util.ui.UtilDialog;
 
-import java.util.ArrayList;
+
 import java.util.Calendar;
 
 import android.app.AlertDialog;
@@ -42,7 +42,7 @@ public class PoiSearchActivity extends TabActivity {
 	/**
 	 * @uml.property  name="pois"
 	 */
-	private ArrayList<Poi> pois;
+	//private ArrayList<Poi> pois;
 
 	// Gestore visualizzazione poi
 	/**
@@ -107,7 +107,7 @@ public class PoiSearchActivity extends TabActivity {
 		hasLocation = false;
 
 		// Inizalizzo l'array di poi
-		pois = new ArrayList<Poi>();
+	//	pois = new ArrayList<Poi>();
 
 		// Inzializzo il gestore delle visuallizzazione dei poi
 		viewPoiManager = new PoiViewManager(this);
@@ -258,8 +258,8 @@ public class PoiSearchActivity extends TabActivity {
 					}
 				}
 				//aggiungo la mia locazione e i poi al gestore delle viste
-				viewPoiManager.setMylocation(mylocation);
-				viewPoiManager.setPois(pois);
+			//	viewPoiManager.setMylocation(mylocation);
+			//	viewPoiManager.setPois(pois);
 				
 				// Se è stata trovata una locazione procedo alla ricerca dei
 				// poi, altrimenti termino la ricerca
@@ -283,9 +283,9 @@ public class PoiSearchActivity extends TabActivity {
 
 					} else {
 						// salvo i poi
-						pois = (ArrayList<Poi>) response.getPois();
+						//pois = (ArrayList<Poi>) response.getPois();
 						// salvo i poi nel gestore del visulizzatore
-						viewPoiManager.setPois(pois);
+						viewPoiManager.setPois( response.getPois());
   
 					}
 					}

@@ -136,7 +136,5 @@ public class Resource  {
 		return getUrl();
 	}
 	
-	public int compareTo(IEntity o) {
-		return 0;
-	}
+	
 }
