@@ -103,6 +103,7 @@ public class GeologActivity extends Activity {
 			public void performAction(View view) {
 
 				// Controllo del menu delle categorie
+				
 				menuCategory.checkMenuCategory();
 			}
 
@@ -172,7 +173,7 @@ public class GeologActivity extends Activity {
 		});
 
 		// Aggiungo un custom typeface alla text view
-		TextView searchPoi = (TextView) findViewById(R.id.search_poi);
+		TextView searchPoi = (TextView) findViewById(R.id.addPoi);
 		searchPoi.setTypeface(ResourcesManager.getCustomTypeFace(context));
 
 		// Inzializzo uno sliding drawer

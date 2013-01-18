@@ -40,7 +40,7 @@ import com.google.gson.GsonBuilder;
 public class WebService {
 
 	// Indirizzo di acesso del servizo web
-	private static final String WEB_SERVICE_URL = "http://192.168.0.105:8080/GeologWeb/services/WS";
+	private static final String WEB_SERVICE_URL = "http://192.168.0.106:8080/GeologWeb/services/WS";
 
 	// Servizi offerti dal Servizioweb
 	/**

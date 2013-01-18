@@ -465,8 +465,30 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		// Se viene cliccato il bottone di aggiungi poi, viene avviatà
 		// l'attività di aggiungi poi.
 		if (v.getId() == R.id.addPoiButton) {
-			Intent intent = new Intent(context, AddPoiActivity.class);
-			context.startActivity(intent);
+			final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+			builder.setMessage("Vuoi aggiungere un punto di interesse?");
+			builder.setCancelable(true);
+			builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					ParametersBridge.getInstance().addParameter("Location", mylocation);
+					Intent intent = new Intent(context, AddPoiActivity.class);
+					context.startActivity(intent);
+				}
+			});
+			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+			final AlertDialog alert = builder.create();
+			alert.show();
+			
 		}
 		// Se è stato premuto il bottone di ricerca effettuo la ricerca dei poi
 		if (v.getId() == R.id.searchButton) {

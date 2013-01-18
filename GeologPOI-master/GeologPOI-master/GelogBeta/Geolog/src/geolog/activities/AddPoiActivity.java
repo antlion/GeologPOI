@@ -13,11 +13,13 @@ import java.util.Date;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.web.ConfrimResponse;
+import com.geolog.dominio.web.PoiListResponse;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +29,7 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -103,12 +106,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 	 */
 	private Bitmap myPhoto;
 
-	// Risposta del servizio Web
-	/**
-	 * @uml.property  name="webResponse"
-	 * @uml.associationEnd  
-	 */
-	private ConfrimResponse webResponse;
+	
 
 	// Stato delle risorse aggiunte
 	/**
@@ -231,190 +229,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 			// aggiungere sono corrette. Se l'operazione va a buon fine,
 			// viene cercata la posizione dell'utente
 			if (checkUserInput()) {
-
-				// Se il gps non è supportato,viene mostrato un messaggi odi
-				// errore e l'attività viene interrotta,altrimenti viene
-				// ricercata la posizione
-				if (locationManager.getProvider(LocationManager.GPS_PROVIDER) == null) {
-
-					UtilDialog.createAlertNoGps(this, this).show();
-					
-				}
-
-				// Se il gps è abilitato, si procede all'acquiszione delle
-				// cordinate gps dell'utente,
-				// altrimenti viene richesto all'utente di abilitarlo
-				if (locationManager
-						.isProviderEnabled(LocationManager.GPS_PROVIDER) == true) {
-					// Se la locazione dell'utente non è ancora stata trovata,
-					// viene ricercata, altrimenti si procede ad aggiungere il
-					// poi
-					if (mylocation == null)
-
-						// Richiesta delle cordinate gps
-						locationManager.requestLocationUpdates(
-								LocationManager.GPS_PROVIDER, 5, 1,
-								myLocationListener);
-
-					else
-						// La locazione è stata trovata
-						hasLocation = true;
-
-					// Creo una nuova barra di progresso
-					final ProgressDialog progress = new ProgressDialog(this);
-					progress.setIndeterminate(true);
-					progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-					progress.setTitle("Attendere");
-					progress.setMessage("Inserisco POI");
-					progress.show();
-
-					// Creo un gestore della progressBar
-					final Handler progressBarHandler = new Handler() {
-						@Override
-						public void handleMessage(Message msg) {
-							// Termino la progressBar
-							progress.dismiss();
-
-							// Se la location dell'utente non è stata trovata,
-							// restituisco un messaggio d'errore
-							if (hasLocation == false)
-
-								UtilDialog.alertDialog(context,
-										"Impossibile stabilire posizione")
-										.show();
-							// Se l'aggiunta del poi non è andata a buon fine,
-							// resituisco un messaggio di errore, altimenti un
-							// messaggio positivo
-							else if (webResponse == null) {
-
-								UtilDialog.alertDialog(context,
-										"Impossibile insrire il poi").show();
-							} else {
-
-								UtilDialog.alertDialog(context,
-										"POI aggiunto con successo").show();
-							}
-							// Se è stata scattata una foto e non è stata
-							// aggiunta, viene mostrato un messaggio d'errore
-							if (myPhoto != null && resourceAdded == false) {
-								UtilDialog.alertDialog(context,
-										"Impossibile aggiungere foto").show();
-							}
-						}
-					};
-					// Creo un nuovo thread per la gestione dell'aggiunta del
-					// POI
-					Thread threadAddPoi = new Thread(new Runnable() {
-
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-
-							// Attendo per 15 secondi la ricerca di una
-							// posizione. Se durante questo tempo non viene
-							// trovata, termino l'esecuzione del thread
-							Long t = Calendar.getInstance().getTimeInMillis();
-							while (hasLocation == false
-									&& Calendar.getInstance().getTimeInMillis()
-											- t < 15000) {
-								try {
-									Thread.sleep(1000);
-								} catch (InterruptedException e) {
-									e.printStackTrace();
-								}
-							}
-							;
-
-							// Controllo se è stata trovata una locazione, in
-							// caso positvo, procedo ad aggiungere il poi
-							if (hasLocation) {
-
-								// /Ottengo le informazioni che ha aggiunto
-								// l'utente sul poi
-								final EditText et1 = (EditText) findViewById(R.id.editText1);
-								final EditText et2 = (EditText) findViewById(R.id.editText2);
-								Spinner spinner = (Spinner) findViewById(R.id.spinner1);
-								// Creo una nuova data per l'inserimento del poi
-								Date date = new Date();
-
-								// Ottengo la categoria scelta dall'utente per
-								// il poi da aggiungere
-								int id = categoriesHandler
-										.getCategoryIdFromSource(spinner
-												.getSelectedItem().toString());
-
-								// Creo un nuovo poi con le informazioni
-								// ottenute
-								
-								
-
-								// Uso il servizio web per aggiungere il poi al
-								// sistema
-								webResponse = PoiManager.addPOI(PoiManager.createNewPoi(
-										mylocation, id, et1.getText()
-										.toString(), et2.getText()
-										.toString(), date), context,
-										"io");
-
-								// Se la risposta del servizio web è nulla o c'è
-								// stato un errore, l'esecuzione del thread
-								// termina,
-								// altrimenti procedo a caricare l'immagine
-								// scattata dalla fotocamera
-								if (webResponse == null
-										|| webResponse.getStatus() != 200) {
-
-									progressBarHandler.sendEmptyMessage(0);
-								} else {
-
-									// recupero l'id del poi appena creato
-									int idPOI = Integer.parseInt(webResponse
-											.getResult());
-
-									// se la foto non è stata scattata, termino
-									// l'esecuzione, altrimento procedo
-									// all'upload
-									if (myPhoto != null) {
-
-										// contatto il servizio web per caricare
-										// la foto
-										webResponse = PoiManager
-												.uploadPoiResource(
-														idPOI,
-														context,
-														ResourcesManager
-																.covertBitmapToByte(myPhoto),
-														"image/jpeg");
-
-										// Se il caricamento è avvenuto con
-										// successo, aggiorno l ostato delle
-										// risorse e termino il thread
-										if (webResponse == null
-												|| webResponse.getStatus() != 200)
-
-											progressBarHandler
-													.sendEmptyMessage(0);
-										else {
-											resourceAdded = true;
-											progressBarHandler
-													.sendEmptyMessage(0);
-										}
-									} else {
-										progressBarHandler.sendEmptyMessage(0);
-									}
-								}
-
-							} else {
-								progressBarHandler.sendEmptyMessage(0);
-							}
-						}
-					});
-					threadAddPoi.start();
-
-				} else {
-					UtilDialog.createAlertNoGps(this, this).show();
-					
-				}
+					sendPoi();
 
 			} else
 				UtilDialog.createBaseToast("I campi non devono essere vuoti",
@@ -462,6 +277,132 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 
 			cameraPic.setImageBitmap(myPhoto);
 		}
+	}
+	
+	private void sendPoi()
+	{
+		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
+			// Creo una nuova progressDialog
+			ProgressDialog dialog;
+			private ConfrimResponse webResponse = null;
+			private ConfrimResponse webResponseAddRes= null;
+
+			@Override
+			protected void onPreExecute() {
+				locationManager.requestLocationUpdates(
+						LocationManager.GPS_PROVIDER, 5, 1, myLocationListener);
+			
+
+				dialog = ProgressDialog.show(context, "Attendere...",
+						"Invio poi in corso");
+				
+			}
+
+			@Override
+			protected String doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+
+				Long t = Calendar.getInstance().getTimeInMillis();
+				while (!hasLocation
+						&& Calendar.getInstance().getTimeInMillis() - t < 15000) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				if (hasLocation)
+				{
+					// /Ottengo le informazioni che ha aggiunto
+					// l'utente sul poi
+					final EditText et1 = (EditText) findViewById(R.id.editText1);
+					final EditText et2 = (EditText) findViewById(R.id.editText2);
+					Spinner spinner = (Spinner) findViewById(R.id.spinner1);
+					// Creo una nuova data per l'inserimento del poi
+					Date date = new Date();
+
+					// Ottengo la categoria scelta dall'utente per
+					// il poi da aggiungere
+					int id = categoriesHandler
+							.getCategoryIdFromSource(spinner
+									.getSelectedItem().toString());
+
+					// Creo un nuovo poi con le informazioni
+					// ottenute
+					
+					
+
+					// Uso il servizio web per aggiungere il poi al
+					// sistema
+					webResponse = PoiManager.addPOI(PoiManager.createNewPoi(
+							mylocation, id, et1.getText()
+							.toString(), et2.getText()
+							.toString(), date), context,
+							"io");
+
+					// Se la risposta del servizio web è nulla o c'è
+					// stato un errore, l'esecuzione del thread
+					// termina,
+					// altrimenti procedo a caricare l'immagine
+					// scattata dalla fotocamera
+					if (webResponse != null
+							&& webResponse.getStatus() == 200) {
+
+						// recupero l'id del poi appena creato
+						int idPOI = Integer.parseInt(webResponse
+								.getResult());
+
+						// se la foto non è stata scattata, termino
+						// l'esecuzione, altrimento procedo
+						// all'upload
+						if (myPhoto != null) {
+
+							// contatto il servizio web per caricare
+							// la foto
+							webResponseAddRes = PoiManager
+									.uploadPoiResource(
+											idPOI,
+											context,
+											ResourcesManager
+													.covertBitmapToByte(myPhoto),
+											"image/jpeg");
+
+							// Se il caricamento è avvenuto con
+							// successo, aggiorno l ostato delle
+							// risorse e termino il thread
+							if (webResponseAddRes != null
+									&& webResponse.getStatus() == 200)
+
+								resourceAdded = true;
+					} 
+
+						
+					}
+
+				
+					}
+				return null;
+			}
+
+			protected void onPostExecute(String result) {
+				dialog.dismiss();
+				if ( !hasLocation){
+					UtilDialog.createBaseToast("impossibile stabilire posizione", context).show();
+				}
+				else if (webResponse != null && webResponse.getStatus() == 200){
+					if (webResponseAddRes == null || webResponseAddRes.getStatus() != 200)
+						UtilDialog.createBaseToast("poi aggiunto.Impossibile aggiungere la risorsa", context).show();
+				}
+				else{
+					UtilDialog.createBaseToast("poi aggiunto con successo", context).show();
+				}
+				
+				
+			}
+
+		};
+		task.execute((Void[]) null);
+
 	}
 
 	@Override
