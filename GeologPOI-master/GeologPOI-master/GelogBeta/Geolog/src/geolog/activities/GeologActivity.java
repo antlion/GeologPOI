@@ -36,23 +36,23 @@ import android.widget.TextView;
 /**
  * @author Lorenzo
  * 
- *         Questa class rappresenta l'attività principale dell'applicazione. Da
- *         questa attività è possibile aggiungere e ricercare i poi.
+ *         Questa class rappresenta l'attivitï¿½ principale dell'applicazione. Da
+ *         questa attivitï¿½ ï¿½ possibile aggiungere e ricercare i poi.
  * 
  */
 
 public class GeologActivity extends Activity {
 
-	// Attirubuto contentente l'intera attività android
+	// Attirubuto contentente l'intera attivitï¿½ android
 	private Activity activity;
 
-	// Contesto dell'atitività
+	// Contesto dell'atitivitï¿½
 	private Context context;
 
 	// Gestore delle categorie
 	private CategoriesManager categoriesHandler;
 
-	// Menù delle categorie
+	// Menï¿½ delle categorie
 	private MenuCategory menuCategory;
 
 	// Stato della inzializzazione
@@ -66,38 +66,38 @@ public class GeologActivity extends Activity {
 		// Setto lo stato dell'inzializzazione
 		inzializationFinsh = false;
 
-		// Variabile contenente l'ActionBar dell'attività
+		// Variabile contenente l'ActionBar dell'attivitï¿½
 		final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 
 		// Inzializzazione del gestore delle categorie
 		categoriesHandler = CategoriesManager.getCategoriesManager();
 
-		// Salvataggio il contesto dell'attività
-		context = getBaseContext();
+		// Salvataggio il contesto dell'attivitï¿½
+		context = this;
 
-		// Salvataggio dell'attività
+		// Salvataggio dell'attivitï¿½
 		activity = this;
 
 		// Creazione del menu delle categorie
 		menuCategory = new MenuCategory(false,
 				(ListView) findViewById(R.id.listView1), categoriesHandler,
 				context);
-		// Setto la visibilità del menu delle categorie
+		// Setto la visibilitï¿½ del menu delle categorie
 		menuCategory.setVisibilityListCategory(false);
 
 		// Controllo che l'utente si autenticato al sistema. In caso positivo
 		// l'applicazione continua il suo corso,
-		// in caso negativo non è possibile procedere altrimenti.
+		// in caso negativo non ï¿½ possibile procedere altrimenti.
 		checkUserAccount();
 
-		// Se l'inizializzazione non è stata eseguita, viene eseguita
+		// Se l'inizializzazione non ï¿½ stata eseguita, viene eseguita
 		if (inzializationFinsh != true) {
 			// Inzializzo l'applicaizone
-			updateApplication(this);
+			updateApplication(context);
 			inzializationFinsh = false;
 		}
 
-		// Aggiungo l'azione di aprire il menù delle categorie sull'ActionBar
+		// Aggiungo l'azione di aprire il menï¿½ delle categorie sull'ActionBar
 		// dell'activity
 		actionBar.addAction(new Action() {
 			public void performAction(View view) {
@@ -113,7 +113,7 @@ public class GeologActivity extends Activity {
 			}
 		});
 
-		// Aggiungo l'azione di apertura del menù delle opzioni.
+		// Aggiungo l'azione di apertura del menï¿½ delle opzioni.
 		actionBar.addAction(new Action() {
 
 			@Override
@@ -163,7 +163,7 @@ public class GeologActivity extends Activity {
 			public void onDrawerOpened() {
 				// TODO Auto-generated method stub
 
-				// Quando il drawer viene aperto, viene avviata l'attivià di
+				// Quando il drawer viene aperto, viene avviata l'attiviï¿½ di
 				// ricerca poi
 				Intent intent = new Intent(context, PoiSearchActivity.class);
 
@@ -184,7 +184,7 @@ public class GeologActivity extends Activity {
 			@Override
 			public void onDrawerOpened() {
 				// TODO Auto-generated method stub
-				// Quando il drawer viene aperto, viene avviata l'attivià di
+				// Quando il drawer viene aperto, viene avviata l'attiviï¿½ di
 				// aggiungi poi
 				Intent intent = new Intent(context, AddPoiActivity.class);
 				startActivity(intent);
@@ -204,18 +204,18 @@ public class GeologActivity extends Activity {
 		// recupero il parametro del boolean hint
 		String choose = (String) ParametersBridge.getInstance().getParameter(
 				"hint");
-		// Se il valore non è stato ancora inzializzato, verranno mostrati i
+		// Se il valore non ï¿½ stato ancora inzializzato, verranno mostrati i
 		// suggerimenti
 		if (choose == null) {
 			UtilDialog
 					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalità dell'applicazione",
+							"Trascina le frecce per avviare le funzionalitï¿½ dell'applicazione",
 							context).show();
 		} else if (choose.equals("true")) {
-			// se il valore è uguale a true, vengono visualizzati i suggerimenti
+			// se il valore ï¿½ uguale a true, vengono visualizzati i suggerimenti
 			UtilDialog
 					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalità dell'applicazione",
+							"Trascina le frecce per avviare le funzionalitï¿½ dell'applicazione",
 							context).show();
 		}
 	}
@@ -240,9 +240,16 @@ public class GeologActivity extends Activity {
 				// Vengono richieste le categorie al servizio WEB
 				categoryListResponse = categoriesHandler
 						.askCategoriesFromWebService();
-				// Se L'operazione è andata a buon termine, le ctaegorie vengono
+				// Se L'operazione ï¿½ andata a buon termine, le ctaegorie vengono
 				// salvate dal gestore delle categorie.A seconda dell'esito
 				// dell'operazione viene visualizzato un diverso messagio
+			
+
+				return null;
+			}
+
+			protected void onPostExecute(String result) {
+				dialog.dismiss();
 				if (categoryListResponse != null
 						&& categoryListResponse.getStatus() == 200) {
 
@@ -250,7 +257,7 @@ public class GeologActivity extends Activity {
 							.setCategories((ArrayList<Category>) categoryListResponse
 									.getCategories());
 					// Viene creato un nuovo categoriesAdapter.
-					// L'adattatore è un contenitore di categorie
+					// L'adattatore ï¿½ un contenitore di categorie
 
 					menuCategory = new MenuCategory(false,
 							(ListView) findViewById(R.id.listView1),
@@ -258,14 +265,7 @@ public class GeologActivity extends Activity {
 					menuCategory.setVisibilityListCategory(false);
 
 				}
-
-				return null;
-			}
-
-			protected void onPostExecute(String result) {
-				dialog.dismiss();
-				if (categoryListResponse == null
-						|| categoryListResponse.getStatus() != 200)
+				else 
 					UtilDialog.createBaseToast(
 							"Impossibile recuperare la lista delle categorie",
 							context).show();
@@ -280,7 +280,7 @@ public class GeologActivity extends Activity {
 	 * Controllo se l'utente ha effettuato l'accesso al servizio google.
 	 */
 	private void checkUserAccount() {
-		// Se non è stato trovato nemmeno un account, viene mostrato un
+		// Se non e' stato trovato nemmeno un account, viene mostrato un
 		// messaggio in cui viene richiesto di
 		// effttuare l'accesso al servizio.
 		if (AuthGoogle.getAccountName(activity) == null) {
@@ -348,8 +348,8 @@ public class GeologActivity extends Activity {
 									// Se l'utente
 									// sceglie di non
 									// autenticarsi,
-									// verrà mostrato un
-									// dialogo e verrà
+									// verrï¿½ mostrato un
+									// dialogo e verrï¿½
 									// terminata
 									// l'applicazione
 
