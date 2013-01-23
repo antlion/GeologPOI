@@ -13,13 +13,12 @@ import java.util.Date;
 
 import com.geolog.activity.R;
 import com.geolog.dominio.web.ConfrimResponse;
-import com.geolog.dominio.web.PoiListResponse;
+
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,8 +30,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -45,7 +42,7 @@ import android.widget.Spinner;
  * 
  *         Classe che gestisce l'aggiunta di un poi al sistema. L'utente tramite
  *         l'inserimento di opportune informazioni attraverso l'interfaccia
- *         grafica, può aggiungere il poi nel sistema. Inoltre, l'utente può
+ *         grafica, puo' aggiungere il poi nel sistema. Inoltre, l'utente puo'
  *         scattare una foto rappresentativa del poi da ggiungere come corredo
  *         alle informazioni sul poi stesso.
  * 
@@ -92,7 +89,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 	 */
 	private boolean hasLocation;
 
-	// Contesto dell'attività
+	// Contesto dell'attivitï¿½
 	/**
 	 * @uml.property  name="context"
 	 * @uml.associationEnd  
@@ -106,13 +103,6 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 	 */
 	private Bitmap myPhoto;
 
-	
-
-	// Stato delle risorse aggiunte
-	/**
-	 * @uml.property  name="resourceAdded"
-	 */
-	private boolean resourceAdded = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +113,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 		// Salvataggio del contesto
 		context = this;
 
-		// Acquisizione della locazione da altre attività
+		// Acquisizione della locazione da altre attivita'
 		ParametersBridge bridge = ParametersBridge.getInstance();
 
 		// Aggiornamento della posizione dell'utente
@@ -168,7 +158,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 		actionBar.addAction(new Action() {
 			public void performAction(View view) {
 
-				// Start di una nuova attività per lo scatto della fotografia
+				// Start di una nuova attivita' per lo scatto della fotografia
 				Intent cameraIntent = new Intent(
 						android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 				startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
@@ -220,7 +210,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 	}
 
 	public void onClick(View v) {
-		// TODO Auto-generated method stubù
+		// TODO Auto-generated method stubï¿½
 
 		// Se l'utente ha premuto il pulsante ok, si procede ad aggiungere il
 		// poi al sistema
@@ -262,7 +252,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		// Se l'utente ha rihiesto di scattare una foto e l'operazione è andata
+		// Se l'utente ha rihiesto di scattare una foto e l'operazione ï¿½ andata
 		// a buon fine, si procede alla visualizzazione della foto
 		// e al suo salvataggio.
 
@@ -340,7 +330,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 							.toString(), date), context,
 							"io");
 
-					// Se la risposta del servizio web è nulla o c'è
+					// Se la risposta del servizio web ï¿½ nulla o c'ï¿½
 					// stato un errore, l'esecuzione del thread
 					// termina,
 					// altrimenti procedo a caricare l'immagine
@@ -352,7 +342,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 						int idPOI = Integer.parseInt(webResponse
 								.getResult());
 
-						// se la foto non è stata scattata, termino
+						// se la foto non ï¿½ stata scattata, termino
 						// l'esecuzione, altrimento procedo
 						// all'upload
 						if (myPhoto != null) {
@@ -367,13 +357,8 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 													.covertBitmapToByte(myPhoto),
 											"image/jpeg");
 
-							// Se il caricamento è avvenuto con
-							// successo, aggiorno l ostato delle
-							// risorse e termino il thread
-							if (webResponseAddRes != null
-									&& webResponse.getStatus() == 200)
 
-								resourceAdded = true;
+								
 					} 
 
 						

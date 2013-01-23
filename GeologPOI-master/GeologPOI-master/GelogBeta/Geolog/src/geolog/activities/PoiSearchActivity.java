@@ -26,12 +26,11 @@ import android.widget.TabHost.TabSpec;
 
 
 import com.geolog.activity.R;
-import com.geolog.dominio.Poi;
 import com.geolog.dominio.web.PoiListResponse;
 
 /**
- * Attività per la ricerca dei punti di interesse. Vengono create le tab che rappresentano le varie visualizzazioni dei poi
- * se il gps è attivo vengono ricercati i poi e passate alle varie visualizzazioni
+ * Attivitï¿½ per la ricerca dei punti di interesse. Vengono create le tab che rappresentano le varie visualizzazioni dei poi
+ * se il gps ï¿½ attivo vengono ricercati i poi e passate alle varie visualizzazioni
  * 
  * @author Lorenzo
  * 
@@ -140,14 +139,14 @@ public class PoiSearchActivity extends TabActivity {
 			}
 		};
 
-		// se il provider gps non è supportato dal device, viene resituito un
-		// messaggio d'errore e viene terminata l'attività
+		// se il provider gps non ï¿½ supportato dal device, viene resituito un
+		// messaggio d'errore e viene terminata l'attivitï¿½
 		if (locationManager.getProvider(LocationManager.GPS_PROVIDER) == null) {
 			UtilDialog.createAlertNoProviderGps(context, this).show();
 			
 		}
 
-		// se il gps è abilitato si procede alla ricerca dei punti di
+		// se il gps ï¿½ abilitato si procede alla ricerca dei punti di
 		// interesse,altrimenti viene richiesto di attivare il gps
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) == true) {
 			searchPOI(this);
@@ -184,7 +183,7 @@ public class PoiSearchActivity extends TabActivity {
 
 	/**
 	 * Crea le tabelle che rappresentano le varie visualizzazioni dei poi : su
-	 * lista,su mappa,su realtà aumentata
+	 * lista,su mappa,su realtï¿½ aumentata
 	 * 
 	 */
 	private void setTab() {
@@ -203,7 +202,7 @@ public class PoiSearchActivity extends TabActivity {
 				.getDrawable(R.drawable.list));
 		poiList.setContent(viewPoiManager.createNewViewIntent("List"));
 
-		// Tab per la realtà aumentata
+		// Tab per la realtï¿½ aumentata
 		TabSpec poiAr = tabHost.newTabSpec("AR");
 		poiAr.setIndicator("", getResources().getDrawable(R.drawable.camera));
 		poiAr.setContent(viewPoiManager.createNewViewIntent("Ar"));
@@ -224,7 +223,7 @@ public class PoiSearchActivity extends TabActivity {
 	 * dall'utente
 	 * 
 	 * @param context
-	 *            contesto dell'attività
+	 *            contesto dell'attivitï¿½
 	 */
 	private void searchPOI(final Context context) {
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
@@ -247,7 +246,7 @@ public class PoiSearchActivity extends TabActivity {
 				// TODO Auto-generated method stub
 
 				// Attendo 15 sec che venga trovata la posizione o fin quando lo
-				// stato della locazione trovata è false,altrimenti esco
+				// stato della locazione trovata ï¿½ false,altrimenti esco
 				Long t = Calendar.getInstance().getTimeInMillis();
 				while (!hasLocation
 						&& Calendar.getInstance().getTimeInMillis() - t < 15000) {
@@ -261,7 +260,7 @@ public class PoiSearchActivity extends TabActivity {
 			//	viewPoiManager.setMylocation(mylocation);
 			//	viewPoiManager.setPois(pois);
 				
-				// Se è stata trovata una locazione procedo alla ricerca dei
+				// Se ï¿½ stata trovata una locazione procedo alla ricerca dei
 				// poi, altrimenti termino la ricerca
 				if (hasLocation) {
 					// Salvo la location trovata nel gestore delle
@@ -275,7 +274,7 @@ public class PoiSearchActivity extends TabActivity {
 					PoiListResponse response = PoiManager.searchPoi(mylocation,
 							context, CategoriesManager.getCategoriesManager().getCategoriesSelected());
 
-					// Se la risposta del gestore è nulla o si è verificato un
+					// Se la risposta del gestore ï¿½ nulla o si ï¿½ verificato un
 					// errore,termino la ricerca,altrimenti
 					// procedo al salvataggio dei poi
 					if (response == null || response.getStatus() != 200) {
@@ -298,7 +297,7 @@ public class PoiSearchActivity extends TabActivity {
 			protected void onPostExecute(String result) {
 				dialog.dismiss();
 
-				// se la locazion non è stata trovata, resituisco un messaggio
+				// se la locazion non ï¿½ stata trovata, resituisco un messaggio
 				// d'errore 
 				// altrimenti, setto lo stato della location e inzializzo le tab
 				if (mylocation == null) {

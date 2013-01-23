@@ -2,24 +2,29 @@ package geolog.util;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.accounts.AccountManagerFuture;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.os.Handler;
 
 /**
  * Controllo degli account per l'accesso all'applicazione. L'autenticazione
- * avviene tramite il servizio esterno dell'account di google. Se L'utente è
- * connesso al proprio account google, può accedere all'applicazione
+ * avviene tramite il servizio esterno dell'account di google. Se L'utente e'
+ * connesso al proprio account google, puo' accedere all'applicazione
  * 
  * @author Lorenzo
  * 
  */
 public class AuthGoogle {
 
+
+
 	/**
 	 * Controllo che l'utente sia collegato ad ccount google
 	 * 
 	 * @param activity
-	 *            attività che chiama il servizio
+	 *            attivita' che chiama il servizio
 	 * @return Account dell'utente
 	 */
 	public static Account googleServiceAviable(Activity activity) {
@@ -31,7 +36,7 @@ public class AuthGoogle {
 
 		// creo una nuova variabile di tipo account
 		Account myAccount = null;
-		// Vedo se è stato trovato un account, appena lo trovo interrompo il
+		// Vedo se e' stato trovato un account, appena lo trovo interrompo il
 		// ciclo
 		for (Account account : accounts) {
 
@@ -50,5 +55,19 @@ public class AuthGoogle {
 			return account.name;
 		return null;
 	}
+	
+	/**
+	 * Viene controllato che l'utente sia connesso al servizio google.
+	 * @param activity attivitÃ  che richiama il metodo
+	 * @return true, se l'utente e' connesso al servizio google,false altrimenti
+	 */
+	public static boolean isGoogleServiceAviable(Activity activity)
+	{
+		//Controllo se l'utente Ã¨ connesso al servizio google
+		if ( googleServiceAviable(activity) != null)
+			return true;
+		return false;
+	}
 
+	
 }

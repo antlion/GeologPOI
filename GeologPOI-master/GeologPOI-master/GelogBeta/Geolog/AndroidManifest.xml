@@ -29,7 +29,8 @@
         android:theme="@android:style/Theme.Black.NoTitleBar" >
         <uses-library android:name="com.google.android.maps" />
 
-        <activity android:name="geolog.activities.GeologActivity" >
+        <activity android:name="geolog.activities.GeologActivity" 
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

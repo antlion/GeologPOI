@@ -26,6 +26,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,17 +37,17 @@ import android.widget.TextView;
 /**
  * @author Lorenzo
  * 
- *         Questa class rappresenta l'attivit� principale dell'applicazione. Da
- *         questa attivit� � possibile aggiungere e ricercare i poi.
+ *         Questa class rappresenta l'attivita' principale dell'applicazione. Da
+ *         questa attivita' e' possibile aggiungere e ricercare i poi.
  * 
  */
 
 public class GeologActivity extends Activity {
 
-	// Attirubuto contentente l'intera attivit� android
+	// Attirubuto contentente l'intera attivita' android
 	private Activity activity;
 
-	// Contesto dell'atitivit�
+	// Contesto dell'atitivita'
 	private Context context;
 
 	// Gestore delle categorie
@@ -60,44 +61,45 @@ public class GeologActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		
 		setContentView(R.layout.geolog_activity_layout);
 
 		// Setto lo stato dell'inzializzazione
 		inzializationFinsh = false;
 
-		// Variabile contenente l'ActionBar dell'attivit�
+		// Variabile contenente l'ActionBar dell'attivita'
 		final ActionBar actionBar = (ActionBar) findViewById(R.id.actionbar);
 
 		// Inzializzazione del gestore delle categorie
 		categoriesHandler = CategoriesManager.getCategoriesManager();
 
-		// Salvataggio il contesto dell'attivit�
+		// Salvataggio il contesto dell'attivita'
 		context = this;
 
-		// Salvataggio dell'attivit�
+		// Salvataggio dell'attivita'
 		activity = this;
 
 		// Creazione del menu delle categorie
 		menuCategory = new MenuCategory(false,
 				(ListView) findViewById(R.id.listView1), categoriesHandler,
 				context);
-		// Setto la visibilit� del menu delle categorie
+		// Setto la visibilita' del menu delle categorie
 		menuCategory.setVisibilityListCategory(false);
 
 		// Controllo che l'utente si autenticato al sistema. In caso positivo
 		// l'applicazione continua il suo corso,
-		// in caso negativo non � possibile procedere altrimenti.
+		// in caso negativo non e' possibile procedere altrimenti.
 		checkUserAccount();
 
-		// Se l'inizializzazione non � stata eseguita, viene eseguita
+		
+		// Se l'inizializzazione non e' stata eseguita, viene eseguita
 		if (inzializationFinsh != true) {
 			// Inzializzo l'applicaizone
 			updateApplication(context);
 			inzializationFinsh = false;
 		}
 
-		// Aggiungo l'azione di aprire il men� delle categorie sull'ActionBar
+		// Aggiungo l'azione di aprire il menu' delle categorie sull'ActionBar
 		// dell'activity
 		actionBar.addAction(new Action() {
 			public void performAction(View view) {
@@ -113,7 +115,7 @@ public class GeologActivity extends Activity {
 			}
 		});
 
-		// Aggiungo l'azione di apertura del men� delle opzioni.
+		// Aggiungo l'azione di apertura del menu' delle opzioni.
 		actionBar.addAction(new Action() {
 
 			@Override
@@ -152,8 +154,13 @@ public class GeologActivity extends Activity {
 
 		// Inizializzo l'animazione sull'immagine del drawer
 		ImageView image = (ImageView) findViewById(R.id.handle);
-		image.startAnimation(AnimationUtils.loadAnimation(context,
-				R.layout.slidemenu));
+		/*image.startAnimation(AnimationUtils.loadAnimation(context,
+				android.R.anim.slide_in_left));*/
+		Animation a = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
+		a.setFillAfter(true); 
+		a.setDuration(2000);
+		image.startAnimation(a);
+		
 
 		// Inizalizzo un nuovo sliding drawer
 		final SlidingDrawer drawerSearchPoi = (SlidingDrawer) findViewById(R.id.drawerSearchPoi);
@@ -194,13 +201,13 @@ public class GeologActivity extends Activity {
 
 		// Controllo se devono essere visualizzati i suggerimenti
 		checkHint();
-
+		
 	}
 
 	/**
 	 * Controllo se devono essere visualizzati gli hint nell'applicazione
 	 */
-	public void checkHint() {
+	private void checkHint() {
 		// recupero il parametro del boolean hint
 		String choose = (String) ParametersBridge.getInstance().getParameter(
 				"hint");
@@ -209,13 +216,13 @@ public class GeologActivity extends Activity {
 		if (choose == null) {
 			UtilDialog
 					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalit� dell'applicazione",
+							"Trascina le frecce per avviare le funzionalita' dell'applicazione",
 							context).show();
 		} else if (choose.equals("true")) {
-			// se il valore � uguale a true, vengono visualizzati i suggerimenti
+			// se il valore e' uguale a true, vengono visualizzati i suggerimenti
 			UtilDialog
 					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalit� dell'applicazione",
+							"Trascina le frecce per avviare le funzionalita' dell'applicazione",
 							context).show();
 		}
 	}
@@ -283,7 +290,7 @@ public class GeologActivity extends Activity {
 		// Se non e' stato trovato nemmeno un account, viene mostrato un
 		// messaggio in cui viene richiesto di
 		// effttuare l'accesso al servizio.
-		if (AuthGoogle.getAccountName(activity) == null) {
+		if (AuthGoogle.isGoogleServiceAviable(activity) == false) {
 			// Costruisco un nuovo diaologo
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setMessage(
@@ -348,8 +355,8 @@ public class GeologActivity extends Activity {
 									// Se l'utente
 									// sceglie di non
 									// autenticarsi,
-									// verr� mostrato un
-									// dialogo e verr�
+									// verra' mostrato un
+									// dialogo e verra'
 									// terminata
 									// l'applicazione
 
