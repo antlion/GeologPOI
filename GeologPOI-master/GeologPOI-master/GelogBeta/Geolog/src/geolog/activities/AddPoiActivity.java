@@ -103,6 +103,9 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 	 */
 	private Bitmap myPhoto;
 
+	private ConfrimResponse webResponse = null;
+	
+	private ConfrimResponse webResponseAddRes= null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -274,8 +277,7 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 			// Creo una nuova progressDialog
 			ProgressDialog dialog;
-			private ConfrimResponse webResponse = null;
-			private ConfrimResponse webResponseAddRes= null;
+			
 
 			@Override
 			protected void onPreExecute() {
@@ -356,8 +358,6 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 											ResourcesManager
 													.covertBitmapToByte(myPhoto),
 											"image/jpeg");
-
-
 								
 					} 
 
@@ -395,5 +395,19 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 		// TODO Auto-generated method stub
 
 	}
+
+	public ConfrimResponse getWebResponse() {
+		return webResponse;
+	}
+
+	public ConfrimResponse getWebResponseAddRes() {
+		return webResponseAddRes;
+	}
+
+	public void setMyPhoto(Bitmap myPhoto) {
+		this.myPhoto = myPhoto;
+	}
+	
+	
 
 }

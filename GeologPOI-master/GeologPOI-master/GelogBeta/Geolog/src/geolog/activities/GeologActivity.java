@@ -25,6 +25,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -59,11 +62,15 @@ public class GeologActivity extends Activity {
 	// Stato della inzializzazione
 	private boolean inzializationFinsh;
 
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.geolog_activity_layout);
 
+	
+		
+		
 		// Setto lo stato dell'inzializzazione
 		inzializationFinsh = false;
 
@@ -80,11 +87,11 @@ public class GeologActivity extends Activity {
 		activity = this;
 
 		// Creazione del menu delle categorie
-		menuCategory = new MenuCategory(false,
+		menuCategory = new MenuCategory(true,
 				(ListView) findViewById(R.id.listView1), categoriesHandler,
 				context);
 		// Setto la visibilita' del menu delle categorie
-		menuCategory.setVisibilityListCategory(false);
+		menuCategory.setVisibilityListCategory(true);
 
 		// Controllo che l'utente si autenticato al sistema. In caso positivo
 		// l'applicazione continua il suo corso,
@@ -269,7 +276,7 @@ public class GeologActivity extends Activity {
 					menuCategory = new MenuCategory(false,
 							(ListView) findViewById(R.id.listView1),
 							categoriesHandler, context);
-					menuCategory.setVisibilityListCategory(false);
+					menuCategory.setVisibilityListCategory(true);
 
 				}
 				else 
@@ -286,7 +293,7 @@ public class GeologActivity extends Activity {
 	/**
 	 * Controllo se l'utente ha effettuato l'accesso al servizio google.
 	 */
-	private void checkUserAccount() {
+	private boolean checkUserAccount() {
 		// Se non e' stato trovato nemmeno un account, viene mostrato un
 		// messaggio in cui viene richiesto di
 		// effttuare l'accesso al servizio.
@@ -345,6 +352,7 @@ public class GeologActivity extends Activity {
 										builder.show();
 
 									}
+									
 								}
 							})
 					.setNegativeButton("no",
@@ -371,14 +379,17 @@ public class GeologActivity extends Activity {
 														DialogInterface dialog,
 														int id) {
 													activity.finish();
+													
 												}
 											});
 									builder.show();
 								}
 							});
 			builder.show();
+			return false;
 		}
-
+		return true;
 	}
-
+	
+	
 }

@@ -22,8 +22,13 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -39,8 +44,8 @@ import com.geolog.dominio.web.PoiListResponse;
 
 
 /**
- * Gestore della visualizzazione dei Poi una lista. Ogni elmento della lista è
- * cliccabile ed è possibile visionare le informazioni del poi cliccato.
+ * Gestore della visualizzazione dei Poi una lista. Ogni elmento della lista ï¿½
+ * cliccabile ed ï¿½ possibile visionare le informazioni del poi cliccato.
  * 
  * @author Lorenzo
  * 
@@ -52,7 +57,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 	// interesse
 	private ArrayList<Poi> pois;
 
-	// Contesto dell'attività
+	// Contesto dell'attivitï¿½
 	private Context context;
 
 	// Location dell'utente
@@ -76,13 +81,18 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 	// Listenr delle location
 	private LocationListener myLocationListener;
 
+	 
+	
 	@SuppressWarnings("unchecked")
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+	
+		
 		setContentView(R.layout.poi_list_layout);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 
-		// La visibilità delle informazioni relative ad uno specifico poi è
+		// La visibilita' delle informazioni relative ad uno specifico poi e'
 		// nascosta
 		RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
 		rl.setVisibility(View.GONE);
@@ -90,7 +100,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		// Inzializzo lo stato dei click dei poi a false.
 		itemListPOIClicked = false;
 
-		// Salvo il contesto dell'attività
+		// Salvo il contesto dell'attivitï¿½
 		context = this;
 
 		// Inizializzo l'arrayList dei poi
@@ -108,11 +118,19 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		setPoiList();
 
 		// Inzializzo il menu delle categorie
-		menuCategory = new MenuCategory(false,
+		menuCategory = new MenuCategory(true,
 				(ListView) findViewById(R.id.list_category),
 				CategoriesManager.getCategoriesManager(), context);
-		// Il menù non è inzialmente visibile
-		menuCategory.setVisibilityListCategory(false);
+		// Il menu' non e' inzialmente visibile
+		
+		Animation a = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
+		a.setFillAfter(true); 
+		a.setDuration(2000);
+		LinearLayout aa = (LinearLayout) findViewById(R.id.linearLayout2);
+		aa.startAnimation(a);
+	
+		
+		
 
 		// Inzializzo il locationManager
 		locationManager = (LocationManager) this
@@ -144,7 +162,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5,
 				1, myLocationListener);
 
-		// Aggiungo la possibilità di visualizzare le informazioni dei poi
+		// Aggiungo la possibilitï¿½ di visualizzare le informazioni dei poi
 		setPoiListInformation();
 		
 		//Controllo se devono essere visualizzati gli aggironamenti
@@ -159,26 +177,25 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		// recupero il parametro del boolean hint
 		String choose = (String) ParametersBridge.getInstance().getParameter(
 				"hint");
-		// Se il valore non è stato ancora inzializzato, verranno mostrati i
+		// Se il valore non ï¿½ stato ancora inzializzato, verranno mostrati i
 		// suggerimenti
 		if (choose == null) {
 			UtilDialog
 					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalità dell'applicazione",
-							context).show();
+							"premi il tasto menu'per visualizzare le categorie,chiudilo per avviare la ricerca", context).show();
 		} else if (choose.equals("true")) {
-			// se il valore è uguale a true, vengono visualizzati i suggerimenti
+			// se il valore ï¿½ uguale a true, vengono visualizzati i suggerimenti
 			UtilDialog
 					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalità dell'applicazione",
-							context).show();
+							"premi il tasto menu'per visualizzare le categorie,chiudilo per avviare la ricerca", context).show();
+				
 		}
 	}
 
 	/**
 	 * Metodo che aggiung ogni elemento della lista dei poi ad un
 	 * listener.Cliccando su un elemnto della lista dei poi, si ottengono
-	 * informazioni più dettagliate sul poi
+	 * informazioni piï¿½ dettagliate sul poi
 	 */
 	private void setPoiListInformation() {
 		// Se la lista dei poi e la mia locazione sono stati acquisiti corretamente si aggiungono i vari listner
@@ -194,7 +211,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 					final LinearLayout ln = (LinearLayout) findViewById(R.id.linearLayout5);
 					final RelativeLayout rl = (RelativeLayout) findViewById(R.id.layoutInformationPOI);
 
-					// Setto la visibilità della lista delle categorie e dei
+					// Setto la visibilitï¿½ della lista delle categorie e dei
 					// layout
 					// Inizializzo la lista delle categorie
 					ListView listCategory = (ListView) findViewById(R.id.list_category);
@@ -202,7 +219,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 					ln.setVisibility(View.GONE);
 					rl.setVisibility(View.VISIBLE);
 
-					// Recupero il poi che è stato selezionato
+					// Recupero il poi che ï¿½ stato selezionato
 					Poi poi = (Poi) poisAdapter.getItem(arg2);
 					// Visualizzo l'immagine rappresentativa del poi
 					ImageView imageDescriptionPOi = (ImageView) findViewById(R.id.imagePOI);
@@ -232,13 +249,18 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		// lista delle categorie
 		if (keyCode == KeyEvent.KEYCODE_MENU) {
 			if (menuCategory.checkMenuCategory()) {
+				//Se e' stata selezionata almeno una categoria di ricerca, vengono ricercati i poi,
+				//altrimenti viene mostrato un messaggio d'errore
+				if ( CategoriesManager.getCategoriesManager().getCategoriesSelected().size() >0 )
 				searchPoi(context);
+				else
+					UtilDialog.createBaseToast("Seleziona almeno una categoria per ricercare i poi", context).show();
 			}
 			
 			return true;
 		}
 
-		// se è stato premuto il pulsante indietro e ci troviamo
+		// se e' stato premuto il pulsante indietro e ci troviamo
 		// nell'informazione del poi, viene chiusa l'informazione dei poi
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (itemListPOIClicked) {
@@ -269,7 +291,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 	public void onResume() {
 		super.onResume();
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-		// aggiorno il menù delle categorie
+		// aggiorno il menï¿½ delle categorie
 		menuCategory.updateMenuCategory();
 		
 		
@@ -316,7 +338,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 	 * dall'utente
 	 * 
 	 * @param context
-	 *            contesto dell'attività
+	 *            contesto dell'attivita'
 	 */
 	@Override
 	public void searchPoi(final Context context) {
@@ -360,7 +382,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 			protected void onPostExecute(String result) {
 				dialog.dismiss();
 
-				// se la risposta è negativa o si è verifcato un errore
+				// se la risposta ï¿½ negativa o si ï¿½ verifcato un errore
 				// viene
 				// mostrato un messaggio d'errore e la
 				// barra di progresso viene chiusa, altrimenti viene
@@ -384,7 +406,7 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 				
 					ParametersBridge.getInstance().addParameter("listaPOI", pois);
 					ParametersBridge.getInstance().addParameter("location", myLocation);
-					// Se è stato trovato almeno un poi, aggiorno la
+					// Se ï¿½ stato trovato almeno un poi, aggiorno la
 					// locazione,
 					// altrimenti resituisco un messaggio d'errore
 					if (pois.size() < 0) {
@@ -407,11 +429,11 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 
 	/**
 	 * La lista dei poi ricerca dall'utente viene aggiunta all'adattatore dei
-	 * poi, che andarà a popolare la ListView dei poi.
+	 * poi, che andarï¿½ a popolare la ListView dei poi.
 	 * 
 	 */
 	private void setPoiList() {
-		// Se la lista dei poi contiene è diversa da null, si procede a creare
+		// Se la lista dei poi contiene ï¿½ diversa da null, si procede a creare
 		// un nuovo adattatore e a popolarlo,altrimenti viene
 		// visualizzato un messaggio d'errore.
 		if (pois != null && myLocation != null) {
@@ -428,6 +450,10 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		}
 	}
 
-	
+	public MenuCategory getMenuCategory() {
+		return menuCategory;
+	}
+
+
 
 }

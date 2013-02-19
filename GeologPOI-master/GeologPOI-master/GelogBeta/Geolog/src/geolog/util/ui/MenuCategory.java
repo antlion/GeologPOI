@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 
 /**
- * Menù delle categorie. Questa classe si occupa di gestire un menu delle
+ * Menï¿½ delle categorie. Questa classe si occupa di gestire un menu delle
  * categorie. Salva la selezione delle categorie dell'utente.
  * 
  * @author Lorenzo
@@ -44,7 +44,7 @@ public class MenuCategory {
 	 */
 	private CategoriesManager categoriesManager;
 
-	// Contesto dell'attività che richiedo l'uso del menu
+	// Contesto dell'attivitï¿½ che richiedo l'uso del menu
 	/**
 	 * @uml.property  name="context"
 	 * @uml.associationEnd  multiplicity="(1 1)"
@@ -61,7 +61,7 @@ public class MenuCategory {
 	 * @param categoriesManager
 	 *            gestore delle categorie
 	 * @param context
-	 *            contesto dell'attività che richiama il menù
+	 *            contesto dell'attivitï¿½ che richiama il menï¿½
 	 */
 	public MenuCategory(boolean isExpandedMenuCateogories,
 			ListView listCategory, CategoriesManager categoriesManager,
@@ -81,6 +81,7 @@ public class MenuCategory {
 		// delle categorie
 		categoriesManager.setSelectionCategory(listCategory, context,
 				categoryAdapter);
+		setVisibilityListCategory(isExpandedMenuCateogories);
 	}
 
 	/**
@@ -144,10 +145,10 @@ public class MenuCategory {
 	}
 
 	/**
-	 * Imposta la visibilità del menù delle categorie
+	 * Imposta la visibilitï¿½ del menï¿½ delle categorie
 	 * 
 	 * @param visibility
-	 *            stato della visibilità del menu delle categorie
+	 *            stato della visibilitï¿½ del menu delle categorie
 	 */
 	public void setVisibilityListCategory(boolean visibility) {
 		if (visibility)
@@ -157,20 +158,20 @@ public class MenuCategory {
 	}
 
 	/**
-	 * Controlla il menù delle categorie per vedere se sono state selezionate
+	 * Controlla il menï¿½ delle categorie per vedere se sono state selezionate
 	 * delle categorie per la ricerca di poi
 	 * 
-	 * @return boolean stato del controllo del menù delle categorie
+	 * @return boolean stato del controllo del menï¿½ delle categorie
 	 */
 	public boolean checkMenuCategory() {
 
-		// Se il menù è aperto, controlla le categorie e chiudi il
-		// menu,altrimenti apri il menù
+		// Se il menï¿½ ï¿½ aperto, controlla le categorie e chiudi il
+		// menu,altrimenti apri il menï¿½
 		if (isExpandedMenuCateogories()) {
 
 			// aggiorno lo stato dell'apertua delle categorie
 			setExpandedMenuCateogories(false);
-			// La lista delle categorie non è più visibile
+			// La lista delle categorie non ï¿½ piï¿½ visibile
 			setVisibilityListCategory(false);
 
 			// Controllo delle categorie selezionate

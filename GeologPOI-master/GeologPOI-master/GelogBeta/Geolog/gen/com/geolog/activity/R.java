@@ -138,7 +138,7 @@ containing a value of this type.
         public static final int balloon_main_layout=0x7f0a0012;
         public static final int categoriaPOI=0x7f0a003f;
         public static final int categoryButton=0x7f0a003a;
-        public static final int category_checkbox=0x7f0a0019;
+        public static final int category_checkbox=0x7f0a001a;
         public static final int content=0x7f0a001e;
         public static final int descriptionPOI=0x7f0a002e;
         public static final int descrizione=0x7f0a0016;
@@ -180,7 +180,7 @@ containing a value of this type.
         public static final int spinner1=0x7f0a0011;
         public static final int streetViewCheckBox=0x7f0a0028;
         public static final int tableRow1=0x7f0a0034;
-        public static final int textView1=0x7f0a001a;
+        public static final int textView1=0x7f0a0019;
         public static final int textView2=0x7f0a0020;
         public static final int thumbnail=0x7f0a003d;
         public static final int trafficCheckBox=0x7f0a0029;

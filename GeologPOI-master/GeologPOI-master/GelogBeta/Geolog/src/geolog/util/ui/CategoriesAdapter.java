@@ -20,8 +20,8 @@ import android.widget.TextView;
 
 
 /**
- * Questa classe è una adattore personalizzato di categorie per popolare gli elementi di una listView. Ogni elemento della listView
- * contiene una categoria e una checkBox associata. Questa checkBox rappresenta se la categoria è stata scelta dall'utente.
+ * Questa classe ï¿½ una adattore personalizzato di categorie per popolare gli elementi di una listView. Ogni elemento della listView
+ * contiene una categoria e una checkBox associata. Questa checkBox rappresenta se la categoria ï¿½ stata scelta dall'utente.
  * 
  * @author Lorenzo
  *
@@ -29,7 +29,7 @@ import android.widget.TextView;
 public class CategoriesAdapter extends BaseAdapter{
 
 
-	//Contesto dell'attività che usa il categoriesAdapter
+	//Contesto dell'attivitï¿½ che usa il categoriesAdapter
 	/**
 	 * @uml.property  name="context"
 	 * @uml.associationEnd  multiplicity="(1 1)"
@@ -43,7 +43,7 @@ public class CategoriesAdapter extends BaseAdapter{
 	 */
 	private ArrayList<Category> categories; 
 
-	//HashMaps contenente per ogni categoria un valore che rappresenta se la categoria è stata scelta dall'utente.
+	//HashMaps contenente per ogni categoria un valore che rappresenta se la categoria ï¿½ stata scelta dall'utente.
 	/**
 	 * @uml.property  name="categoriesSelected"
 	 * @uml.associationEnd  qualifier="key:com.geolog.dominio.Category java.lang.String"
@@ -133,8 +133,7 @@ public class CategoriesAdapter extends BaseAdapter{
 		}
 		//Recupero il nome che rappresenta la categoria specifica
 		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
-	   
-	    
+	  
 		TextView tx = (TextView) convertView.findViewById(R.id.textView1);
 		tx.setText(categories.get(position).getNomeCategoria());
 		
