@@ -51,7 +51,7 @@ public class Category {
 	 * @param icon
 	 *            icona della categoria
 	 */
-	public Category(String nomeCategoria, int idTipo, int icon) {
+	public Category(String nomeCategoria, int idTipo, String icon) {
 		this.name = nomeCategoria;
 		this.id = idTipo;
 
@@ -122,17 +122,17 @@ public class Category {
 	 * @return Drawable l'icona della categoria sotto forma di drawable
 	 */
 	public Drawable getIconFromResource(Context context) {
-		// Se l'icona è stata già scaricata, viene resituita, altrimenti viene
+		// Se l'icona ï¿½ stata giï¿½ scaricata, viene resituita, altrimenti viene
 		// scaricata
-		if (ResourcesManager.controlImageResource(icon, context))
+		/*if (ResourcesManager.controlImageResource(icon, context))
 			return Drawable.createFromPath(context.getFilesDir().toString()
-					+ "//" + ResourcesManager.getNameFileFromUrl(icon));
+					+ "//" + ResourcesManager.getNameFileFromUrl(icon));*/
 		Drawable d = ResourcesManager.getDrawableFromUri(icon, context);
-		// Se si è verificato un errore durante lo scaricamento, viene
+		// Se si ï¿½ verificato un errore durante lo scaricamento, viene
 		// restituita un icona base,altrimenti l'icona della categoria
 		if (d == null)
 			return context.getResources().getDrawable(R.drawable.no_image_icon);
-		return ResourcesManager.getDrawableFromUri(icon, context);
+		return d;
 	}
 
 	

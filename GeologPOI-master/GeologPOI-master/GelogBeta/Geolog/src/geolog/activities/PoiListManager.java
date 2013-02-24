@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Typeface;
 import android.location.Location;
@@ -22,6 +23,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
@@ -118,16 +120,16 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 		setPoiList();
 
 		// Inzializzo il menu delle categorie
-		menuCategory = new MenuCategory(true,
+		menuCategory = new MenuCategory(false,
 				(ListView) findViewById(R.id.list_category),
 				CategoriesManager.getCategoriesManager(), context);
 		// Il menu' non e' inzialmente visibile
 		
-		Animation a = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
-		a.setFillAfter(true); 
-		a.setDuration(2000);
-		LinearLayout aa = (LinearLayout) findViewById(R.id.linearLayout2);
-		aa.startAnimation(a);
+//		Animation a = AnimationUtils.loadAnimation(this,android.R.anim.slide_in_left);
+//		a.setFillAfter(true); 
+//		a.setDuration(2000);
+//		LinearLayout aa = (LinearLayout) findViewById(R.id.linearLayout2);
+//		aa.startAnimation(a);
 	
 		
 		
@@ -174,22 +176,15 @@ public class PoiListManager extends ListActivity implements ItypeOfViewPoi
 	 * Controllo se devono essere visualizzati gli hint nell'applicazione
 	 */
 	public void checkHint() {
-		// recupero il parametro del boolean hint
-		String choose = (String) ParametersBridge.getInstance().getParameter(
-				"hint");
-		// Se il valore non � stato ancora inzializzato, verranno mostrati i
-		// suggerimenti
-		if (choose == null) {
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String  string =( new Boolean (prefs.getBoolean("checkBoxSuggestion", false))).toString();
+		if (string.equals("true"))
+	
 			UtilDialog
 					.createBaseToast(
 							"premi il tasto menu'per visualizzare le categorie,chiudilo per avviare la ricerca", context).show();
-		} else if (choose.equals("true")) {
-			// se il valore � uguale a true, vengono visualizzati i suggerimenti
-			UtilDialog
-					.createBaseToast(
-							"premi il tasto menu'per visualizzare le categorie,chiudilo per avviare la ricerca", context).show();
-				
-		}
+	
 	}
 
 	/**

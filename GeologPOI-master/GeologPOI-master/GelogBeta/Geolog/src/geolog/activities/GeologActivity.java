@@ -7,6 +7,7 @@ import geolog.util.AuthGoogle;
 import geolog.util.ParametersBridge;
 import geolog.util.ui.MenuCategory;
 import geolog.util.ui.UtilDialog;
+import geolog.web.WebService;
 
 import java.util.ArrayList;
 
@@ -16,6 +17,7 @@ import com.geolog.dominio.web.CategoryListResponse;
 import com.markupartist.android.widget.ActionBar;
 import com.markupartist.android.widget.ActionBar.Action;
 
+import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -23,6 +25,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.GestureDetector;
@@ -87,17 +90,19 @@ public class GeologActivity extends Activity {
 		activity = this;
 
 		// Creazione del menu delle categorie
-		menuCategory = new MenuCategory(true,
+		menuCategory = new MenuCategory(false,
 				(ListView) findViewById(R.id.listView1), categoriesHandler,
 				context);
 		// Setto la visibilita' del menu delle categorie
-		menuCategory.setVisibilityListCategory(true);
+	//	menuCategory.setVisibilityListCategory(true);
 
 		// Controllo che l'utente si autenticato al sistema. In caso positivo
 		// l'applicazione continua il suo corso,
 		// in caso negativo non e' possibile procedere altrimenti.
 		checkUserAccount();
 
+		//Opzioni sviluppatore, setto le url per la comunicazione con il web server
+		setDevUrl();
 		
 		// Se l'inizializzazione non e' stata eseguita, viene eseguita
 		if (inzializationFinsh != true) {
@@ -145,6 +150,7 @@ public class GeologActivity extends Activity {
 			@Override
 			public void performAction(View view) {
 				// TODO Auto-generated method stub
+				setDevUrl();
 				updateApplication(context);
 			}
 
@@ -179,6 +185,7 @@ public class GeologActivity extends Activity {
 
 				// Quando il drawer viene aperto, viene avviata l'attivi� di
 				// ricerca poi
+				setDevUrl();
 				Intent intent = new Intent(context, PoiSearchActivity.class);
 
 				startActivity(intent);
@@ -200,6 +207,7 @@ public class GeologActivity extends Activity {
 				// TODO Auto-generated method stub
 				// Quando il drawer viene aperto, viene avviata l'attivi� di
 				// aggiungi poi
+				setDevUrl();
 				Intent intent = new Intent(context, AddPoiActivity.class);
 				startActivity(intent);
 				addPoiDrawer.close();
@@ -215,23 +223,16 @@ public class GeologActivity extends Activity {
 	 * Controllo se devono essere visualizzati gli hint nell'applicazione
 	 */
 	private void checkHint() {
-		// recupero il parametro del boolean hint
-		String choose = (String) ParametersBridge.getInstance().getParameter(
-				"hint");
-		// Se il valore non � stato ancora inzializzato, verranno mostrati i
-		// suggerimenti
-		if (choose == null) {
-			UtilDialog
-					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalita' dell'applicazione",
-							context).show();
-		} else if (choose.equals("true")) {
-			// se il valore e' uguale a true, vengono visualizzati i suggerimenti
-			UtilDialog
-					.createBaseToast(
-							"Trascina le frecce per avviare le funzionalita' dell'applicazione",
-							context).show();
-		}
+		
+		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String  string =( new Boolean (prefs.getBoolean("checkBoxSuggestion", false))).toString();
+		if (string.equals("true"));
+		UtilDialog
+		.createBaseToast(
+			"Trascina le frecce per avviare le funzionalita' dell'applicazione",
+			context).show();
+
 	}
 
 	private void updateApplication(final Context context) {
@@ -264,6 +265,7 @@ public class GeologActivity extends Activity {
 
 			protected void onPostExecute(String result) {
 				dialog.dismiss();
+				
 				if (categoryListResponse != null
 						&& categoryListResponse.getStatus() == 200) {
 
@@ -276,7 +278,7 @@ public class GeologActivity extends Activity {
 					menuCategory = new MenuCategory(false,
 							(ListView) findViewById(R.id.listView1),
 							categoriesHandler, context);
-					menuCategory.setVisibilityListCategory(true);
+					
 
 				}
 				else 
@@ -390,6 +392,18 @@ public class GeologActivity extends Activity {
 		}
 		return true;
 	}
+
+	public MenuCategory getMenuCategory() {
+		return menuCategory;
+	}
 	
-	
+	public void setDevUrl()
+	{
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		String  string = prefs.getString("Dev options", "<unset>");
+		String stringURL = string+":8080/web/services/WS";
+		String stringURLRes = string+":8080/web";
+		WebService.setWEB_SERVICE_URL(stringURL);
+		WebService.setWEB_SERVICE_URL_RES(stringURLRes);
+	}
 }

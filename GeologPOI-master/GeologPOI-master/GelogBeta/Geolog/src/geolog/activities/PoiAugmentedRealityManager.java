@@ -4,7 +4,7 @@ package geolog.activities;
 
 import geolog.ar.ARLayout;
 import geolog.ar.CustomCameraView;
-import geolog.ar.FourSquareClient;
+import geolog.ar.PoiOnCameraManager;
 import geolog.ar.PoiOnCamera;
 import geolog.managers.CategoriesManager;
 import geolog.managers.PoiManager;
@@ -27,12 +27,14 @@ import com.geolog.dominio.web.PoiListResponse;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -45,72 +47,66 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 
+/**
+ * @author antlion
+ * Gestione della visualizzazione dei poi su realtÃ  aumentata, attraverso l'ausilio della fotocamera del
+ * dispositivo mobile.
+ *
+ */
 public class PoiAugmentedRealityManager extends Activity  implements ItypeOfViewPoi{
-	/**
-	 * Called when the activity is first created.
-	 * @uml.property  name="cv"
-	 * @uml.associationEnd  
-	 */
-	private CustomCameraView cv;
+	
+	// Visualizzazione della videocamera
+	private CustomCameraView customCameraView;
+	//Contesto dell'applicazione
 	public static volatile Context ctx;
 	public Context context;
-	/**
-	 * @uml.property  name="ar"
-	 * @uml.associationEnd  
-	 */
-	private ARLayout ar;
-	/**
-	 * @uml.property  name="curLocation"
-	 * @uml.associationEnd  
-	 */
+	//Layout della visualizzazione dei poi
+	private ARLayout augmentedRealtyLayout;
+	//Location corrente
 	volatile Location curLocation = null;
-	/**
-	 * @uml.property  name="poi"
-	 */
+	//lista dei poi da visualizzare
 	private ArrayList<Poi> poi;
-	/**
-	 * @uml.property  name="gpsListener"
-	 * @uml.associationEnd  multiplicity="(1 1)"
-	 */
+	//Listener del gps
 	private LocationListener gpsListener = new LocationListener(){
 
+	
 		@SuppressWarnings("unchecked")
 		public void onLocationChanged(Location location)
 		{
-			Log.e("HoldMe","Got first");
+			//Se la posizione non Ã¨ nulla aggiorna la posizione
 			if(curLocation != null)
 				return;
-			poi = new ArrayList<Poi>();
+			updateLocationData(location);
+			/*poi = new ArrayList<Poi>();
 			ParametersBridge bridge = ParametersBridge.getInstance();
 			poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
 			curLocation = location;
 			Log.d("miaLocation",location.toString());
-			//  curLocation.setLatitude(41.687015);
-			// curLocation.setLongitude(12.774302);
+		
 			new Thread(){
 				public void run(){
-					FourSquareClient fc = new FourSquareClient();
-					Vector<PoiOnCamera> vc = fc.prova(curLocation,poi,getApplicationContext());
-					//Vector<FourSqareVenue> vc = fc.getVenuList(curLocation);
-					Log.e("Where4","CurLocation LA:"+curLocation.getLatitude()+" LO:"+curLocation.getLongitude());
+					PoiOnCameraManager poiOnCameraManager = new PoiOnCameraManager();
+					Vector<PoiOnCamera> poiOnCamera = poiOnCameraManager.createPoiOnCameraFromPoi(curLocation,poi,getApplicationContext());
+					
+					Log.e("Geolog","CurLocation LA:"+curLocation.getLatitude()+" LO:"+curLocation.getLongitude());
 
-					ar.clearARViews();
-					if(vc != null && vc.size() > 0)
+					augmentedRealtyLayout.clearARViews();
+					if(poiOnCamera != null && poiOnCamera.size() > 0)
 					{
 						@SuppressWarnings("rawtypes")
-						Enumeration e = vc.elements();
+						Enumeration e = poiOnCamera.elements();
 						while(e.hasMoreElements())
 						{
-							PoiOnCamera fq = (PoiOnCamera) e.nextElement();
-							Log.e("Where4","Got Venue:"+fq.name);
-							if(fq.location != null)
-								Log.i("Where4", "Lat:"+fq.location.getLatitude()+":"+fq.location.getLongitude());
-							Log.e("Where4", "Azimuth: "+fq.azimuth);
-							ar.addARView(fq);
+							PoiOnCamera element = (PoiOnCamera) e.nextElement();
+							Log.e("Where4","Got Venue:"+element.name);
+							if(element.location != null)
+								Log.i("Geolog", "Lat:"+element.location.getLatitude()+":"+element.location.getLongitude());
+							Log.e("Where4", "Azimuth: "+element.azimuth);
+							augmentedRealtyLayout.addARView(element);
 						}
 					}
 				}
-			}.start();
+			}.start();*/
 			LocationManager locMan = (LocationManager)ctx.getSystemService(Context.LOCATION_SERVICE);
 			locMan.removeUpdates(this);
 
@@ -124,6 +120,8 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 		public void onStatusChanged(String provider, int status, Bundle extras){}
 
 	};
+	
+	//Menu delle categorie
 	private MenuCategory menuCategory;
 
 
@@ -137,39 +135,43 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 		try{
 			super.onCreate(savedInstanceState);
 
+			//Inizalizza una nuova lista dei poi
 			poi  = new ArrayList<Poi>();
+			//Ottieni i paremetri passati tra attivitÃ 
 			ParametersBridge bridge = ParametersBridge.getInstance();
 			poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
-			// curLocation =(Location)ParametersBridge.getInstance().getParameter("location");
+			
+			//Inzializza il contesto
 			context = this;
 			ctx = this.getApplicationContext();
-			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+			//Orientazione dello schermo
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-			// setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
 			requestWindowFeature(Window.FEATURE_NO_TITLE); 
 			getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, 
 					WindowManager.LayoutParams.FLAG_FULLSCREEN); 
-
-			ar = new ARLayout(getApplicationContext());
-
-			cv = new CustomCameraView(this.getApplicationContext());
+			
+			//Inzializza il layout della visualizzazione dei poi
+			augmentedRealtyLayout = new ARLayout(getApplicationContext());
+			//Inizializza la visione della fotocamera
+			customCameraView = new CustomCameraView(this.getApplicationContext());
 			requestWindowFeature(Window.FEATURE_NO_TITLE);
-			//cl = new CompassListener(this.getApplicationContext());
+			//Ottieni la larghezza e la grandella dello schermo
 			WindowManager w = getWindowManager();
 			Display d = w.getDefaultDisplay();
 			int width = d.getWidth();
 			int height = d.getHeight(); 
-			ar.screenHeight = height;
-			ar.screenWidth = width;
+			augmentedRealtyLayout.screenHeight = height;
+			augmentedRealtyLayout.screenWidth = width;
+			
 			FrameLayout rl = new FrameLayout(getApplicationContext());
-
-			rl.addView(cv,width,height);
-			ar.debug = true;
-			rl.addView(ar, width, height);
+			rl.addView(customCameraView,width,height);
+			augmentedRealtyLayout.debug = true;
+			rl.addView(augmentedRealtyLayout, width, height);
 			ListView listView = new ListView(ctx);
 			listView.setLayoutParams(new LayoutParams(
 					200,
 					ViewGroup.LayoutParams.WRAP_CONTENT));
+			
 			// Inzializzazione del gestore delle categorie
 			CategoriesManager categoriesHandler = CategoriesManager.getCategoriesManager();
 			menuCategory = new MenuCategory(false,
@@ -181,19 +183,15 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 			listView.setVisibility(View.GONE);
 			LocationManager locMan = (LocationManager)ctx.getSystemService(Context.LOCATION_SERVICE);
 			locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, gpsListener);
-			//Log.e("Where","Orientation:"+i);
-			//rl.bringChildToFront(cl);
-			//addLoadingLayouts();
-			String choose = (String) ParametersBridge.getInstance().getParameter("hint");
-	 		if ( choose == null)
-	 		{
-	 			UtilDialog.createBaseToast("Clicca sul tasto del menu, per ricercare i poi", context).show();
-	 		}
-	 		else
-	 		{
-	 			if ( choose.equals("true"))
-	 				UtilDialog.createBaseToast("Trascina le frecce per avviare le funzionalità dell'applicazione", context).show();
-	 		}
+			
+			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			String  string =( new Boolean (prefs.getBoolean("checkBoxSuggestion", false))).toString();
+			if (string.equals("true"))
+				UtilDialog
+				.createBaseToast(
+						"premi il tasto menu'per visualizzare le categorie,chiudilo per avviare la ricerca", context).show();
+			
 		}catch(Exception e)
 		{
 			e.printStackTrace();
@@ -221,10 +219,9 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 	public void onDestroy()
 	{
 		super.onDestroy();
-		cv.closeCamera();
-		ar.close();
-		//cl.close();
-		//cv.closeCamera();
+		customCameraView.closeCamera();
+		augmentedRealtyLayout.close();
+	
 	}
 
 	@Override
@@ -246,23 +243,28 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 		new Thread(){
 			@SuppressWarnings("rawtypes")
 			public void run(){
-				FourSquareClient fc = new FourSquareClient();
-				Vector<PoiOnCamera> vc = fc.prova(curLocation,poi,getApplicationContext());
-				//Vector<FourSqareVenue> vc = fc.getVenuList(curLocation);
-				Log.e("Where4","CurLocation LA:"+curLocation.getLatitude()+" LO:"+curLocation.getLongitude());
-
-				ar.clearARViews();
-				if(vc != null && vc.size() > 0)
+				//Ottieni il gestore dei poi della VideoCamera
+				PoiOnCameraManager poiOnCameraManager = new PoiOnCameraManager();
+				//Creazione dei poi che devono essere visualizzati sulla fotocamera
+				Vector<PoiOnCamera> poisOnCamera = poiOnCameraManager.createPoiOnCameraFromPoi(curLocation,poi,getApplicationContext());
+				
+				Log.e("Geolog","CurLocation LA:"+curLocation.getLatitude()+" LO:"+curLocation.getLongitude());
+				//Pulisci lo shcermo da vecchi poi
+				augmentedRealtyLayout.clearARViews();
+				
+				//Se il vettore dei poi non Ã¨ nullo, ed esiste almeno un poi da visualizzare
+				//aggiungi il poi sullo schermo
+				if(poisOnCamera != null && poisOnCamera.size() > 0)
 				{
-					Enumeration e = vc.elements();
+					Enumeration e = poisOnCamera.elements();
 					while(e.hasMoreElements())
 					{
-						PoiOnCamera fq = (PoiOnCamera) e.nextElement();
-						Log.e("Where4","Got Venue:"+fq.name);
-						if(fq.location != null)
-							Log.i("Where4", "Lat:"+fq.location.getLatitude()+":"+fq.location.getLongitude());
-						Log.e("Where4", "Azimuth: "+fq.azimuth);
-						ar.addARView(fq);
+						PoiOnCamera poiOnCamera = (PoiOnCamera) e.nextElement();
+						Log.e("Geolog","Got Venue:"+poiOnCamera.name);
+						if(poiOnCamera.location != null)
+							Log.i("Geolog", "Lat:"+poiOnCamera.location.getLatitude()+":"+poiOnCamera.location.getLongitude());
+						Log.e("Geolog", "Azimuth: "+poiOnCamera.azimuth);
+						augmentedRealtyLayout.addARView(poiOnCamera);
 					}
 				}
 			}
@@ -310,7 +312,7 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 					protected void onPostExecute(String result) {
 						dialog.dismiss();
 
-						// se la risposta è negativa o si è verifcato un errore
+						// se la risposta ï¿½ negativa o si ï¿½ verifcato un errore
 						// viene
 						// mostrato un messaggio d'errore e la
 						// barra di progresso viene chiusa, altrimenti viene
@@ -335,7 +337,7 @@ public class PoiAugmentedRealityManager extends Activity  implements ItypeOfView
 							ParametersBridge.getInstance().addParameter("listaPOI", poi);
 							ParametersBridge.getInstance().addParameter("location", curLocation);
 							
-							// Se è stato trovato almeno un poi, aggiorno la
+							// Se ï¿½ stato trovato almeno un poi, aggiorno la
 							// locazione,
 							// altrimenti resituisco un messaggio d'errore
 							if (poi.size() < 0) {

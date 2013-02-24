@@ -23,7 +23,7 @@ public class Resource  {
 	 * @uml.property  name="description"
 	 */
 	private String description;
-	//Il poi a cui è assoicata la risorsa
+	//Il poi a cui ï¿½ assoicata la risorsa
 	/**
 	 * @uml.property  name="poi"
 	 * @uml.associationEnd  multiplicity="(1 1)" inverse="resources:com.geolog.dominio.Poi"
@@ -34,7 +34,7 @@ public class Resource  {
 	 * @uml.property  name="resourceType"
 	 * @uml.associationEnd  multiplicity="(1 1)"
 	 */
-	private ResourceType resourceType;
+	private String resourceType;
 	
 	
 	/**
@@ -42,11 +42,11 @@ public class Resource  {
 	 * @param id identificativo della risorsa
 	 * @param url url della risorsa
 	 * @param description descrizione della riosrsa
-	 * @param poi poi a cui è associata la risorsa
+	 * @param poi poi a cui ï¿½ associata la risorsa
 	 * @param resourceType tipo di riosrsa
 	 */
 	public Resource(int id, String url, String description, Poi poi,
-			ResourceType resourceType) {
+			String resourceType) {
 		super();
 		this.id = id;
 		this.url = url;
@@ -117,23 +117,22 @@ public class Resource  {
 		this.poi = poi;
 	}
 	
-	/**
-	 * @return
-	 * @uml.property  name="resourceType"
-	 */
-	public ResourceType getResourceType(){
-		return this.resourceType;
-	}
-	/**
-	 * @param type
-	 * @uml.property  name="resourceType"
-	 */
-	public void setResourceType(ResourceType type){
-		this.resourceType = type;
-	}
+
 
 	public String getLabel() {
 		return getUrl();
+	}
+
+
+
+	public String getResourceType() {
+		return resourceType;
+	}
+
+
+
+	public void setResourceType(String resourceType) {
+		this.resourceType = resourceType;
 	}
 	
 	

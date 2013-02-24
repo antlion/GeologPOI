@@ -43,12 +43,18 @@
 			        android:layout_height="match_parent"
 			        android:apiKey="0RKzE3GmM5HA3RKgeYG0ODkcK59jkcn4ONV3ORA"
 			        android:clickable="true" />
-			    
+			    <ZoomControls
+    android:id="@+id/zoomControls"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_above="@+id/buttonbar" />
 
 			      <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent" android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#45303030">
+        android:background="#45303030"
+        android:id="@+id/buttonbar">
         
        <ImageButton android:layout_below="@+id/mapview" android:text="@string/search"
            android:contentDescription="@string/search"

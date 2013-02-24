@@ -247,7 +247,7 @@ public class Poi {
 	 * Creazione di un drawable a partire da un risorsa presente nel poi.
 	 * 
 	 * @param context
-	 *            contesto dell'attività che chiama il metodo
+	 *            contesto dell'attivitï¿½ che chiama il metodo
 	 * @return Drawable la risorsa sotto forma di drawable
 	 */
 	public Drawable setImageFromResource(Context context) {
@@ -256,14 +256,14 @@ public class Poi {
 			// Se nomo somo presenti le risorse resituisco una risorsa base
 			return context.getResources().getDrawable(R.drawable.no_image_icon);
 		}
-		// Altrimenti scandisco le risorse finchè non trovo quella desiderata
+		// Altrimenti scandisco le risorse finchï¿½ non trovo quella desiderata
 		// creo un nuovo iteratore
 		Iterator<Resource> it = resources.iterator();
 		// Cerco la risorsa
 		while (it.hasNext()) {
 			Resource elemento = it.next();
-			if (elemento.getResourceType().getName().equals("image/jpeg")) {
-				// Controllo che la risorsa non sià già presente sul sistema. In
+			if (elemento.getResourceType().equals("image/jpeg")) {
+				// Controllo che la risorsa non siï¿½ giï¿½ presente sul sistema. In
 				// caso positivo la restituisco, in caso negativo la scarico
 				if (ResourcesManager.controlImageResource(elemento.getUrl(),
 						context))
@@ -299,6 +299,14 @@ public class Poi {
 
 	public void setCategory_id(int category_id) {
 		this.category_id = category_id;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	

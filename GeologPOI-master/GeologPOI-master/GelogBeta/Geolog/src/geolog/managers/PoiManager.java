@@ -59,7 +59,7 @@ public class PoiManager {
 	/**
 	 *  Metodo che invia una nuova segnalazione al servizio Web.
 	 *  
-	 * @param poiBase poi su cui è stata fatta la segnalazione
+	 * @param poiBase poi su cui ï¿½ stata fatta la segnalazione
 	 * @param descrizione descrizione della segnalazione
 	 * @param date data di creazione della segnalazione
 	 * @param context contesto dell'applicazione
@@ -86,7 +86,7 @@ public class PoiManager {
 	/**
 	 * Metodo che aggiunge un poi al sistema attraverso il servizio web.
 	 * @param poi poi che deve essere aggiunto al sistma
-	 * @param context contesto dell'attività che richiama il servizio
+	 * @param context contesto dell'attivitï¿½ che richiama il servizio
 	 * @param user utente che aggiunge il poi
 	 * 
 	 * @return ConfrimResponse risposta di conferma da parte del servizio web per l'aggiunta di un poi
@@ -105,7 +105,7 @@ public class PoiManager {
 	 * Metodo che provvede all'upload di una risorsa(immagine,audio,video,ecc) per un poi specifico.
 	 *  
 	 * @param idPOI identificatio del poi a cui si sta aggiungendo uuna risorsa
-	 * @param context contesto dell'attività che richiama il servizio
+	 * @param context contesto dell'attivitï¿½ che richiama il servizio
 	 * @param resource risorsa da aggiungere al poi
 	 * @param typeRespurce tipo di risorsa
 	 * 
@@ -127,10 +127,10 @@ public class PoiManager {
 
 	/**
 	 * 
-	 * Metodo che richiede tutti i poi di una,o più categorie, situati vicino alla posizione dell'utente
+	 * Metodo che richiede tutti i poi di una,o piï¿½ categorie, situati vicino alla posizione dell'utente
 	 * 
 	 * @param location location in cui si trova l'utente
-	 * @param context contesto dell'attività che richiede il servizio
+	 * @param context contesto dell'attivitï¿½ che richiede il servizio
 	 * @param categorySelected categorie scelte dall'utente per la ricerca dei poi
 	 * 
 	 * 
@@ -169,7 +169,8 @@ public class PoiManager {
 			return response;
 		}
 		//il poi ha una categoria identificata dall'id.
-		return response;		}
+		return response;		
+		}
 		
 		return null;
 	}

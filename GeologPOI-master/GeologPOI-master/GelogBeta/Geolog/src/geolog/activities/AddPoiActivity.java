@@ -12,6 +12,7 @@ import java.util.Date;
 
 
 import com.geolog.activity.R;
+import com.geolog.dominio.Poi;
 import com.geolog.dominio.web.ConfrimResponse;
 
 import com.markupartist.android.widget.ActionBar;
@@ -326,10 +327,11 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 
 					// Uso il servizio web per aggiungere il poi al
 					// sistema
-					webResponse = PoiManager.addPOI(PoiManager.createNewPoi(
-							mylocation, id, et1.getText()
+					Poi poi = new Poi(categoriesHandler.getCategoryFromId(id), et1.getText()
 							.toString(), et2.getText()
-							.toString(), date), context,
+							.toString(), date, mylocation);
+					poi.setCategory_id(id);
+					webResponse = PoiManager.addPOI(poi, context,
 							"io");
 
 					// Se la risposta del servizio web � nulla o c'�
@@ -377,6 +379,8 @@ public class AddPoiActivity extends Activity implements OnClickListener,
 				else if (webResponse != null && webResponse.getStatus() == 200){
 					if (webResponseAddRes == null || webResponseAddRes.getStatus() != 200)
 						UtilDialog.createBaseToast("poi aggiunto.Impossibile aggiungere la risorsa", context).show();
+					else
+						UtilDialog.createBaseToast("poi aggiunto con successo", context).show();
 				}
 				else{
 					UtilDialog.createBaseToast("poi aggiunto con successo", context).show();

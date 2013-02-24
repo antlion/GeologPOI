@@ -11,16 +11,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.util.ByteArrayBuffer;
 import org.json.simple.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.geolog.dominio.Category;
 import com.geolog.dominio.Poi;
 import com.geolog.dominio.Suggestion;
 import com.geolog.dominio.web.CategoryListResponse;
@@ -28,6 +33,9 @@ import com.geolog.dominio.web.ConfrimResponse;
 import com.geolog.dominio.web.PoiListResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Interfacciamento con il servizio web.Questa classe esponde i metodi per
@@ -40,7 +48,10 @@ import com.google.gson.GsonBuilder;
 public class WebService {
 
 	// Indirizzo di acesso del servizo web
-	private static final String WEB_SERVICE_URL = "http://192.168.0.106:8080/GeologWeb/services/WS";
+	private static  String WEB_SERVICE_URL = "http://192.168.1.150:8080/web/services/WS";
+	private static  String WEB_SERVICE_URL_RES = "http://192.168.1.150:8080/web";
+
+	
 
 	// Servizi offerti dal Servizioweb
 	/**
@@ -56,6 +67,8 @@ public class WebService {
 		// creo l'accesso ai servizi
 		webServices = new Services();
 		// imposto l'indirizzo per accedere ai servizi
+		
+		
 		webServices.setUrl(WEB_SERVICE_URL);
 
 	}
@@ -79,7 +92,7 @@ public class WebService {
 		try {
 			// richiedo al servizo di ricercare i poi
 			String responseWeb = webServices.findNearby(location.getLatitude(),
-					location.getLongitude(), 0);
+					location.getLongitude(), id);
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
 			response = gson.fromJson(responseWeb, PoiListResponse.class);
@@ -99,7 +112,7 @@ public class WebService {
 	 * @param suggestion
 	 *            segnalazione di un poi
 	 * @param context
-	 *            contesto dell'attività
+	 *            contesto dell'attivitï¿½
 	 * @return ConfirmResponse risposta di conferma del web service
 	 */
 	@SuppressWarnings("unchecked")
@@ -150,15 +163,16 @@ public class WebService {
 	 * @param url
 	 *            url della risorsa da scaricare
 	 * @param context
-	 *            contesto dell'atività
+	 *            contesto dell'ativitï¿½
 	 * @return Drawable la risorsa rappresentata da un drawable
 	 */
 	public Drawable downloadResource(String url, Context context) {
 		// Percorso in cui salvare la risorsa
 		String path = (context.getFilesDir().toString());
+		String string = WEB_SERVICE_URL_RES+url;
 		try {
 			// Creo un nuovo url
-			URL web = new URL(url);
+			URL web = new URL(string);
 
 			// Crea un nuovo file con il nome della risorsa
 			File file = new File(path, ResourcesManager.getNameFileFromUrl(url));
@@ -207,7 +221,7 @@ public class WebService {
 	 * Upoload di una resource relativa al sistema attraverso il servizioWeb
 	 * 
 	 * @param context
-	 *            contesto dell'attività
+	 *            contesto dell'attivitï¿½
 	 * @param idPOI
 	 *            id del poi a cui si riferisce la risorsa
 	 * @param typeResource
@@ -261,7 +275,7 @@ public class WebService {
 		result.put("latitude", poi.getLongitude());
 		result.put("description", poi.getDescrizione());
 		// attenzione questo valore
-		result.put("category_id", 8);
+		result.put("category_id", poi.getCategory_id());
 		try {
 
 			// Invio il poi al sistema attraverso il servizioWEb
@@ -279,6 +293,7 @@ public class WebService {
 		}
 		return confirmResponse;
 	}
+	
 
 	/**
 	 * Richiesta delle categorie di ricerca poi al servizio web.
@@ -291,13 +306,14 @@ public class WebService {
 
 		try {
 			// Setto il timeOut per la richiesta
-			webServices.setTimeOut(7);
+			webServices.setTimeOut(15);
 			
 			// Richedo la lista delle categorie
 			String response = webServices.listCategories();
 			GsonBuilder builder = new GsonBuilder();
 			Gson gson = builder.create();
-			responseWeb = gson.fromJson(response, CategoryListResponse.class);
+		responseWeb = gson.fromJson(response, CategoryListResponse.class);
+		//	responseWeb = desrializeCategoryList(response);
 			// ritorno la risposta
 			return responseWeb;
 
@@ -308,4 +324,27 @@ public class WebService {
 		}
 		return responseWeb;
 	}
+	
+
+	public void setWebServices(Services webServices) {
+		this.webServices = webServices;
+	}
+
+	public static String getWEB_SERVICE_URL() {
+		return WEB_SERVICE_URL;
+	}
+
+	public static void setWEB_SERVICE_URL(String wEB_SERVICE_URL) {
+		WEB_SERVICE_URL = wEB_SERVICE_URL;
+	}
+
+	public static String getWEB_SERVICE_URL_RES() {
+		return WEB_SERVICE_URL_RES;
+	}
+
+	public static void setWEB_SERVICE_URL_RES(String wEB_SERVICE_URL_RES) {
+		WEB_SERVICE_URL_RES = wEB_SERVICE_URL_RES;
+	}
+	
+	
 }

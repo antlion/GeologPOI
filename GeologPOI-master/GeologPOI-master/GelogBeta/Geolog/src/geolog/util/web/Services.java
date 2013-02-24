@@ -56,12 +56,12 @@ public class Services {
 		this.url = url;
 	}
 
-	public String findNearby(double latitude, double longitude, int category_id) {
+	public String findNearby(double latitude, double longitude, String category_id) {
 		return findNearby(latitude, longitude, category_id, null);
 	}
 
 	public String findNearby(double latitude, double longitude,
-			int category_id, List<HeaderProperty> headers) {
+			String category_id, List<HeaderProperty> headers) {
 
 		SoapSerializationEnvelope soapEnvelope = new SoapSerializationEnvelope(
 				SoapEnvelope.VER11);
@@ -72,7 +72,7 @@ public class Services {
 
 		soapReq.addProperty("longitude", longitude);
 
-		soapReq.addProperty("category_id", category_id);
+		soapReq.addProperty("categories", category_id);
 
 		new MarshalFloat().register(soapEnvelope);
 

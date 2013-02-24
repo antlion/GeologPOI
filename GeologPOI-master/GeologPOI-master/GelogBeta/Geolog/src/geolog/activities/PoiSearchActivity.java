@@ -193,21 +193,22 @@ public class PoiSearchActivity extends TabActivity {
 		// Creo la tabella per la mappa
 		TabSpec poiMap = tabHost.newTabSpec("Mappa");
 		poiMap.setIndicator("", getResources()
-				.getDrawable(R.drawable.googlemaps));
+				.getDrawable(R.drawable.maps));
 		poiMap.setContent(viewPoiManager.createNewViewIntent("Map"));
 
 		// Tab per la lista dei poi
 		TabSpec poiList = tabHost.newTabSpec("Lista");
 		poiList.setIndicator("", getResources()
-				.getDrawable(R.drawable.list));
+				.getDrawable(R.drawable.appdraw1));
 		poiList.setContent(viewPoiManager.createNewViewIntent("List"));
 
 		// Tab per la realt� aumentata
 		TabSpec poiAr = tabHost.newTabSpec("AR");
-		poiAr.setIndicator("", getResources().getDrawable(R.drawable.camera));
+		poiAr.setIndicator("", getResources().getDrawable(R.drawable.camera1));
 		poiAr.setContent(viewPoiManager.createNewViewIntent("Ar"));
 
 		// Aggiungo le tab al gestore delle tab
+
 		tabHost.addTab(poiMap);
 		tabHost.addTab(poiList);
 		tabHost.addTab(poiAr);
@@ -225,7 +226,7 @@ public class PoiSearchActivity extends TabActivity {
 	 * @param context
 	 *            contesto dell'attivit�
 	 */
-	private void searchPOI(final Context context) {
+	public void searchPOI(final Context context) {
 		AsyncTask<Void, Void, String> task = new AsyncTask<Void, Void, String>() {
 			// Creo una nuova progressDialog
 			ProgressDialog dialog;
@@ -348,4 +349,25 @@ public class PoiSearchActivity extends TabActivity {
 		.setBackgroundResource(R.drawable.tabs_backgorund); // Selezionato
 	}
 
+	public Location getMylocation() {
+		return mylocation;
+	}
+
+	public void setMylocation(Location mylocation) {
+		this.mylocation = mylocation;
+	}
+
+	public boolean isHasLocation() {
+		return hasLocation;
+	}
+
+	public void setHasLocation(boolean hasLocation) {
+		this.hasLocation = hasLocation;
+	}
+
+	public PoiViewManager getViewPoiManager() {
+		return viewPoiManager;
+	}
+
+	
 }

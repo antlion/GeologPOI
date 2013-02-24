@@ -81,6 +81,12 @@ public class MenuCategory {
 		// delle categorie
 		categoriesManager.setSelectionCategory(listCategory, context,
 				categoryAdapter);
+		if(isExpandedMenuCateogories == true){
+		if( categoriesManager.getCategories() != null && categoriesManager.getCategories().size() >0)
+			setVisibilityListCategory(false);
+		else
+		setVisibilityListCategory(isExpandedMenuCateogories);
+		}
 		setVisibilityListCategory(isExpandedMenuCateogories);
 	}
 
@@ -180,9 +186,16 @@ public class MenuCategory {
 			return true;
 
 		} else {
-			setExpandedMenuCateogories(true);
+			if( categoriesManager.getCategories() != null && categoriesManager.getCategories().size() >0){
+				setVisibilityListCategory(true);
+				setExpandedMenuCateogories(true);
+				}
+			else{
+			
+			UtilDialog.createBaseToast("Impossibile aprire la lista delle categorie.Eseguire aggiornamento sistema", context).show();
+			setExpandedMenuCateogories(false);
 
-			setVisibilityListCategory(true);
+			setVisibilityListCategory(false);}
 			return false;
 		}
 	}

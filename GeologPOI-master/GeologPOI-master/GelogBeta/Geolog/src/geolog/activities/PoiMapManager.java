@@ -35,12 +35,16 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.ZoomButtonsController;
+import android.widget.ZoomControls;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -52,7 +56,7 @@ import com.google.android.maps.OverlayItem;
 /**
  * 
  * Gestione della visualizzazione dei Poi sulla mappa. Vengono aggiunti gli
- * overlay della posizione dell'utente e dei poi ricercati. Inoltre è possibile
+ * overlay della posizione dell'utente e dei poi ricercati. Inoltre ï¿½ possibile
  * selezionare le categorie di rcierca da un apposito menu.
  * 
  * @author Lorenzo
@@ -143,28 +147,49 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		// Salvo il contesto dell'applicazione
 		context = this;
 
-		// Accedo al passaggio di parametri tra attività
+		// Accedo al passaggio di parametri tra attivitï¿½
 		ParametersBridge bridge = ParametersBridge.getInstance();
 
 		// Inzializzo l'array di poi
 		poi = new ArrayList<Poi>();
 
-		// Prendo la lista dei poi dai parametri dell'attività
+		// Prendo la lista dei poi dai parametri dell'attivitï¿½
 		poi = (ArrayList<Poi>) bridge.getParameter("listaPOI");
 
-		// Prendo la locazione dai parametri dell'attività
+		// Prendo la locazione dai parametri dell'attivitï¿½
 		mylocation = (Location) ParametersBridge.getInstance().getParameter(
 				"location");
 
 		// Inizializzo la mappa
 		mapView = (MapView) findViewById(R.id.mapView);
 		mapView.setClickable(true);
-		mapView.setBuiltInZoomControls(true);
+		final ZoomControls zoomControls = (ZoomControls) findViewById(R.id.zoomControls);
+		zoomControls.setIsZoomInEnabled(true);
+		zoomControls.setIsZoomOutEnabled(true);
+
+		zoomControls.setOnZoomInClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mapController.setZoom(mapView.getZoomLevel()+1);
+			}
+		});
+		zoomControls.setOnZoomOutClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mapController.setZoom(mapView.getZoomLevel()-1);
+			}
+		});
+	
+		mapView.setBuiltInZoomControls(false);
 		// Inzializzo il mapController
 		mapController = mapView.getController();
 
-		mapView.setBuiltInZoomControls(true);
-		mapController.setZoom(8);
+		
+		mapController.setZoom(14);
 		
 		// Inzializzo gli overlays della mappa
 		mapOverlays = mapView.getOverlays();
@@ -176,7 +201,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 		menuCategory = new MenuCategory(false,
 				(ListView) findViewById(R.id.listViewCategories),
 				CategoriesManager.getCategoriesManager(), context);
-		// Il menù delle categorie non + inizialmente visibile
+		// Il menï¿½ delle categorie non + inizialmente visibile
 		menuCategory.setVisibilityListCategory(false);
 
 		// Configuro i buttons visibili sull'iterfaccia grafica
@@ -245,7 +270,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 				(ListView) findViewById(R.id.listViewCategories),
 				CategoriesManager.getCategoriesManager(), context);
 
-		// Recupero la lista dei poi dai parametri passati all'attività
+		// Recupero la lista dei poi dai parametri passati all'attivitï¿½
 		poi = ((ArrayList<Poi>) ParametersBridge.getInstance().getParameter(
 				"listaPOI"));
 
@@ -271,13 +296,13 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 
 	public void updateLocationData(Location location) {
 
-		// se la locazione è diversa da null, aggiungo la mia posizione sugli
+		// se la locazione ï¿½ diversa da null, aggiungo la mia posizione sugli
 		// overlays della mappa
 		if (mylocation != null) {
 			addUserPositionToMap(mapOverlays, createNewGeoPoint(mylocation));
 			mapController.setCenter(createNewGeoPoint(mylocation));
 		}
-		// Se la lista dei poi è diversa da null, aggiungo i poi sugli overlays
+		// Se la lista dei poi ï¿½ diversa da null, aggiungo i poi sugli overlays
 		// della mappa,altrimenti mostro un messaggio d'errore
 		if (poi != null) {
 			addPOIOverlay(mapOverlays);
@@ -375,7 +400,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 	 * Ricerca dei poi in base alle categorie scelte dall'utente.
 	 * 
 	 * @param context
-	 *            contesto dell'attività che richiede il servizio
+	 *            contesto dell'attivitï¿½ che richiede il servizio
 	 */
 	@Override
 	public void searchPoi(final Context context) {
@@ -415,7 +440,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 
 			protected void onPostExecute(String result) {
 				dialog.dismiss();
-				// Se la risposta è nulla o si è verificato un errore,
+				// Se la risposta ï¿½ nulla o si ï¿½ verificato un errore,
 				// termino
 				// con un messaggio di errore, altrimenti aggiorno la lista
 				// dei
@@ -462,8 +487,8 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 
-		// Se viene cliccato il bottone di aggiungi poi, viene avviatà
-		// l'attività di aggiungi poi.
+		// Se viene cliccato il bottone di aggiungi poi, viene avviatï¿½
+		// l'attivitï¿½ di aggiungi poi.
 		if (v.getId() == R.id.addPoiButton) {
 			final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 			builder.setMessage("Vuoi aggiungere un punto di interesse?");
@@ -490,19 +515,19 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 			alert.show();
 			
 		}
-		// Se è stato premuto il bottone di ricerca effettuo la ricerca dei poi
+		// Se ï¿½ stato premuto il bottone di ricerca effettuo la ricerca dei poi
 		if (v.getId() == R.id.searchButton) {
 			searchPoi(context);
 
 		}
-		// Se è stato premuto il bottone delle categorie, apro il menu delle
+		// Se ï¿½ stato premuto il bottone delle categorie, apro il menu delle
 		// categorie
 		if (v.getId() == R.id.categoryButton) {
 
 			ImageButton searchButton = (ImageButton) findViewById(R.id.searchButton);
 			ImageButton levelsMap = (ImageButton) findViewById(R.id.levelsButton);
 			ImageButton updateButton = (ImageButton) findViewById(R.id.addPoiButton);
-			// Se il menù è stato aperto, verrà chiuso
+			// Se il menï¿½ ï¿½ stato aperto, verrï¿½ chiuso
 			if (menuCategory.checkMenuCategory()) {
 				searchButton.setVisibility(View.VISIBLE);
 				updateButton.setVisibility(View.VISIBLE);
@@ -515,7 +540,7 @@ public class PoiMapManager extends MapActivity implements ItypeOfViewPoi,
 
 			}
 		}
-		// Se è stato premuto il bottone dei livelli,visualizzo un dialogo per i
+		// Se ï¿½ stato premuto il bottone dei livelli,visualizzo un dialogo per i
 		// livelli
 		if (v.getId() == R.id.levelsButton) {
 			// Creo un nuovo dialogo, dove vengono visualizzate le checkBox per

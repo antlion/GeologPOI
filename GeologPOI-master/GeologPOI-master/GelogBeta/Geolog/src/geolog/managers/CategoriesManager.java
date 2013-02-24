@@ -27,12 +27,12 @@ import com.geolog.dominio.web.CategoryListResponse;
  * Classe che si occupa di gestire le categorie. Ogni modifica e aggiunta di una
  * categoria, viene gestita da questa classe. Viene salvata anche la selezione
  * delle categorie da parte dell'utente. Questa classe viene gestita come un
- * sigleton. Questa scelta è dovuto al fatto che le cateogorie non cambiano
- * durante l'esecuzione dell'applicazione. Poichè le categorie devono essere
- * passate a più oggetti, non c'è bisogno di istanziarle più volte. Inoltre per
+ * sigleton. Questa scelta ï¿½ dovuto al fatto che le cateogorie non cambiano
+ * durante l'esecuzione dell'applicazione. Poichï¿½ le categorie devono essere
+ * passate a piï¿½ oggetti, non c'ï¿½ bisogno di istanziarle piï¿½ volte. Inoltre per
  * passare le categorie selezionate dall'utente, la creazione di nuove istanze
  * di questa classe elminerebbero sia le scelte dell'utente e creerebbero la
- * necessità di recuperare di nuovo la lsita delle categorie dal servizio web.
+ * necessitï¿½ di recuperare di nuovo la lsita delle categorie dal servizio web.
  * 
  * @author Lorenzo
  * 
@@ -165,7 +165,7 @@ public class CategoriesManager {
 				return categoria;
 		}
 		return null;
-		// ricordare di gestire il caso in cui c'è una nuova categoria
+		// ricordare di gestire il caso in cui c'ï¿½ una nuova categoria
 	}
 
 	/**
@@ -177,11 +177,11 @@ public class CategoriesManager {
 	 * @param categoryChoose
 	 */
 	public void checkMenuCategory(CategoriesAdapter categoryChoose) {
-		// Definisco un nuovo array che conterrà le categorie scelte dall'utente
+		// Definisco un nuovo array che conterrï¿½ le categorie scelte dall'utente
 		ArrayList<Category> categoriaSelezionate = new ArrayList<Category>();
 
 		// Ottengo l'hash map che contiene per ogni categoria, un stringa che
-		// rappresenta un valore true,se la cateogoria è stata scelta,false
+		// rappresenta un valore true,se la cateogoria ï¿½ stata scelta,false
 		// altrimenti.
 		HashMap<Category, String> map = categoryChoose.getCategorySelected();
 		// Trasformo le categorie dell'hashMap in una lista di categorie
@@ -189,7 +189,7 @@ public class CategoriesManager {
 		// creo un nuovo iterator
 		Iterator<Category> iter = list.iterator();
 		// Per ogni elemento della lista delle categorie, controllo il
-		// corripondente valore, se è true,lacategoria viene aggiunta alla lista
+		// corripondente valore, se ï¿½ true,lacategoria viene aggiunta alla lista
 		// delle categorie scelte dall'utente.
 		while (iter.hasNext()) {
 			Category key = (Category) iter.next();
@@ -206,15 +206,15 @@ public class CategoriesManager {
 	 * Gestione degli elementi di una ListView contenente una lista di
 	 * categorie. Le categorie sono contenute in un adattatore di categorie.
 	 * Ogni elemento selezionato viene salvato all'interno di un
-	 * hashMap<Category,String>, dove per ogni categoria c'è un valore che
-	 * rappresenta se la categoria è stata selezionata.
+	 * hashMap<Category,String>, dove per ogni categoria c'ï¿½ un valore che
+	 * rappresenta se la categoria ï¿½ stata selezionata.
 	 * 
 	 * 
 	 * @param listView
 	 *            listView contenente le categorie che possono essere
 	 *            selezionate
 	 * @param context
-	 *            contesto dell'attività che chiama il metodo
+	 *            contesto dell'attivitï¿½ che chiama il metodo
 	 * @param category
 	 *            adattatore di categorie contenente le categorie
 	 */
@@ -229,7 +229,7 @@ public class CategoriesManager {
 		// Ogni elemento della categoria viene aggiunto ad un listener.Quando
 		// una categoria viene selezionata, viene estratta la categoria
 		// dall'adattatore e viene salvata
-		// òa selezione
+		// ï¿½a selezione
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -246,7 +246,7 @@ public class CategoriesManager {
 				// Recupero la categoria scelta dall'utente
 				Category category = (Category) categoryAdapter.getItem(arg2);
 
-				// Controlo se la categoria è stata selezionata, se è
+				// Controlo se la categoria ï¿½ stata selezionata, se ï¿½
 				// false,aggiorno il valore della selezione a false,true
 				// altrimenti.
 				if (cb.isChecked()) {

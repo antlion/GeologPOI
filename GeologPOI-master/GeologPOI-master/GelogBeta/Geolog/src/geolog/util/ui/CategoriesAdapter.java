@@ -127,6 +127,7 @@ public class CategoriesAdapter extends BaseAdapter{
 		CheckBox chk = (CheckBox) convertView.findViewById(R.id.category_checkbox);
 		chk.setClickable(false);
 		
+		
 		if (CategoriesManager.getCategoriesManager().getCategoriesSelected().contains(categories.get(position))){
 			chk.setChecked(true);
 			updateCategorySelected(categories.get(position), "true");
@@ -134,10 +135,12 @@ public class CategoriesAdapter extends BaseAdapter{
 		//Recupero il nome che rappresenta la categoria specifica
 		Typeface myTypeface = Typeface.createFromAsset(context.getAssets(), "fonts/bebe.otf");
 	  
-		TextView tx = (TextView) convertView.findViewById(R.id.textView1);
-		tx.setText(categories.get(position).getNomeCategoria());
+		chk.setText(categories.get(position).getNomeCategoria());
 		
-		tx.setTypeface(myTypeface);
+		//TextView tx = (TextView) convertView.findViewById(R.id.textView1);
+		//tx.setText(categories.get(position).getNomeCategoria());
+		
+		chk.setTypeface(myTypeface);
 
 		return convertView;
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory
+   android:summary="Application Option"
+   android:title="Option" >
+ <CheckBoxPreference
+     	 android:key="checkBoxSuggestion"
+	     android:summary="Attivia/Disattiva i suggerimenti"
+	     android:title="Show suggestion" />
+
+ </PreferenceCategory>
+
+ <PreferenceCategory
+   android:summary="System managment"
+   android:title="System" >
+   <EditTextPreference
+     android:key="Dev options"
+     android:summary="Add url to reach web service"
+     android:title="Modify url web service"
+     android:defaultValue="http://inserisci indirizzo host" />
+  <Preference
+      android:key="Info"
+      android:summary="Info applcation"
+      android:title="Info Geolog" />
+
+ </PreferenceCategory>
+    </PreferenceScreen>

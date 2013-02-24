@@ -19,39 +19,44 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+/**
+ * @author antlion
+ * Gestione del layout della visualizzazione dei poi sulla superficie della videocamera del dispositvo mobile
+ */
 @SuppressLint("DrawAllocation")
 public class ARLayout extends View implements LocationListener, SensorEventListener
 {
 	
-	
+	//Angolo dello schermo.Cordinata x
 	private final float xAngleWidth = 29;
-	
+	//Angolo dello schermo.Cordinata y
 	private final float yAngleWidth = 19;
 	
-	
+	//Dimensioni dello schermo.
 	public float screenWidth = 480;
 	
 	public float screenHeight = 320;
 	
 	
 	@SuppressWarnings("rawtypes")
+	//Vettore dei poi da visualizzare
 	volatile Vector arViews = new Vector();
 	
-	
+	//Manger dei sensori
 	public SensorManager sensorMan;
-	
+	//Manager della Location
 	public LocationManager locMan;
-	
+	//Locazione corrente
 	public Location curLocation = null;
-	
+	//Contesto dell'applicazione
 	private Context ctx;
-	
+	//Direzione di puntamento del telefono
 	public float direction = (float) 22.4;
-	
+	//Inclinazione del telefono
 	public double inclination;
-	
+	//Inclinaizone verso sinistra
 	public double rollingX = (float)0;
-	
+	//Inclinazione verso destra
 	public double rollingZ = (float)0;
 	
 	public float kFilteringFactor = (float)0.05;
@@ -70,7 +75,7 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 	{
 		super(context);
 		ctx = context;
-		
+		//Inzializza i sensori
 		sensorMan = (SensorManager)ctx.getSystemService(Context.SENSOR_SERVICE);
 		sensorMan.registerListener(this, sensorMan.getDefaultSensor(Sensor.TYPE_ORIENTATION), SensorManager.SENSOR_DELAY_FASTEST);
 		sensorMan.registerListener(this, sensorMan.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
@@ -180,32 +185,13 @@ public class ARLayout extends View implements LocationListener, SensorEventListe
 	{
 		arViews.remove(view);
 	}
-/*	private boolean isVisibleY(float lowerArm, float upperArm, float inc)
-	{
-		return true;//(inc >= lowerArm &&inc <= upperArm);
-	}*/
+
 	
 	public void clearARViews()
 	{
 		arViews.removeAllElements();
 	}
-	//Given a point, is it visible on the screen?
-	/*private boolean isVisibleX(float leftArm, float rightArm, float az)
-	{
-//		//Flip!
-//		if(leftArm > rightArm)
-//		{
-//			if(!(az <= leftArm && az >= rightArm))
-//				return false;
-//		}
-//		else
-//		{
-//			if(!(az >= leftArm && az <= rightArm))
-//				return false;
-//		}
-		
-		return true;
-	}*/
+
 	private  float calcXvalue(float leftArm, float rightArm, float az)
 	{
 		
